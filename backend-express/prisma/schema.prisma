@@ -1,0 +1,499 @@
+// ============================================================
+// Library Management System - Prisma Schema
+// Database: PostgreSQL
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum Role {
+  GUEST
+  READER
+  LIBRARIAN
+  ADMIN
+}
+
+enum UserStatus {
+  PENDING_VERIFICATION
+  ACTIVE
+  SUSPENDED
+  BANNED
+}
+
+enum BookStatus {
+  ACTIVE
+  DELETED
+}
+
+enum CopyStatus {
+  AVAILABLE
+  BORROWED
+  RESERVED
+  TRANSFERRING
+  DAMAGED
+  LOST
+}
+
+enum BorrowStatus {
+  ACTIVE
+  RETURNED
+  OVERDUE
+}
+
+enum FineStatus {
+  PENDING
+  PAID
+  WAIVED
+}
+
+enum ReservationStatus {
+  WAITING
+  READY_FOR_PICKUP
+  FULFILLED
+  CANCELLED
+  EXPIRED
+}
+
+enum TransferStatus {
+  REQUESTED
+  IN_TRANSIT
+  ARRIVED
+  CANCELLED
+}
+
+enum NotificationType {
+  DUE_DATE_REMINDER
+  RESERVATION_READY
+  FINE_NOTICE
+  BROADCAST
+  SYSTEM
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  SMS
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  BORROW
+  RETURN
+  FINE_PAID
+  CONFIG_CHANGE
+}
+
+enum ResourceType {
+  PDF
+  EPUB
+  AUDIOBOOK
+  VIDEO
+}
+
+// ============================================================
+// 1. ACCOUNT & ACCESS
+// ============================================================
+
+model User {
+  id                 String     @id @default(cuid())
+  email              String     @unique
+  username           String?    @unique
+  passwordHash       String
+  fullName           String
+  phone              String?
+  avatarUrl          String?
+  role               Role       @default(READER)
+  status             UserStatus @default(PENDING_VERIFICATION)
+  branchId           String?
+  mfaEnabled         Boolean    @default(false)
+  mfaSecret          String?
+  failedLoginCount   Int        @default(0)
+  lockedUntil        DateTime?
+  lastLoginAt        DateTime?
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  deletedAt          DateTime?
+
+  branch             Branch?              @relation(fields: [branchId], references: [id])
+  otpTokens          OtpToken[]
+  borrowRecords      BorrowRecord[]
+  reservations       Reservation[]
+  reviews            Review[]
+  fines              Fine[]
+  notifications      Notification[]
+  notificationSetting NotificationSetting?
+  auditLogs          AuditLog[]
+  chatHistory        ChatHistory[]
+
+  @@index([email])
+  @@index([role])
+  @@index([status])
+  @@map("users")
+}
+
+model OtpToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String
+  type      String   // REGISTER | RESET_PASSWORD | MFA
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([token])
+  @@map("otp_tokens")
+}
+
+// ============================================================
+// 2. CATALOGING
+// ============================================================
+
+model Category {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  description String?
+  parentId    String?
+  createdAt   DateTime   @default(now())
+
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryTree")
+  books    Book[]
+
+  @@map("categories")
+}
+
+model Book {
+  id               String     @id @default(cuid())
+  isbn             String?    @unique
+  title            String
+  authorNames      String[]   // denormalized for simplicity
+  publisher        String?
+  publishYear      Int?
+  language         String?    @default("vi")
+  categoryId       String?
+  description      String?
+  aiSummary        String?    // AI-generated summary (UC-CAT-04)
+  aiSummaryFlag    Boolean    @default(false)
+  coverImageUrl    String?
+  totalCopies      Int        @default(0)
+  availableCopies  Int        @default(0)
+  averageRating    Float      @default(0)
+  reviewCount      Int        @default(0)
+  status           BookStatus @default(ACTIVE)
+  createdById      String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  deletedAt        DateTime?
+
+  category         Category?        @relation(fields: [categoryId], references: [id])
+  physicalCopies   PhysicalCopy[]
+  digitalResources DigitalResource[]
+  reviews          Review[]
+  reservations     Reservation[]
+
+  @@index([title])
+  @@index([isbn])
+  @@index([categoryId])
+  @@index([status])
+  @@map("books")
+}
+
+model PhysicalCopy {
+  id          String     @id @default(cuid())
+  bookId      String
+  branchId    String
+  barcode     String     @unique
+  status      CopyStatus @default(AVAILABLE)
+  condition   String?    @default("GOOD") // GOOD | FAIR | POOR
+  location    String?    // shelf location
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  book          Book           @relation(fields: [bookId], references: [id])
+  branch        Branch         @relation(fields: [branchId], references: [id])
+  borrowRecords BorrowRecord[]
+  transfers     BranchTransfer[]
+
+  @@index([bookId])
+  @@index([branchId])
+  @@index([barcode])
+  @@index([status])
+  @@map("physical_copies")
+}
+
+model DigitalResource {
+  id                String       @id @default(cuid())
+  bookId            String
+  resourceType      ResourceType
+  fileUrl           String
+  maxConcurrentUsers Int         @default(5)
+  currentUsers      Int          @default(0)
+  fileSizeBytes     BigInt?
+  createdAt         DateTime     @default(now())
+
+  book              Book         @relation(fields: [bookId], references: [id])
+  accessLogs        DigitalAccessLog[]
+
+  @@index([bookId])
+  @@map("digital_resources")
+}
+
+model DigitalAccessLog {
+  id                String   @id @default(cuid())
+  digitalResourceId String
+  userId            String
+  accessedAt        DateTime @default(now())
+  endedAt           DateTime?
+  durationSeconds   Int?
+
+  digitalResource DigitalResource @relation(fields: [digitalResourceId], references: [id])
+
+  @@index([digitalResourceId])
+  @@index([userId])
+  @@map("digital_access_logs")
+}
+
+// ============================================================
+// 3. CIRCULATION
+// ============================================================
+
+model BorrowRecord {
+  id               String       @id @default(cuid())
+  userId           String
+  physicalCopyId   String
+  borrowedAt       DateTime     @default(now())
+  dueDate          DateTime
+  returnedAt       DateTime?
+  renewCount       Int          @default(0)
+  status           BorrowStatus @default(ACTIVE)
+  processedById    String?      // librarian who processed
+  notes            String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id])
+  physicalCopy PhysicalCopy  @relation(fields: [physicalCopyId], references: [id])
+  fine         Fine?
+
+  @@index([userId])
+  @@index([physicalCopyId])
+  @@index([status])
+  @@index([dueDate])
+  @@map("borrow_records")
+}
+
+model Fine {
+  id             String     @id @default(cuid())
+  borrowRecordId String     @unique
+  userId         String
+  daysOverdue    Int
+  dailyRate      Decimal    @db.Decimal(10, 2)
+  totalAmount    Decimal    @db.Decimal(10, 2)
+  status         FineStatus @default(PENDING)
+  paidAt         DateTime?
+  waivedById     String?
+  waivedReason   String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  borrowRecord BorrowRecord @relation(fields: [borrowRecordId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([status])
+  @@map("fines")
+}
+
+model Reservation {
+  id          String            @id @default(cuid())
+  userId      String
+  bookId      String
+  queuePosition Int
+  status      ReservationStatus @default(WAITING)
+  notifiedAt  DateTime?
+  expiresAt   DateTime?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+  book Book @relation(fields: [bookId], references: [id])
+
+  @@unique([userId, bookId, status])
+  @@index([bookId])
+  @@index([status])
+  @@map("reservations")
+}
+
+model BranchTransfer {
+  id               String         @id @default(cuid())
+  physicalCopyId   String
+  requestedById    String
+  fromBranchId     String
+  toBranchId       String
+  status           TransferStatus @default(REQUESTED)
+  requestedAt      DateTime       @default(now())
+  arrivedAt        DateTime?
+  notes            String?
+
+  physicalCopy PhysicalCopy @relation(fields: [physicalCopyId], references: [id])
+
+  @@index([physicalCopyId])
+  @@index([status])
+  @@map("branch_transfers")
+}
+
+// ============================================================
+// 4. INTERACTIONS
+// ============================================================
+
+model Review {
+  id          String   @id @default(cuid())
+  userId      String
+  bookId      String
+  rating      Int      // 1-5
+  content     String?
+  isVisible   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+  book Book @relation(fields: [bookId], references: [id])
+
+  @@unique([userId, bookId])
+  @@index([bookId])
+  @@index([rating])
+  @@map("reviews")
+}
+
+// ============================================================
+// 5. NOTIFICATIONS & AUDIT
+// ============================================================
+
+model Notification {
+  id          String              @id @default(cuid())
+  userId      String
+  type        NotificationType
+  channel     NotificationChannel @default(IN_APP)
+  title       String
+  content     String
+  isRead      Boolean             @default(false)
+  readAt      DateTime?
+  relatedId   String?             // bookId, borrowRecordId, etc.
+  relatedType String?             // "Book" | "BorrowRecord"
+  createdAt   DateTime            @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+model NotificationSetting {
+  id              String  @id @default(cuid())
+  userId          String  @unique
+  emailEnabled    Boolean @default(true)
+  smsEnabled      Boolean @default(false)
+  inAppEnabled    Boolean @default(true)
+  dueDateReminder Boolean @default(true)
+  reservationReady Boolean @default(true)
+  fineNotice      Boolean @default(true)
+  broadcast       Boolean @default(true)
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("notification_settings")
+}
+
+model AuditLog {
+  id           String      @id @default(cuid())
+  userId       String?
+  action       AuditAction
+  entityType   String?     // "User" | "Book" | "BorrowRecord"
+  entityId     String?
+  oldData      Json?
+  newData      Json?
+  ipAddress    String?
+  userAgent    String?
+  riskLevel    String      @default("INFO") // INFO | WARNING | CRITICAL
+  createdAt    DateTime    @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([action])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model ChatHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  role      String   // "user" | "assistant"
+  content   String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("chat_history")
+}
+
+// ============================================================
+// 6. ADMIN & CONFIGURATION
+// ============================================================
+
+model Branch {
+  id          String   @id @default(cuid())
+  name        String
+  address     String
+  phone       String?
+  managerId   String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users         User[]
+  physicalCopies PhysicalCopy[]
+
+  @@map("branches")
+}
+
+model SystemConfig {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String?
+  updatedById String?
+  updatedAt   DateTime @updatedAt
+
+  @@map("system_configs")
+}
+
+// Key examples:
+// max_borrow_limit_reader = "5"
+// max_borrow_limit_faculty = "10"
+// borrow_duration_days = "14"
+// fine_rate_per_day = "2000"
+// max_renew_count = "2"
+// renew_duration_days = "7"
+// holiday_dates = "[\"2025-01-01\",\"2025-04-30\"]"
