@@ -29,6 +29,7 @@ export const forgotPasswordDto = Joi.object({
 });
 
 export const resetPasswordDto = Joi.object({
+  email: Joi.string().email().required(),
   token: Joi.string().required(),
   newPassword: Joi.string().min(8).required(),
 });

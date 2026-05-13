@@ -97,7 +97,7 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
       res.status(400).json({ success: false, message: error.details[0].message });
       return;
     }
-    const result = await authService.resetPassword(value.token, value.newPassword);
+    const result = await authService.resetPassword(value.email, value.token, value.newPassword);
     res.status(200).json({ success: true, data: result });
   } catch (err) {
     next(err);

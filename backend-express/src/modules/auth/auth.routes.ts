@@ -45,6 +45,10 @@ router.post('/register', authController.register);
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/VerifyOtpRequest'
+ *           example:
+ *             email: user@example.com
+ *             token: "123456"
+ *             type: REGISTER
  *     responses:
  *       200:
  *         description: Xác thực thành công, tài khoản đã được kích hoạt

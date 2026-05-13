@@ -6,6 +6,7 @@ import { env } from '../../config/env';
 import { createError } from '../../middlewares/error.middleware';
 import { UserStatus, AuditAction } from '@prisma/client';
 import { AuthPayload } from '../../middlewares/auth.middleware';
+import { sendOtpEmail, sendResetPasswordEmail } from '../../config/mailer';
 
 // ─── Constants ──────────────────────────────────────────────
 const OTP_EXPIRES_MINUTES = 10;
@@ -57,8 +58,8 @@ export const register = async (data: {
     },
   });
 
-  // TODO: Send OTP via email/SMS (integrate with nodemailer)
-  console.log(`[OTP] ${data.email} → ${otpToken} (dev mode)`);
+  // Gửi OTP qua email
+  await sendOtpEmail(data.email, otpToken, OTP_EXPIRES_MINUTES);
 
   return { message: 'Mã OTP đã được gửi đến email của bạn', userId: user.id };
 };
@@ -235,8 +236,9 @@ export const forgotPassword = async (email: string) => {
     return { message: 'Nếu email tồn tại, bạn sẽ nhận được hướng dẫn đặt lại mật khẩu' };
   }
 
-  const resetToken = crypto.randomBytes(32).toString('hex');
-  const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+  // Tạo mã OTP 6 số (giống flow đăng kí)
+  const resetToken = Math.floor(100000 + Math.random() * 900000).toString();
+  const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 phút
 
   await prisma.otpToken.create({
     data: {
@@ -247,17 +249,23 @@ export const forgotPassword = async (email: string) => {
     },
   });
 
-  // TODO: Send email with reset link
-  const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
-  console.log(`[RESET LINK] ${email} → ${resetLink} (dev mode)`);
+  // Gửi OTP qua email
+  await sendOtpEmail(email, resetToken, 15);
 
   return { message: 'Nếu email tồn tại, bạn sẽ nhận được hướng dẫn đặt lại mật khẩu' };
 };
 
 // ─── UC-ACC-02: Reset Password ───────────────────────────────
-export const resetPassword = async (token: string, newPassword: string) => {
+export const resetPassword = async (email: string, token: string, newPassword: string) => {
+  // Xác định user trước — giới hạn phạm vi OTP theo đúng tài khoản
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) {
+    throw createError('Mã OTP không hợp lệ hoặc đã hết hạn', 400);
+  }
+
   const otpRecord = await prisma.otpToken.findFirst({
     where: {
+      userId: user.id,
       token,
       type: 'RESET_PASSWORD',
       usedAt: null,
@@ -266,13 +274,13 @@ export const resetPassword = async (token: string, newPassword: string) => {
   });
 
   if (!otpRecord) {
-    throw createError('Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn', 400);
+    throw createError('Mã OTP không hợp lệ hoặc đã hết hạn', 400);
   }
 
   const passwordHash = await bcrypt.hash(newPassword, env.BCRYPT_ROUNDS);
 
   await prisma.user.update({
-    where: { id: otpRecord.userId },
+    where: { id: user.id },
     data: { passwordHash },
   });
 

@@ -67,10 +67,16 @@ const options: swaggerJsdoc.Options = {
         },
         VerifyOtpRequest: {
           type: 'object',
-          required: ['email', 'otp'],
+          required: ['email', 'token', 'type'],
           properties: {
             email: { type: 'string', format: 'email', example: 'user@example.com' },
-            otp: { type: 'string', example: '123456' },
+            token: { type: 'string', example: '123456', description: 'Mã OTP nhận được qua email' },
+            type: {
+              type: 'string',
+              enum: ['REGISTER', 'RESET_PASSWORD', 'MFA'],
+              example: 'REGISTER',
+              description: 'Loại OTP cần xác thực',
+            },
           },
         },
         LoginRequest: {
@@ -111,10 +117,11 @@ const options: swaggerJsdoc.Options = {
         },
         ResetPasswordRequest: {
           type: 'object',
-          required: ['token', 'newPassword'],
+          required: ['email', 'token', 'newPassword'],
           properties: {
-            token: { type: 'string' },
-            newPassword: { type: 'string', minLength: 6, example: 'newPassword123' },
+            email: { type: 'string', format: 'email', example: 'user@example.com', description: 'Email đã dùng để yêu cầu đặt lại mật khẩu' },
+            token: { type: 'string', example: '123456', description: 'Mã OTP 6 số nhận được qua email' },
+            newPassword: { type: 'string', minLength: 8, example: 'newPassword123' },
           },
         },
 
