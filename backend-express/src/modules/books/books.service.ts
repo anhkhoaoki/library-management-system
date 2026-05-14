@@ -121,6 +121,18 @@ export const createBook = async (data: {
     if (existing) throw createError('Mã ISBN đã tồn tại trong hệ thống', 409);
   }
 
+  // Validate categoryId exists before inserting (avoid FK constraint crash)
+  if (data.categoryId) {
+    const category = await prisma.category.findUnique({ where: { id: data.categoryId } });
+    if (!category) {
+      throw createError(
+        `Danh mục không tồn tại (categoryId: "${data.categoryId}"). ` +
+        'Vui lòng gọi GET /api/v1/books/categories để lấy danh sách ID hợp lệ.',
+        400
+      );
+    }
+  }
+
   const book = await prisma.book.create({
     data: {
       isbn: data.isbn,

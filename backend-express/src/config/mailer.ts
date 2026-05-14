@@ -43,6 +43,7 @@ export const sendOtpEmail = async (to: string, otp: string, expiresMinutes = 10)
     </div>
   `;
 
+  console.log(`[DEV] OTP for ${to}: ${otp}`);
   await sendMail({
     to,
     subject: `[Thư viện] Mã xác thực OTP: ${otp}`,
