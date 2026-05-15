@@ -75,3 +75,13 @@ export const reserveBook = async (req: Request, res: Response, next: NextFunctio
     next(err);
   }
 };
+
+export const lookupCopy = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { barcode } = req.params;
+    const copy = await circulationService.lookupCopyByBarcode(barcode);
+    res.status(200).json({ success: true, data: copy });
+  } catch (err) {
+    next(err);
+  }
+};

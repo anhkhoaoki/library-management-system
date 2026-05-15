@@ -188,4 +188,27 @@ router.post('/borrow-records/:id/renew', circulationController.renewBorrowRecord
 // UC-CIR-05: Reserve (Reader self-service)
 router.post('/reservations', circulationController.reserveBook);
 
+/**
+ * @swagger
+ * /api/v1/circulation/lookup/{barcode}:
+ *   get:
+ *     summary: Tra cứu thông tin bản sao vật lý theo mã vạch (Librarian / Admin)
+ *     tags: [Circulation]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: barcode
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Mã vạch của sách
+ *     responses:
+ *       200:
+ *         description: Thông tin bản sao và sách tương ứng
+ *       404:
+ *         description: Không tìm thấy
+ */
+router.get('/lookup/:barcode', authorize(Role.LIBRARIAN, Role.ADMIN), circulationController.lookupCopy);
+
 export default router;

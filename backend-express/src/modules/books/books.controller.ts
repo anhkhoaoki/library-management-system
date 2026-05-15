@@ -87,3 +87,21 @@ export const getCategories = async (req: Request, res: Response, next: NextFunct
     res.status(200).json({ success: true, data: cats });
   } catch (err) { next(err); }
 };
+
+export const getInfoByIsbn = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const info = await booksService.getBookInfoByIsbn(req.params.isbn);
+    res.status(200).json({ success: true, data: info });
+  } catch (err) { next(err); }
+};
+
+export const importBooks = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.file) {
+      res.status(400).json({ success: false, message: 'Vui lòng tải lên file Excel (.xlsx)' });
+      return;
+    }
+    const result = await booksService.importBooksFromExcel(req.file.buffer, req.user!.userId);
+    res.status(200).json({ success: true, data: result });
+  } catch (err) { next(err); }
+};

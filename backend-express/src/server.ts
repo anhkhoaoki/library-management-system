@@ -2,16 +2,6 @@ import 'dotenv/config';
 import app from './app';
 import { env } from './config/env';
 import prisma from './config/database';
-import { exec } from 'child_process';
-
-const openBrowser = (url: string) => {
-  const platform = process.platform;
-  const cmd =
-    platform === 'win32' ? `start ${url}` :
-    platform === 'darwin' ? `open ${url}` :
-    `xdg-open ${url}`;
-  exec(cmd);
-};
 
 const startServer = async () => {
   try {
@@ -25,11 +15,6 @@ const startServer = async () => {
       console.log(`📖 Environment: ${env.NODE_ENV}`);
       console.log(`🤖 AI Service: ${env.AI_SERVICE_URL}`);
       console.log(`📋 Swagger UI: ${swaggerUrl}`);
-
-      // Tự động mở Swagger UI khi chạy dev
-      if (env.NODE_ENV === 'development') {
-        openBrowser(swaggerUrl);
-      }
     });
 
     // Graceful shutdown

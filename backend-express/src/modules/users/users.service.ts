@@ -24,6 +24,35 @@ export const getProfile = async (userId: string) => {
   return user;
 };
 
+// ─── Lookup User (Librarian/Admin) ───────────────────────────
+export const lookupUserByCode = async (code: string) => {
+  const user = await prisma.user.findFirst({
+    where: {
+      OR: [
+        { email: code },
+        { username: code },
+        { studentId: code }, // Assuming studentId was successfully added or will be
+        { readerCode: code },
+      ],
+    },
+    select: {
+      id: true,
+      email: true,
+      fullName: true,
+      phone: true,
+      avatarUrl: true,
+      role: true,
+      status: true,
+      branchId: true,
+      studentId: true,
+      readerCode: true,
+    },
+  });
+
+  if (!user) throw createError('Không tìm thấy bạn đọc với mã này', 404);
+  return user;
+};
+
 // ─── UC-ACC-04: Update Profile ───────────────────────────────
 export const updateProfile = async (
   userId: string,

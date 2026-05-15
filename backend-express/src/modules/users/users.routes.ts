@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import * as usersController from './users.controller';
-import { authenticate } from '../../middlewares/auth.middleware';
+import { authenticate, authorize } from '../../middlewares/auth.middleware';
+import { Role } from '@prisma/client';
 
 const router = Router();
 
@@ -126,5 +127,28 @@ router.patch('/me', usersController.updateProfile);
  */
 // UC-ACC-05
 router.get('/me/borrow-history', usersController.getBorrowHistory);
+
+/**
+ * @swagger
+ * /api/v1/users/lookup/{code}:
+ *   get:
+ *     summary: Tra cứu bạn đọc theo mã (Librarian / Admin)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: code
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Email, Username hoặc StudentID
+ *     responses:
+ *       200:
+ *         description: Thông tin bạn đọc
+ *       404:
+ *         description: Không tìm thấy
+ */
+router.get('/lookup/:code', authorize(Role.LIBRARIAN, Role.ADMIN), usersController.lookupUser);
 
 export default router;

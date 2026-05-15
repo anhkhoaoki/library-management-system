@@ -40,3 +40,13 @@ export const getBorrowHistory = async (req: Request, res: Response, next: NextFu
     next(err);
   }
 };
+
+export const lookupUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { code } = req.params;
+    const user = await usersService.lookupUserByCode(code);
+    res.status(200).json({ success: true, data: user });
+  } catch (err) {
+    next(err);
+  }
+};

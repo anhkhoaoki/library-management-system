@@ -112,6 +112,8 @@ model User {
   id                 String     @id @default(cuid())
   email              String     @unique
   username           String?    @unique
+  studentId          String?    @unique
+  readerCode         String?    @unique
   passwordHash       String
   fullName           String
   phone              String?

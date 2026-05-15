@@ -1,6 +1,8 @@
 import prisma from '../../config/database';
 import { createError } from '../../middlewares/error.middleware';
 import { BookStatus } from '@prisma/client';
+import * as xlsx from 'xlsx';
+import { fetchBookInfoByIsbn } from './books.utils';
 
 // ─── UC-EXP-01: Search / List Books ─────────────────────────
 export const searchBooks = async (query: {
@@ -315,4 +317,85 @@ export const getCategories = async () => {
     orderBy: { name: 'asc' },
     include: { _count: { select: { books: true } } },
   });
+};
+
+// ─── Get Book Info By ISBN ──────────────────────────────────
+export const getBookInfoByIsbn = async (isbn: string) => {
+  const info = await fetchBookInfoByIsbn(isbn);
+  if (!info) throw createError('Không tìm thấy thông tin sách cho mã ISBN này', 404);
+  return info;
+};
+
+// ─── Bulk Import From Excel ─────────────────────────────────
+export const importBooksFromExcel = async (buffer: Buffer, createdById: string) => {
+  const workbook = xlsx.read(buffer, { type: 'buffer' });
+  const sheetName = workbook.SheetNames[0];
+  const worksheet = workbook.Sheets[sheetName];
+  const data = xlsx.utils.sheet_to_json(worksheet) as any[];
+
+  if (data.length === 0) throw createError('File Excel không có dữ liệu', 400);
+
+  const results = {
+    success: 0,
+    failed: 0,
+    errors: [] as string[],
+  };
+
+  for (const row of data) {
+    try {
+      // Map Excel columns to Book fields
+      // Expected columns: ISBN, Tiêu đề, Tác giả, Nhà xuất bản, Năm XB, Ngôn ngữ, Danh mục, Mô tả
+      const isbn = row['ISBN']?.toString();
+      const title = row['Tiêu đề'] || row['Title'];
+      const authorRaw = row['Tác giả'] || row['Authors'];
+      const publisher = row['Nhà xuất bản'] || row['Publisher'];
+      const publishYear = row['Năm XB'] || row['Year'];
+      const language = row['Ngôn ngữ'] || row['Language'] || 'vi';
+      const categoryName = row['Danh mục'] || row['Category'];
+      const description = row['Mô tả'] || row['Description'];
+
+      if (!title) throw new Error('Tiêu đề là bắt buộc');
+
+      // Find or create category
+      let categoryId = undefined;
+      if (categoryName) {
+        let category = await prisma.category.findFirst({ where: { name: categoryName } });
+        if (!category) {
+          category = await prisma.category.create({ data: { name: categoryName } });
+        }
+        categoryId = category.id;
+      }
+
+      const authorNames = typeof authorRaw === 'string' 
+        ? authorRaw.split(',').map(a => a.trim()) 
+        : (Array.isArray(authorRaw) ? authorRaw : []);
+
+      // Check duplicate ISBN
+      if (isbn) {
+        const existing = await prisma.book.findUnique({ where: { isbn } });
+        if (existing) throw new Error(`Mã ISBN ${isbn} đã tồn tại`);
+      }
+
+      await prisma.book.create({
+        data: {
+          isbn,
+          title,
+          authorNames,
+          publisher: publisher?.toString(),
+          publishYear: publishYear ? parseInt(publishYear.toString()) : undefined,
+          language: language?.toString(),
+          categoryId,
+          description: description?.toString(),
+          createdById,
+        },
+      });
+
+      results.success++;
+    } catch (err: any) {
+      results.failed++;
+      results.errors.push(`Dòng "${row['Tiêu đề'] || 'Không tên'}": ${err.message}`);
+    }
+  }
+
+  return results;
 };

@@ -2,8 +2,10 @@ import { Router } from 'express';
 import * as booksController from './books.controller';
 import { authenticate, authorize } from '../../middlewares/auth.middleware';
 import { Role } from '@prisma/client';
+import multer from 'multer';
 
 const router = Router();
+const upload = multer({ storage: multer.memoryStorage() });
 
 // ─── Public routes ────────────────────────────────────────────
 
@@ -382,5 +384,51 @@ router.put('/:id', authenticate, authorize(Role.LIBRARIAN, Role.ADMIN), booksCon
  *               $ref: '#/components/schemas/ErrorResponse'
  */
 router.delete('/:id', authenticate, authorize(Role.LIBRARIAN, Role.ADMIN), booksController.deleteBook);
+
+/**
+ * @swagger
+ * /api/v1/books/isbn/{isbn}:
+ *   get:
+ *     summary: Lấy thông tin sách từ mã ISBN (Librarian / Admin)
+ *     tags: [Books]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: isbn
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Mã ISBN 10 hoặc 13
+ *     responses:
+ *       200:
+ *         description: Thông tin sách từ API bên thứ 3
+ *       404:
+ *         description: Không tìm thấy thông tin
+ */
+router.get('/isbn/:isbn', authenticate, authorize(Role.LIBRARIAN, Role.ADMIN), booksController.getInfoByIsbn);
+
+/**
+ * @swagger
+ * /api/v1/books/import:
+ *   post:
+ *     summary: Nhập danh sách sách hàng loạt từ file Excel (Librarian / Admin)
+ *     tags: [Books]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Kết quả nhập dữ liệu
+ */
+router.post('/import', authenticate, authorize(Role.LIBRARIAN, Role.ADMIN), upload.single('file'), booksController.importBooks);
 
 export default router;

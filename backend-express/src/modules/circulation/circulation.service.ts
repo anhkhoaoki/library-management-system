@@ -442,3 +442,25 @@ export const reserveBook = async (userId: string, bookId: string) => {
     message: `Đặt giữ chỗ thành công. Bạn đang ở vị trí thứ ${reservation.queuePosition} trong hàng đợi`,
   };
 };
+
+// ─── Lookup Physical Copy (Librarian/Admin) ──────────────────
+export const lookupCopyByBarcode = async (barcode: string) => {
+  const copy = await prisma.physicalCopy.findUnique({
+    where: { barcode },
+    include: {
+      book: {
+        select: {
+          id: true,
+          title: true,
+          authorNames: true,
+          isbn: true,
+          coverImageUrl: true,
+        },
+      },
+      branch: { select: { id: true, name: true } },
+    },
+  });
+
+  if (!copy) throw createError('Không tìm thấy tài liệu với mã vạch này', 404);
+  return copy;
+};
