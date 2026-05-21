@@ -11,6 +11,39 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 /**
  * @swagger
+ * /api/v1/books:
+ *   get:
+ *     summary: Liệt kê hoặc tìm kiếm sách (public)
+ *     tags: [Books]
+ *     parameters:
+ *       - in: query
+ *         name: q
+ *         schema:
+ *           type: string
+ *         description: Từ khóa tìm kiếm
+ *       - in: query
+ *         name: categoryId
+ *         schema:
+ *           type: string
+ *         description: Lọc theo danh mục
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 12
+ *     responses:
+ *       200:
+ *         description: Danh sách sách
+ */
+router.get('/', booksController.searchBooks);
+
+/**
+ * @swagger
  * /api/v1/books/search:
  *   get:
  *     summary: Tìm kiếm sách (public)

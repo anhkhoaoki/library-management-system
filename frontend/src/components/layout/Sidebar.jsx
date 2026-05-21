@@ -24,6 +24,7 @@ const sidebarConfig = {
     { name: 'Quản lý lưu thông', icon: 'sync_alt', path: '/dashboard/librarian/circulation' },
     { name: 'Quản lý danh mục', icon: 'category', path: '/dashboard/librarian/catalog' },
     { name: 'Truyền thông', icon: 'campaign', path: '/dashboard/librarian/news' },
+    { name: 'Luân chuyển sách', icon: 'local_shipping', path: '/dashboard/librarian/transfers' },
     { name: 'Báo cáo', icon: 'bar_chart', path: '/dashboard/librarian/reports' },
   ],
 };

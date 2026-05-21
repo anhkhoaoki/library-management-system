@@ -4,6 +4,7 @@ import RegisterPage from './pages/auth/RegisterPage';
 import VerifyOtpPage from './pages/auth/VerifyOtpPage';
 import StudentDashboard from './pages/student/StudentDashboard';
 import StudentSearchPage from './pages/student/StudentSearchPage';
+import BookDetailPage from './pages/student/BookDetailPage';
 import BorrowedBooksPage from './pages/student/BorrowedBooksPage';
 import ReservationsPage from './pages/student/ReservationsPage';
 import HistoryPage from './pages/student/HistoryPage';
@@ -21,6 +22,7 @@ import CirculationPage from './pages/librarian/CirculationPage';
 import CatalogPage from './pages/librarian/CatalogPage';
 import CommunicationsPage from './pages/librarian/CommunicationsPage';
 import ReportsPage from './pages/librarian/ReportsPage';
+import TransferManagementPage from './pages/librarian/TransferManagementPage';
 import './App.css';
 
 function App() {
@@ -36,6 +38,7 @@ function App() {
           {/* Student Routes */}
           <Route path="/dashboard/student" element={<StudentDashboard />} />
           <Route path="/dashboard/student/search" element={<StudentSearchPage />} />
+          <Route path="/dashboard/student/book/:id" element={<BookDetailPage />} />
           <Route path="/dashboard/student/borrowed-books" element={<BorrowedBooksPage />} />
           <Route path="/dashboard/student/reservations" element={<ReservationsPage />} />
           <Route path="/dashboard/student/history" element={<HistoryPage />} />
@@ -57,6 +60,7 @@ function App() {
           <Route path="/dashboard/librarian/catalog" element={<CatalogPage />} />
           <Route path="/dashboard/librarian/news" element={<CommunicationsPage />} />
           <Route path="/dashboard/librarian/reports" element={<ReportsPage />} />
+          <Route path="/dashboard/librarian/transfers" element={<TransferManagementPage />} />
           <Route path="/dashboard/librarian/settings" element={<ProfilePage />} />
 
           {/* Redirect root to student dashboard */}

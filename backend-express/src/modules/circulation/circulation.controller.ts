@@ -81,7 +81,31 @@ export const lookupCopy = async (req: Request, res: Response, next: NextFunction
     const { barcode } = req.params;
     const copy = await circulationService.lookupCopyByBarcode(barcode);
     res.status(200).json({ success: true, data: copy });
-  } catch (err) {
-    next(err);
-  }
+  } catch (err) { next(err); }
+};
+
+export const getPendingReservations = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const reservations = await circulationService.getPendingReservations();
+    res.status(200).json({ success: true, data: reservations });
+  } catch (err) { next(err); }
+};
+
+export const returnDocumentById = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { recordId } = req.body;
+    const processedById = req.user!.userId;
+    const result = await circulationService.returnDocumentById(recordId, processedById);
+    res.status(200).json({ success: true, data: result });
+  } catch (err) { next(err); }
+};
+
+export const cancelReservation = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user!.userId;
+    const role = req.user!.role;
+    const result = await circulationService.cancelReservation(id, userId, role);
+    res.status(200).json({ success: true, data: result });
+  } catch (err) { next(err); }
 };

@@ -96,74 +96,94 @@ export const getBorrowHistory = async (
   const limit = query.limit || 10;
   const skip = (page - 1) * limit;
 
-  // Build where clause
-  const where: Record<string, unknown> = { userId };
-
+  const where: any = { userId };
   if (query.status && Object.values(BorrowStatus).includes(query.status as BorrowStatus)) {
-    where['status'] = query.status as BorrowStatus;
+    where.status = query.status as BorrowStatus;
   }
-
   if (query.fromDate || query.toDate) {
-    where['borrowedAt'] = {
+    where.borrowedAt = {
       ...(query.fromDate && { gte: new Date(query.fromDate) }),
       ...(query.toDate && { lte: new Date(query.toDate) }),
     };
   }
 
-  // Sequential queries (no transactions)
-  const total = await prisma.borrowRecord.count({ where });
-
-  const records = await prisma.borrowRecord.findMany({
-    where,
-    skip,
-    take: limit,
-    orderBy: { borrowedAt: 'desc' },
-    select: {
-      id: true,
-      borrowedAt: true,
-      dueDate: true,
-      returnedAt: true,
-      status: true,
-      renewCount: true,
-      physicalCopy: {
-        select: {
-          barcode: true,
-          book: {
-            select: {
-              id: true,
-              title: true,
-              authorNames: true,
-              coverImageUrl: true,
-              isbn: true,
-            },
-          },
+  const [total, records] = await Promise.all([
+    prisma.borrowRecord.count({ where }),
+    prisma.borrowRecord.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: { borrowedAt: 'desc' },
+      include: {
+        physicalCopy: {
+          include: { book: { select: { title: true, authorNames: true, coverImageUrl: true } } },
         },
+        fine: true,
       },
-      fine: {
-        select: {
-          totalAmount: true,
-          status: true,
-          daysOverdue: true,
+    }),
+  ]);
+
+  return {
+    data: records,
+    pagination: { total, page, limit, totalPages: Math.ceil(total / limit) },
+  };
+};
+
+// ─── Reader Dashboard Stats ──────────────────────────────────
+export const getDashboardStats = async (userId: string) => {
+  const [borrowingCount, overdueCount, reservationCount, totalFine] = await Promise.all([
+    prisma.borrowRecord.count({ where: { userId, status: BorrowStatus.ACTIVE } }),
+    prisma.borrowRecord.count({ where: { userId, status: BorrowStatus.OVERDUE } }),
+    prisma.reservation.count({ where: { userId, status: { in: ['WAITING', 'READY_FOR_PICKUP'] } } }),
+    prisma.fine.aggregate({
+      where: { userId, status: 'PENDING' },
+      _sum: { totalAmount: true },
+    }),
+  ]);
+
+  return {
+    borrowingCount,
+    overdueCount,
+    reservationCount,
+    totalFine: Number(totalFine._sum.totalAmount || 0),
+  };
+};
+
+// ─── Get User Reservations ───────────────────────────────────
+export const getReservations = async (userId: string, page = 1, limit = 10) => {
+  const skip = (page - 1) * limit;
+  const [total, data] = await Promise.all([
+    prisma.reservation.count({ where: { userId } }),
+    prisma.reservation.findMany({
+      where: { userId },
+      skip,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        book: { select: { title: true, authorNames: true, coverImageUrl: true } },
+      },
+    }),
+  ]);
+
+  return {
+    data,
+    pagination: { total, page, limit, totalPages: Math.ceil(total / limit) },
+  };
+};
+
+// ─── Get User Fines ──────────────────────────────────────────
+export const getFines = async (userId: string) => {
+  return prisma.fine.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'desc' },
+    include: {
+      borrowRecord: {
+        include: {
+          physicalCopy: {
+            include: { book: { select: { title: true } } },
+          },
         },
       },
     },
   });
-
-  if (total === 0) {
-    return {
-      message: 'Bạn chưa có lịch sử mượn tài liệu nào',
-      data: [],
-      pagination: { total: 0, page, limit, totalPages: 0 },
-    };
-  }
-
-  return {
-    data: records,
-    pagination: {
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
-    },
-  };
 };

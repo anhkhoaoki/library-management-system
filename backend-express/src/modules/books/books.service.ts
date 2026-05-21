@@ -82,7 +82,14 @@ export const getBookById = async (bookId: string) => {
       category: true,
       physicalCopies: {
         where: { status: { not: 'LOST' } },
-        select: { id: true, barcode: true, status: true, branchId: true, location: true },
+        select: { 
+          id: true, 
+          barcode: true, 
+          status: true, 
+          branchId: true, 
+          location: true,
+          branch: { select: { id: true, name: true } }
+        },
       },
       digitalResources: {
         select: { id: true, resourceType: true, maxConcurrentUsers: true, currentUsers: true },

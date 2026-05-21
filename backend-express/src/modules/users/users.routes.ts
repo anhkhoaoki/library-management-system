@@ -128,6 +128,10 @@ router.patch('/me', usersController.updateProfile);
 // UC-ACC-05
 router.get('/me/borrow-history', usersController.getBorrowHistory);
 
+router.get('/me/stats', usersController.getDashboardStats);
+router.get('/me/reservations', usersController.getReservations);
+router.get('/me/fines', usersController.getFines);
+
 /**
  * @swagger
  * /api/v1/users/lookup/{code}:

@@ -211,4 +211,8 @@ router.post('/reservations', circulationController.reserveBook);
  */
 router.get('/lookup/:barcode', authorize(Role.LIBRARIAN, Role.ADMIN), circulationController.lookupCopy);
 
+router.get('/reservations/pending', authorize(Role.LIBRARIAN, Role.ADMIN), circulationController.getPendingReservations);
+router.post('/return-by-id', authorize(Role.LIBRARIAN, Role.ADMIN), circulationController.returnDocumentById);
+router.delete('/reservations/:id', circulationController.cancelReservation);
+
 export default router;

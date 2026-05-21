@@ -14,6 +14,7 @@ import circulationRoutes from './modules/circulation/circulation.routes';
 import notificationsRoutes from './modules/notifications/notifications.routes';
 import adminRoutes from './modules/admin/admin.routes';
 import aiRoutes from './modules/ai/ai.routes';
+import branchRoutes from './modules/branches/branch.routes';
 
 const app: Application = express();
 
@@ -77,6 +78,7 @@ app.use('/api/v1/circulation', circulationRoutes);
 app.use('/api/v1/notifications', notificationsRoutes);
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/ai', aiRoutes);
+app.use('/api/v1/branches', branchRoutes);
 
 // ─── 404 Handler ─────────────────────────────────────────────
 app.use((_req: Request, res: Response) => {
