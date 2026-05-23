@@ -123,7 +123,9 @@ export const broadcastNotification = async (data: {
   }
 
   const userWhere: Record<string, unknown> = { status: 'ACTIVE' };
-  if (data.targetRole) userWhere['role'] = data.targetRole;
+  if (data.targetRole) {
+    userWhere['role'] = { name: data.targetRole };
+  }
 
   const users = await prisma.user.findMany({
     where: userWhere,

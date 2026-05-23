@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import * as booksController from './books.controller';
 import { authenticate, authorize } from '../../middlewares/auth.middleware';
-import { Role } from '@prisma/client';
+import { Role } from '../../types/roles';
 import multer from 'multer';
 
 const router = Router();

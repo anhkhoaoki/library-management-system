@@ -16,11 +16,15 @@ datasource db {
 // ENUMS
 // ============================================================
 
-enum Role {
-  GUEST
-  READER
-  LIBRARIAN
-  ADMIN
+model Role {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users       User[]
+  @@map("roles")
 }
 
 enum UserStatus {
@@ -118,7 +122,8 @@ model User {
   fullName           String
   phone              String?
   avatarUrl          String?
-  role               Role       @default(READER)
+  roleId             String
+  role               Role       @relation(fields: [roleId], references: [id])
   status             UserStatus @default(PENDING_VERIFICATION)
   branchId           String?
   mfaEnabled         Boolean    @default(false)
@@ -142,7 +147,7 @@ model User {
   chatHistory        ChatHistory[]
 
   @@index([email])
-  @@index([role])
+  @@index([roleId])
   @@index([status])
   @@map("users")
 }

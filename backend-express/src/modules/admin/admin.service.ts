@@ -1,6 +1,7 @@
 import prisma from '../../config/database';
 import { createError } from '../../middlewares/error.middleware';
-import { UserStatus, Role, AuditAction } from '@prisma/client';
+import { UserStatus, AuditAction } from '@prisma/client';
+import { Role } from '../../types/roles';
 
 // ─── UC-ACC-06: List All Users ───────────────────────────────
 export const listUsers = async (query: {
@@ -16,7 +17,7 @@ export const listUsers = async (query: {
 
   const where: Record<string, unknown> = {};
   if (query.role && Object.values(Role).includes(query.role as Role)) {
-    where['role'] = query.role as Role;
+    where['role'] = { name: query.role };
   }
   if (query.status && Object.values(UserStatus).includes(query.status as UserStatus)) {
     where['status'] = query.status as UserStatus;
@@ -37,14 +38,19 @@ export const listUsers = async (query: {
       orderBy: { createdAt: 'desc' },
       select: {
         id: true, email: true, fullName: true, phone: true,
-        role: true, status: true, lastLoginAt: true, createdAt: true,
+        role: { select: { name: true } }, status: true, lastLoginAt: true, createdAt: true,
         branch: { select: { id: true, name: true } },
       },
     }),
   ]);
 
+  const mappedUsers = users.map((user) => ({
+    ...user,
+    role: user.role.name,
+  }));
+
   return {
-    data: users,
+    data: mappedUsers,
     pagination: { total, page, limit, totalPages: Math.ceil(total / limit) },
   };
 };
@@ -93,13 +99,19 @@ export const updateUserRole = async (
     throw createError('Bạn không thể thay đổi quyền của chính mình', 422);
   }
 
-  const target = await prisma.user.findUnique({ where: { id: targetUserId } });
+  const roleRecord = await prisma.role.findUnique({ where: { name: newRole } });
+  if (!roleRecord) throw createError('Vai trò không hợp lệ', 404);
+
+  const target = await prisma.user.findUnique({
+    where: { id: targetUserId },
+    include: { role: true },
+  });
   if (!target) throw createError('Người dùng không tồn tại', 404);
 
   const updated = await prisma.user.update({
     where: { id: targetUserId },
-    data: { role: newRole },
-    select: { id: true, email: true, role: true },
+    data: { roleId: roleRecord.id },
+    select: { id: true, email: true, role: { select: { name: true } } },
   });
 
   await prisma.auditLog.create({
@@ -108,13 +120,17 @@ export const updateUserRole = async (
       action: AuditAction.UPDATE,
       entityType: 'User',
       entityId: targetUserId,
-      oldData: { role: target.role },
+      oldData: { role: target.role.name },
       newData: { role: newRole },
       riskLevel: 'WARNING',
     },
   });
 
-  return updated;
+  return {
+    id: updated.id,
+    email: updated.email,
+    role: updated.role.name,
+  };
 };
 
 // ─── UC-ADM-01: Dashboard Stats ──────────────────────────────

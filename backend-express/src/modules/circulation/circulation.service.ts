@@ -54,7 +54,10 @@ export const borrowDocument = async (data: {
   processedById: string;
 }) => {
   // Step 1: Verify user exists and is active
-  const user = await prisma.user.findUnique({ where: { id: data.userId } });
+  const user = await prisma.user.findUnique({
+    where: { id: data.userId },
+    include: { role: true },
+  });
   if (!user) throw createError('Người dùng không tồn tại', 404);
   if (user.status !== 'ACTIVE') {
     throw createError('Thẻ thư viện của bạn đọc đang bị khóa', 403);
@@ -73,7 +76,7 @@ export const borrowDocument = async (data: {
 
   // Step 3: Check borrow limit based on role
   const maxBorrowKey =
-    user.role === 'READER' ? CONFIG_KEYS.MAX_BORROW_READER : CONFIG_KEYS.MAX_BORROW_FACULTY;
+    user.role.name === 'READER' ? CONFIG_KEYS.MAX_BORROW_READER : CONFIG_KEYS.MAX_BORROW_FACULTY;
   const maxBorrow = parseInt(await getConfig(maxBorrowKey, '5'), 10);
 
   const currentBorrowCount = await prisma.borrowRecord.count({

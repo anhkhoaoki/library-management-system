@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import * as circulationService from './circulation.service';
-import { Role } from '@prisma/client';
+import { Role } from '../../types/roles';
 
 // UC-CIR-01: Borrow
 export const borrowDocument = async (req: Request, res: Response, next: NextFunction) => {

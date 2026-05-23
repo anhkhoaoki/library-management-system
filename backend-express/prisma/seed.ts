@@ -52,15 +52,15 @@ async function main() {
 
   // ─── System Configurations ────────────────────────────────
   const configs = [
-    { key: 'borrow_duration_days',      value: '14',  description: 'Số ngày mượn mặc định' },
-    { key: 'max_borrow_limit_reader',   value: '5',   description: 'Số sách tối đa bạn đọc được mượn' },
-    { key: 'max_borrow_limit_faculty',  value: '10',  description: 'Số sách tối đa giảng viên được mượn' },
-    { key: 'fine_rate_per_day',         value: '2000',description: 'Mức phạt trễ hạn (VNĐ/ngày)' },
-    { key: 'max_renew_count',           value: '2',   description: 'Số lần gia hạn tối đa' },
-    { key: 'renew_duration_days',       value: '7',   description: 'Số ngày gia hạn mỗi lần' },
+    { key: 'borrow_duration_days', value: '14', description: 'Số ngày mượn mặc định' },
+    { key: 'max_borrow_limit_reader', value: '5', description: 'Số sách tối đa bạn đọc được mượn' },
+    { key: 'max_borrow_limit_faculty', value: '10', description: 'Số sách tối đa giảng viên được mượn' },
+    { key: 'fine_rate_per_day', value: '2000', description: 'Mức phạt trễ hạn (VNĐ/ngày)' },
+    { key: 'max_renew_count', value: '2', description: 'Số lần gia hạn tối đa' },
+    { key: 'renew_duration_days', value: '7', description: 'Số ngày gia hạn mỗi lần' },
     {
       key: 'holiday_dates',
-      value: JSON.stringify(['2025-01-01','2025-04-30','2025-05-01','2025-09-02','2025-12-25']),
+      value: JSON.stringify(['2025-01-01', '2025-04-30', '2025-05-01', '2025-09-02', '2025-12-25']),
       description: 'Danh sách ngày nghỉ lễ không tính phạt (ISO format)',
     },
   ];
@@ -74,6 +74,29 @@ async function main() {
   }
   console.log('✅ System configs seeded');
 
+  // ─── Roles ────────────────────────────────────────────────
+  const guestRole = await prisma.role.upsert({
+    where: { name: 'GUEST' },
+    update: {},
+    create: { name: 'GUEST', description: 'Khách vãng lai' },
+  });
+  const readerRole = await prisma.role.upsert({
+    where: { name: 'READER' },
+    update: {},
+    create: { name: 'READER', description: 'Người đọc (Sinh viên/Giảng viên)' },
+  });
+  const librarianRole = await prisma.role.upsert({
+    where: { name: 'LIBRARIAN' },
+    update: {},
+    create: { name: 'LIBRARIAN', description: 'Thủ thư hệ thống' },
+  });
+  const adminRole = await prisma.role.upsert({
+    where: { name: 'ADMIN' },
+    update: {},
+    create: { name: 'ADMIN', description: 'Quản trị viên hệ thống' },
+  });
+  console.log('✅ Roles seeded');
+
   // ─── Users ────────────────────────────────────────────────
   const hashPw = (pw: string) => bcrypt.hash(pw, 10);
 
@@ -84,7 +107,7 @@ async function main() {
       email: 'admin@library.edu.vn',
       passwordHash: await hashPw('Admin@123456'),
       fullName: 'Quản Trị Viên',
-      role: Role.ADMIN,
+      roleId: adminRole.id,
       status: UserStatus.ACTIVE,
       branchId: branch1.id,
     },
@@ -97,7 +120,7 @@ async function main() {
       email: 'librarian@library.edu.vn',
       passwordHash: await hashPw('Librarian@123'),
       fullName: 'Nguyễn Thủ Thư',
-      role: Role.LIBRARIAN,
+      roleId: librarianRole.id,
       status: UserStatus.ACTIVE,
       branchId: branch1.id,
     },
@@ -111,7 +134,7 @@ async function main() {
       passwordHash: await hashPw('Reader@123'),
       fullName: 'Trần Văn Bạn Đọc',
       phone: '0901234567',
-      role: Role.READER,
+      roleId: readerRole.id,
       status: UserStatus.ACTIVE,
       branchId: branch1.id,
     },
@@ -125,7 +148,7 @@ async function main() {
       passwordHash: await hashPw('Reader@123'),
       fullName: 'Lê Thị Sinh Viên',
       phone: '0912345678',
-      role: Role.READER,
+      roleId: readerRole.id,
       status: UserStatus.ACTIVE,
       branchId: branch2.id,
     },
@@ -142,7 +165,7 @@ async function main() {
       studentId: '2211614',
       readerCode: '2211614',
       phone: '0987654321',
-      role: Role.READER,
+      roleId: readerRole.id,
       status: UserStatus.ACTIVE,
       branchId: branch2.id,
     },
@@ -155,9 +178,9 @@ async function main() {
     create: {
       email: 'anhkhoaoki@gmail.com',
       passwordHash: await hashPw('12345678'),
-      fullName: 'Nguyễn Anh Khoa (Thủ thư)',
+      fullName: 'Trần Huy ',
       phone: '0912345679',
-      role: Role.LIBRARIAN,
+      roleId: librarianRole.id,
       status: UserStatus.ACTIVE,
       branchId: branch1.id,
     },

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import * as aiController from './ai.controller';
 import { authenticate, authorize } from '../../middlewares/auth.middleware';
-import { Role } from '@prisma/client';
+import { Role } from '../../types/roles';
 
 const router = Router();
 

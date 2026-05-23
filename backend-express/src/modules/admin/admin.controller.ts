@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import * as adminService from './admin.service';
-import { UserStatus, Role } from '@prisma/client';
+import { UserStatus } from '@prisma/client';
+import { Role } from '../../types/roles';
 
 // ─── UC-ACC-06: User Management ──────────────────────────────
 export const listUsers = async (req: Request, res: Response, next: NextFunction) => {

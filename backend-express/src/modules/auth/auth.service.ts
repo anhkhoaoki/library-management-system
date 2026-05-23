@@ -7,6 +7,7 @@ import { createError } from '../../middlewares/error.middleware';
 import { UserStatus, AuditAction } from '@prisma/client';
 import { AuthPayload } from '../../middlewares/auth.middleware';
 import { sendOtpEmail, sendResetPasswordEmail } from '../../config/mailer';
+import { Role } from '../../types/roles';
 
 // ─── Constants ──────────────────────────────────────────────
 const OTP_EXPIRES_MINUTES = 10;
@@ -35,6 +36,11 @@ export const register = async (data: {
 
   const passwordHash = await bcrypt.hash(data.password, env.BCRYPT_ROUNDS);
 
+  const readerRole = await prisma.role.findUnique({ where: { name: 'READER' } });
+  if (!readerRole) {
+    throw createError('Không tìm thấy vai trò bạn đọc mặc định', 500);
+  }
+
   const user = await prisma.user.create({
     data: {
       email: data.email,
@@ -42,6 +48,7 @@ export const register = async (data: {
       fullName: data.fullName,
       phone: data.phone,
       status: UserStatus.PENDING_VERIFICATION,
+      roleId: readerRole.id,
     },
   });
 
@@ -109,7 +116,10 @@ export const login = async (
   ipAddress?: string,
   userAgent?: string
 ) => {
-  const user = await prisma.user.findUnique({ where: { email: data.email } });
+  const user = await prisma.user.findUnique({
+    where: { email: data.email },
+    include: { role: true },
+  });
 
   // Generic message to prevent user enumeration
   if (!user) {
@@ -172,7 +182,7 @@ export const login = async (
   const payload: AuthPayload = {
     userId: user.id,
     email: user.email,
-    role: user.role,
+    role: user.role.name as Role,
   };
 
   const accessToken = generateAccessToken(payload);
@@ -198,7 +208,7 @@ export const login = async (
       id: user.id,
       email: user.email,
       fullName: user.fullName,
-      role: user.role,
+      role: user.role.name,
       status: user.status,
       avatarUrl: user.avatarUrl,
       branchId: user.branchId,
@@ -211,7 +221,10 @@ export const refreshToken = async (token: string) => {
   try {
     const decoded = jwt.verify(token, env.JWT_REFRESH_SECRET) as AuthPayload;
 
-    const user = await prisma.user.findUnique({ where: { id: decoded.userId } });
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      include: { role: true },
+    });
     if (!user || user.status !== UserStatus.ACTIVE) {
       throw createError('Tài khoản không hợp lệ', 401);
     }
@@ -219,7 +232,7 @@ export const refreshToken = async (token: string) => {
     const payload: AuthPayload = {
       userId: user.id,
       email: user.email,
-      role: user.role,
+      role: user.role.name as Role,
     };
 
     const newAccessToken = generateAccessToken(payload);

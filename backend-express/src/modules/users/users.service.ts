@@ -13,7 +13,7 @@ export const getProfile = async (userId: string) => {
       fullName: true,
       phone: true,
       avatarUrl: true,
-      role: true,
+      role: { select: { name: true } },
       status: true,
       branchId: true,
       lastLoginAt: true,
@@ -22,7 +22,10 @@ export const getProfile = async (userId: string) => {
   });
 
   if (!user) throw createError('Người dùng không tồn tại', 404);
-  return user;
+  return {
+    ...user,
+    role: user.role.name,
+  };
 };
 
 // ─── Lookup User (Librarian/Admin) ───────────────────────────
@@ -42,7 +45,7 @@ export const lookupUserByCode = async (code: string) => {
       fullName: true,
       phone: true,
       avatarUrl: true,
-      role: true,
+      role: { select: { name: true } },
       status: true,
       branchId: true,
       studentId: true,
@@ -51,7 +54,10 @@ export const lookupUserByCode = async (code: string) => {
   });
 
   if (!user) throw createError('Không tìm thấy bạn đọc với mã này', 404);
-  return user;
+  return {
+    ...user,
+    role: user.role.name,
+  };
 };
 
 // ─── UC-ACC-04: Update Profile ───────────────────────────────
