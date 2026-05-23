@@ -53,7 +53,7 @@ export default function LibrarianDashboard() {
           </div>
           <div className="flex gap-stack-sm">
             <Link 
-              to="/librarian/circulation"
+              to="/dashboard/librarian/circulation"
               className="flex items-center gap-stack-sm px-6 py-3 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:bg-primary-container transition-all shadow-sm"
             >
               <span className="material-symbols-outlined">qr_code_scanner</span>
@@ -113,7 +113,7 @@ export default function LibrarianDashboard() {
                 <span className="material-symbols-outlined text-secondary">pending_actions</span>
                 Yêu cầu chờ xử lý
               </h3>
-              <Link to="/librarian/circulation" className="text-primary hover:underline text-sm font-bold">Xử lý tại quầy</Link>
+              <Link to="/dashboard/librarian/circulation" className="text-primary hover:underline text-sm font-bold">Xử lý tại quầy</Link>
             </div>
             
             <div className="space-y-4">
@@ -135,7 +135,7 @@ export default function LibrarianDashboard() {
                       </div>
                     </div>
                     <button 
-                      onClick={() => navigate('/librarian/circulation', { state: { reservationId: res.id, readerCode: res.user.readerCode } })}
+                      onClick={() => navigate('/dashboard/librarian/circulation', { state: { reservationId: res.id, readerCode: res.user.readerCode || res.user.email } })}
                       className="bg-primary text-on-primary px-4 py-2 rounded-lg text-xs font-bold hover:bg-primary-container transition-colors"
                     >
                       Xử lý

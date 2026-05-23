@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 
 const sidebarConfig = {
   student: [
     { name: 'Trang chủ', icon: 'home', path: '/dashboard/student' },
-    { name: 'Tra cứu AI', icon: 'auto_awesome', path: '/dashboard/student/search' },
+    { name: 'Tra cứu tài liệu', icon: 'search', path: '/dashboard/student/search' },
     { name: 'Sách đang mượn', icon: 'book', path: '/dashboard/student/borrowed-books' },
     { name: 'Lịch sử', icon: 'history', path: '/dashboard/student/history' },
     { name: 'Đặt chỗ', icon: 'event_seat', path: '/dashboard/student/reservations' },
     { name: 'Tài nguyên số', icon: 'cloud_download', path: '/dashboard/student/digital-resources' },
+    { name: 'Trợ lý hỏi đáp', icon: 'forum', path: '#chat', isChatTrigger: true },
     { name: 'Hồ sơ', icon: 'person', path: '/dashboard/student/profile' },
   ],
   admin: [
@@ -29,8 +31,9 @@ const sidebarConfig = {
   ],
 };
 
-export default function Sidebar({ role = 'student' }) {
+export default function Sidebar({ role = 'student', onOpenChat }) {
   const location = useLocation();
+  const { logout } = useContext(AuthContext);
   const menuItems = sidebarConfig[role] || [];
 
   return (
@@ -41,15 +44,34 @@ export default function Sidebar({ role = 'student' }) {
             account_balance
           </span>
           <h1 className="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">
-            Intellectual Heritage
+            BkLib
           </h1>
         </div>
-        <p className="font-label-sm text-label-sm text-on-surface-variant">Hệ thống quản lý thông minh</p>
+        <p className="font-label-sm text-label-sm text-on-surface-variant">Hệ thống quản lý thư viện</p>
       </div>
 
       <nav className="flex-1 flex flex-col gap-stack-sm px-2">
         {menuItems.map((item) => {
           const isActive = location.pathname === item.path;
+
+          // Chat trigger – fires the floating widget instead of navigating
+          if (item.isChatTrigger) {
+            return (
+              <button
+                key={item.path}
+                onClick={() => {
+                  // Dispatch a custom event so ChatWidget can intercept
+                  window.dispatchEvent(new Event('bklib:open-chat'));
+                }}
+                className="flex items-center gap-stack-md px-stack-md py-stack-sm rounded-lg mx-2 transition-all duration-150 text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low hover:bg-surface-container dark:hover:bg-on-tertiary-fixed-variant w-full text-left relative"
+              >
+                <span className="material-symbols-outlined">{item.icon}</span>
+                <span className="font-label-md text-label-md font-medium">{item.name}</span>
+                <span className="absolute right-4 w-2 h-2 rounded-full bg-secondary animate-pulse" />
+              </button>
+            );
+          }
+
           return (
             <Link
               key={item.path}
@@ -77,13 +99,13 @@ export default function Sidebar({ role = 'student' }) {
           <span className="material-symbols-outlined">settings</span>
           <span className="font-label-md text-label-md">Cài đặt</span>
         </Link>
-        <Link
-          to="/login"
-          className="flex items-center gap-stack-md px-stack-md py-stack-sm text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low mx-2 rounded-lg hover:bg-surface-container dark:hover:bg-on-tertiary-fixed-variant transition-all"
+        <button
+          onClick={logout}
+          className="flex items-center gap-stack-md px-stack-md py-stack-sm text-on-surface-variant dark:text-outline-variant hover:bg-error/10 hover:text-error mx-2 rounded-lg transition-all w-full text-left"
         >
           <span className="material-symbols-outlined">logout</span>
           <span className="font-label-md text-label-md">Đăng xuất</span>
-        </Link>
+        </button>
       </div>
     </aside>
   );

@@ -52,7 +52,7 @@ export default function LoginPage() {
         <img
           alt="Modern library interior"
           className="absolute inset-0 w-full h-full object-cover z-0"
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuALSM_z-pCiODGiAgU_Hr1xfEOF46juwVyCcQbj7io-ZtMKqh0CQ0EZoKfRzXo972grdD0v3KU4M_DaKK6KzYGJ2YrQzLpmPWJa16bLnN9SbE0Nd2-_MVR0TeYmGdSSbTGfRrBVG0xXCSlBbxPDd5YPjw6ee5Oslzy64GTOH9osDmtn447OXRKBC9oUofoAO_nS-ibY7HBzKXg93hrShb06Qp52mR61UmTB-0JaL0VcaMT3pK3OEoVCgwoWBbhfFoEsYoEaczaSyamh"
+          src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=1920"
         />
         {/* Overlay Content */}
         <div className="relative z-20 flex flex-col justify-end p-margin-desktop h-full w-full text-white">
@@ -61,15 +61,15 @@ export default function LoginPage() {
               Khám phá tri thức vô tận.
             </h1>
             <p className="font-body-lg text-body-lg opacity-90 drop-shadow">
-              Hệ thống quản lý thư viện thông minh được tăng cường bởi AI, giúp bạn tìm kiếm, nghiên cứu và quản lý tài nguyên một cách tối ưu.
+              Hệ thống quản lý thư viện hiện đại, giúp bạn tìm kiếm, nghiên cứu và quản lý tài nguyên một cách tối ưu.
             </p>
           </div>
           {/* AI Indicator Badge */}
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 w-fit">
             <span className="material-symbols-outlined text-secondary-fixed" style={{ fontVariationSettings: "'FILL' 1" }}>
-              auto_awesome
+              menu_book
             </span>
-            <span className="font-label-md text-label-md text-white">Được hỗ trợ bởi AI Engine 2.0</span>
+            <span className="font-label-md text-label-md text-white">BkLib – Thư viện trực tuyến</span>
           </div>
         </div>
       </div>
@@ -88,9 +88,9 @@ export default function LoginPage() {
               </span>
             </div>
             <div className="font-headline-md text-headline-md font-bold text-primary mb-1">
-              Intellectual Heritage
+              BkLib
             </div>
-            <p className="font-body-md text-body-md text-on-surface-variant">Hệ thống thư viện thông minh</p>
+            <p className="font-body-md text-body-md text-on-surface-variant">Hệ thống thư viện trực tuyến</p>
           </div>
 
           <div className="mb-stack-lg">

@@ -154,5 +154,6 @@ router.get('/me/fines', usersController.getFines);
  *         description: Không tìm thấy
  */
 router.get('/lookup/:code', authorize(Role.LIBRARIAN, Role.ADMIN), usersController.lookupUser);
+router.post('/me/change-password', usersController.changePassword);
 
 export default router;

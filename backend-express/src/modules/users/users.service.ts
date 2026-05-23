@@ -1,4 +1,5 @@
 import prisma from '../../config/database';
+import bcrypt from 'bcryptjs';
 import { createError } from '../../middlewares/error.middleware';
 import { BorrowStatus } from '@prisma/client';
 
@@ -186,4 +187,28 @@ export const getFines = async (userId: string) => {
       },
     },
   });
+};
+
+// ─── Change Password ─────────────────────────────────────────
+export const changePassword = async (
+  userId: string,
+  data: { currentPassword?: string; newPassword?: string }
+) => {
+  if (!data.currentPassword || !data.newPassword) {
+    throw createError('Mật khẩu cũ và mật khẩu mới là bắt buộc', 400);
+  }
+
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) throw createError('Người dùng không tồn tại', 404);
+
+  const isValid = await bcrypt.compare(data.currentPassword, user.passwordHash);
+  if (!isValid) throw createError('Mật khẩu cũ không chính xác', 400);
+
+  const passwordHash = await bcrypt.hash(data.newPassword, 10);
+  await prisma.user.update({
+    where: { id: userId },
+    data: { passwordHash },
+  });
+
+  return { message: 'Đổi mật khẩu thành công' };
 };

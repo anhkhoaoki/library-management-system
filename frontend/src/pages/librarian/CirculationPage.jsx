@@ -13,8 +13,14 @@ export default function CirculationPage() {
   const [scannedItems, setScannedItems] = useState([]);
   const [readerReservations, setReaderReservations] = useState([]);
   const [readerBorrows, setReaderBorrows] = useState([]);
+  const [readerFines, setReaderFines] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Selected reservation details for quick borrow processing
+  const [selectedResId, setSelectedResId] = useState(null);
+  const [availableCopies, setAvailableCopies] = useState([]);
+  const [loadingCopies, setLoadingCopies] = useState(false);
 
   useEffect(() => {
     if (location.state?.readerCode) {
@@ -32,21 +38,93 @@ export default function CirculationPage() {
       const userData = response.data.data;
       setReader(userData);
       
-      // Fetch reservations and active borrows for this reader
-      const [resResponse, borrowResponse] = await Promise.all([
+      // Fetch reservations, active borrows, and fines for this reader
+      const [resResponse, borrowResponse, finesResponse] = await Promise.all([
         api.get(`/users/me/reservations?userId=${userData.id}`),
-        api.get(`/users/me/borrow-history?userId=${userData.id}&status=ACTIVE`)
+        api.get(`/users/me/borrow-history?userId=${userData.id}&status=ACTIVE`),
+        api.get(`/users/me/fines?userId=${userData.id}`)
       ]);
       
       setReaderReservations(resResponse.data.data.filter(r => 
         r.status === 'WAITING' || r.status === 'READY_FOR_PICKUP'
       ));
       setReaderBorrows(borrowResponse.data.data);
+      setReaderFines(finesResponse.data.data.filter(f => f.status === 'PENDING'));
     } catch (err) {
       setError('Không tìm thấy bạn đọc hoặc lỗi tải dữ liệu');
       setReader(null);
       setReaderReservations([]);
       setReaderBorrows([]);
+      setReaderFines([]);
+    }
+    setLoading(false);
+  };
+
+  const handlePayFine = async (fineId) => {
+    setLoading(true);
+    setError('');
+    try {
+      await api.post(`/circulation/fines/${fineId}/pay`);
+      await handleReaderLookup();
+      setScannedItems(prev => [
+        {
+          id: Date.now(),
+          barcode: 'N/A',
+          title: 'Thu tiền phạt quá hạn',
+          type: 'return',
+          status: 'Thanh toán thành công',
+          isError: false,
+        },
+        ...prev
+      ]);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Lỗi khi thanh toán phí phạt');
+    }
+    setLoading(false);
+  };
+
+  const handleSelectReservation = async (res) => {
+    setSelectedResId(res.id);
+    setLoadingCopies(true);
+    setAvailableCopies([]);
+    try {
+      const response = await api.get(`/books/${res.bookId}`);
+      const copies = response.data.data.physicalCopies || [];
+      // Only show copies that are AVAILABLE or RESERVED (which can be assigned to this user)
+      const validCopies = copies.filter(c => c.status === 'AVAILABLE' || c.status === 'RESERVED');
+      setAvailableCopies(validCopies);
+    } catch (err) {
+      setError('Lỗi khi tải danh sách bản sao vật lý khả dụng');
+    }
+    setLoadingCopies(false);
+  };
+
+  const handleConfirmBorrowReservation = async (barcodeVal) => {
+    if (!reader || !barcodeVal) return;
+    setLoading(true);
+    setError('');
+    try {
+      const response = await api.post('/circulation/borrow', {
+        userId: reader.id,
+        barcode: barcodeVal
+      });
+      const result = response.data.data;
+      setScannedItems(prev => [
+        {
+          id: Date.now(),
+          barcode: result.barcode,
+          title: result.bookTitle,
+          type: 'borrow',
+          status: `Hạn trả: ${new Date(result.dueDate).toLocaleDateString('vi-VN')}`,
+          isError: false,
+        },
+        ...prev
+      ]);
+      setSelectedResId(null);
+      setAvailableCopies([]);
+      await handleReaderLookup();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Lỗi khi mượn sách');
     }
     setLoading(false);
   };
@@ -73,6 +151,8 @@ export default function CirculationPage() {
         ...scannedItems
       ]);
       setBarcode('');
+      // Refresh reader details so borrowing lists and counts are up to date!
+      await handleReaderLookup();
     } catch (err) {
       setError(err.response?.data?.message || 'Lỗi khi mượn sách');
     }
@@ -184,8 +264,46 @@ export default function CirculationPage() {
                   </div>
                   <div>
                     <span className="block text-[10px] text-on-surface-variant uppercase font-bold">Sách đang mượn</span>
-                    <span className="font-bold">N/A</span>
+                    <span className="font-bold">{readerBorrows.length}</span>
                   </div>
+                </div>
+              </section>
+            )}
+
+            {/* Reader Unpaid Fines */}
+            {reader && readerFines.length > 0 && (
+              <section className="bg-white rounded-xl shadow-sm border border-error/30 overflow-hidden animate-in fade-in slide-in-from-left-4">
+                <div className="p-stack-md border-b border-error/20 bg-error/5 flex items-center justify-between">
+                  <h2 className="font-title-md text-error flex items-center gap-2 font-bold">
+                    <span className="material-symbols-outlined text-error">payments</span>
+                    Khoản phạt chưa thanh toán ({readerFines.length})
+                  </h2>
+                </div>
+                <div className="divide-y divide-outline-variant">
+                  {readerFines.map(fine => (
+                    <div key={fine.id} className="p-stack-md flex flex-col gap-2 bg-error/[0.01]">
+                      <div className="flex justify-between items-start">
+                        <span className="font-bold text-sm text-on-surface leading-tight">
+                          {fine.borrowRecord?.physicalCopy?.book?.title || 'Tài liệu'}
+                        </span>
+                        <span className="text-xs font-bold text-error">
+                          {Number(fine.totalAmount).toLocaleString('vi-VN')}đ
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between mt-1 text-xs">
+                        <div className="flex flex-col text-on-surface-variant">
+                          <span>Quá hạn: {fine.daysOverdue} ngày</span>
+                          <span className="text-[10px] text-outline">Đơn giá: {Number(fine.dailyRate).toLocaleString('vi-VN')}đ/ngày</span>
+                        </div>
+                        <button 
+                          onClick={() => handlePayFine(fine.id)}
+                          className="bg-error text-white px-3 py-1 rounded-md font-bold text-xs hover:bg-error-container hover:text-on-error-container transition-all"
+                        >
+                          Thu tiền
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </section>
             )}
@@ -234,30 +352,80 @@ export default function CirculationPage() {
                   </h2>
                 </div>
                 <div className="divide-y divide-outline-variant">
-                  {readerReservations.map(res => (
-                    <div key={res.id} className="p-stack-md flex flex-col gap-2">
-                      <div className="flex justify-between items-start">
-                        <span className="font-bold text-sm text-on-surface leading-tight">{res.book.title}</span>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase ${res.status === 'READY_FOR_PICKUP' ? 'bg-success text-white' : 'bg-warning text-on-warning'}`}>
-                          {res.status === 'READY_FOR_PICKUP' ? 'Sẵn sàng' : 'Đang chờ'}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between mt-1">
-                        <span className="text-xs text-on-surface-variant">ISBN: {res.book.isbn || 'N/A'}</span>
-                        {res.status === 'READY_FOR_PICKUP' && (
-                          <button 
-                            onClick={() => {
-                              setError(`Vui lòng nhập/quét mã vạch cho sách: ${res.book.title}`);
-                              // Pre-fill if possible? No, we need a barcode
-                            }}
-                            className="text-primary font-bold text-xs hover:underline"
-                          >
-                            Xử lý mượn
-                          </button>
+                  {readerReservations.map(res => {
+                    const isSelected = selectedResId === res.id;
+                    return (
+                      <div key={res.id} className={`p-stack-md flex flex-col gap-2 transition-all ${isSelected ? 'bg-primary-container/5 border-l-4 border-primary' : ''}`}>
+                        <div className="flex justify-between items-start">
+                          <span className="font-bold text-sm text-on-surface leading-tight">{res.book.title}</span>
+                          <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase ${res.status === 'READY_FOR_PICKUP' ? 'bg-success text-white' : 'bg-warning text-on-warning'}`}>
+                            {res.status === 'READY_FOR_PICKUP' ? 'Sẵn sàng' : 'Đang chờ'}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between mt-1">
+                          <span className="text-xs text-on-surface-variant">ISBN: {res.book.isbn || 'N/A'}</span>
+                          {res.status === 'READY_FOR_PICKUP' && !isSelected && (
+                            <button 
+                              onClick={() => handleSelectReservation(res)}
+                              className="text-primary font-bold text-xs hover:underline flex items-center gap-1"
+                            >
+                              <span className="material-symbols-outlined text-[14px]">arrow_circle_right</span>
+                              Xử lý mượn
+                            </button>
+                          )}
+                          {isSelected && (
+                            <button 
+                              onClick={() => { setSelectedResId(null); setAvailableCopies([]); }}
+                              className="text-on-surface-variant font-bold text-xs hover:underline flex items-center gap-1"
+                            >
+                              <span className="material-symbols-outlined text-[14px]">cancel</span>
+                              Hủy
+                            </button>
+                          )}
+                        </div>
+
+                        {/* List of physical copies if selected */}
+                        {isSelected && (
+                          <div className="mt-2 p-3 bg-surface-container-low rounded-lg border border-outline-variant animate-in fade-in zoom-in-95 duration-200">
+                            <h4 className="text-xs font-bold text-on-surface mb-2 flex items-center gap-1">
+                              <span className="material-symbols-outlined text-sm text-primary">inventory_2</span>
+                              Chọn bản sao vật lý:
+                            </h4>
+                            {loadingCopies ? (
+                              <div className="flex items-center gap-2 justify-center py-4 text-xs text-outline">
+                                <span className="material-symbols-outlined animate-spin text-sm">progress_activity</span>
+                                Đang tải bản sao...
+                              </div>
+                            ) : availableCopies.length === 0 ? (
+                              <p className="text-xs italic text-error py-2">Không tìm thấy bản sao khả dụng nào.</p>
+                            ) : (
+                              <div className="space-y-2">
+                                {availableCopies.map(copy => (
+                                  <div key={copy.id} className="flex justify-between items-center bg-white p-2 rounded border border-outline-variant hover:border-primary transition-all text-xs">
+                                    <div className="flex flex-col gap-0.5">
+                                      <span className="font-bold text-on-surface">{copy.barcode}</span>
+                                      <span className="text-[10px] text-on-surface-variant">
+                                        {copy.branch.name} {copy.location ? ` - Kệ: ${copy.location}` : ''}
+                                      </span>
+                                      <span className={`text-[9px] font-bold uppercase mt-0.5 ${copy.status === 'AVAILABLE' ? 'text-success' : 'text-warning'}`}>
+                                        {copy.status === 'AVAILABLE' ? 'Sẵn có' : 'Giữ chỗ'}
+                                      </span>
+                                    </div>
+                                    <button
+                                      onClick={() => handleConfirmBorrowReservation(copy.barcode)}
+                                      className="bg-primary text-on-primary px-2.5 py-1 rounded font-bold hover:bg-primary-container transition-all text-[11px]"
+                                    >
+                                      Chọn mượn
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         )}
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </section>
             )}

@@ -88,3 +88,15 @@ export const getFines = async (req: Request, res: Response, next: NextFunction) 
     res.status(200).json({ success: true, data: fines });
   } catch (err) { next(err); }
 };
+
+export const changePassword = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user!.userId;
+    const { currentPassword, newPassword } = req.body;
+    const result = await usersService.changePassword(userId, { currentPassword, newPassword });
+    res.status(200).json({ success: true, ...result });
+  } catch (err) {
+    next(err);
+  }
+};
+

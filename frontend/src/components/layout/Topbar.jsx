@@ -12,7 +12,7 @@ export default function Topbar({ userName = 'Người dùng', userRole = 'Vai tr
         />
         <button
           className="absolute right-4 top-1/2 -translate-y-1/2 text-secondary hover:text-secondary-container transition-colors"
-          title="Tìm kiếm thông minh (AI)"
+          title="Tìm kiếm nâng cao"
         >
           <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
             auto_awesome
@@ -29,7 +29,7 @@ export default function Topbar({ userName = 'Người dùng', userRole = 'Vai tr
           <img
             alt="User profile avatar"
             className="w-10 h-10 rounded-full border border-outline-variant"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCB2EB1pXnatRAnrbYjoIzN46inAhUlGTLV4yAsmXcW1DWSUu0sa6kL3eax1zHc5GbwKA2-KE0lge00UcyYQ6y8wSPMkwzxnAv3Uvoe_1s_SNFaRahGITuOLwptHyErBZr9MQyH2XSGkeHMG33n-Tx9_MWyw01XsyFD5FoK2MILMujFhDzjw3AKCGw96YfDAEk4ZW2OFECCQNpG45tfnXt4OyJf7-Iy2Uter8LbwRccEMXVpTAlyJ6zmNWgqqo-DpE4QyuxKYAY157E"
+            src="https://ui-avatars.com/api/?name=User&background=0d9488&color=fff&size=80"
           />
           <div className="hidden lg:block">
             <p className="font-label-md text-label-md font-semibold text-on-surface">{userName}</p>

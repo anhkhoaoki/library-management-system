@@ -10,7 +10,7 @@ export default function DigitalResourcesPage() {
       type: 'E-book',
       status: 'available',
       accessCount: '2/5',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC0-SeTtYaeUAItv5yQwD4iS8AQJn5Kfn-8s5eMSO3W9nI0szhntFAwHGAavvmdJjW_RF2-y2_zWmx0qatFhKlwBPIvzuv4xCFwJUNqAtT8HiRvtp6wmQ3xPF1bExHo1UTutL_9W5iUpr8xtk7cHBByr1OmHgGdz04JgtO6-G7HwSNazfiNnMyphUwMcY2-n2_ugXlQf8a2jHr7PkmKq2w2KWq4v0yHnSxt7CcjpZ7OkPUwFhgv-qp1uG0dXiArAgGksk_K3NrJhpzB',
+      image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=400',
     },
     {
       id: 2,
@@ -19,7 +19,7 @@ export default function DigitalResourcesPage() {
       type: 'Audio',
       status: 'full',
       accessCount: '10/10',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC92mcDZQOwtzVBAVwgnS3JQT7Cj9vzvxFgQ2YDc_KDHu3y2-toQk9IZol2BdjPhrSe9kau5fUfitBCh6ryaTyUbDlMiss3becOmYaorWvBlpqmODBSjX3BjA7RcuONvfJyCW4jc0IHgdpVmdxTQ-pG_lrOZxLYvrqPHbqX0prAit6KiON5vwUgDr3oi2Cag5Aoy03j9bUWXkevpOG4JzvL3mCihg2ZswIS008TPSwmZcSDaqQjJqil1YYlvdt-vAoqKkIE1OIl-85e',
+      image: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=400',
     },
     {
       id: 3,
@@ -28,7 +28,7 @@ export default function DigitalResourcesPage() {
       type: 'EPUB',
       status: 'available',
       accessCount: '1/50',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCfFxJ8NBhu4c1_IbXUc5s8l67qKrwgnHcXADLjbnwokw8BNb1RsZbBFmaGw9fbQdARkUH3KvpzWSUa3QLsqUNfAtFon28dDXX2fURuubS_FvPP5NeLpyg-A034sTDNG7AFkw7iaGbkwGZhr7emgUBeVnzS-9NcRL7hflTIHwr6YXFyXRYd1OzXW-U9RO9wK3cHYNZ3fS7AHoWAmdsLH7p52WZMmQx2LVsTzEIn3ZcjfPmK6C5PNpgmPz3UWC7zfZMZZMtgIU-kyEQv',
+      image: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=400',
     },
     {
       id: 4,
@@ -37,7 +37,7 @@ export default function DigitalResourcesPage() {
       type: 'Audio',
       status: 'available',
       accessCount: '5/20',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDsJN_ObwVzWj4jqn2z9STXb4X_EmysHFPs_GBLC7UonBOcY7NnRZtN2jDrOQvc4w6AvsRPZhvsL-0kzGc2tLIkVIHq4LgnllZ75ixaB1wPIsYMUU2MP5y1Nku-xFX9DdeFzuVqquMn7C2PViKTwVpiW-LQup6Je-Z8-yQT_xYjuHzGcL_mAphbwiX2pVz-dTlNq5oSQTBbFiD6t1UKZcNDEhumHZTlXjxkgB8o_LUSFLRewsgeVBxErg6LjTszdF73uR1Nh2E9pIdL',
+      image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=400',
     },
     {
       id: 5,
@@ -46,7 +46,7 @@ export default function DigitalResourcesPage() {
       type: 'E-book',
       status: 'full',
       accessCount: '2/2',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAewEAtCxZmtj-4RZYG2EbEgffj1LyTZAhcknsKOHrvkl6_hvMV_Vcrsk-eAtaGG5HeSWzv7JM-ysizKgFX6zEBLznY64LVndbuuSgihf5rA2sp3Va6TI0Qi1BZpWqKb-Z5_87Q9U1uz0PKuRwusI-asxKsPcCv-OGpcyoXQRvcsBkrNC270AMCDethA0Z1FrJH1vGMqlxZK8MYLynCkNcTIAtNXv8JwizMYOwTduZwL5ItXPJwJL1MKbDypeHfhkHYDjLGQOgh6wWV',
+      image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&q=80&w=400',
     },
   ]);
 
@@ -89,7 +89,7 @@ export default function DigitalResourcesPage() {
                 <img
                   alt="Audiobook cover"
                   className="w-full h-full object-cover"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKhYRy709r6IjdllcJSkTIvkF7oZWShubPZ05k_LwJbY9llYY3gH_eS7vfHih_-bqZF3O2_rZchxM9x-p5mipAkSgYYXVTH0GTvKNexiFxGJbjUCi7ToaaX-Kx4sx9Ap4xsAKGrXY290ZckQsns9G77YjSFZBiU6kNQ-HlXkFVr5MV6lM8pA8PDfpze3osc3Q7qrBbY8oo7UoK2pQjQYu7iHHK8DmojtFCi_Nc51MdAb9KfGABdJzoGIS5a8LWazWzswzpYCmebaM-"
+                  src="https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=400"
                 />
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <span className="material-symbols-outlined text-white text-4xl">play_circle</span>
@@ -136,16 +136,16 @@ export default function DigitalResourcesPage() {
           {/* AI Recommendation Card */}
           <div className="lg:col-span-4 bg-surface-container-lowest rounded-xl p-6 border border-secondary shadow-[0_0_15px_rgba(13,148,136,0.08)] relative flex flex-col">
             <div className="absolute top-4 right-4 bg-secondary-container text-on-secondary-container px-2 py-1 rounded-md font-label-sm text-label-sm flex items-center gap-1 shadow-sm">
-              <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span> AI Đề xuất
+              <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>recommend</span> Gợi ý cho bạn
             </div>
             <h3 className="font-title-lg text-title-lg text-on-surface mb-2">Tiếp tục nghiên cứu</h3>
-            <p className="font-body-md text-body-md text-on-surface-variant mb-6">Dựa trên lịch sử mượn sách "Khoa học Dữ liệu", AI đề xuất ấn bản PDF này cho bạn.</p>
+            <p className="font-body-md text-body-md text-on-surface-variant mb-6">Dựa trên lịch sử mượn sách "Khoa học Dữ liệu", chúng tôi đề xuất ấn bản PDF này cho bạn.</p>
             <div className="flex gap-4 items-start mb-6">
               <div className="w-20 h-28 bg-surface-container rounded shadow-sm overflow-hidden flex-shrink-0">
                 <img
                   alt="Book cover data science"
                   className="w-full h-full object-cover"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBItVdAp8rp744PceQoMX9FSVYtcgOOGsOoL78255GCR0zPFWQwK1CerLJq4cb_KfMryfmBKQapMuBOAv7uAzJdl_UoNKakv5e1os1PhKiLv0F-eC6F8OocSsv1ghXDgyxLtsHBBlsMAgYsumt4MWoBLy-U38kytvNK3_NivBTwA9O-gPCdcVy2A0jA1P83xncawUtaFMbq13mYUmiOJNYiLSnK35oa1KHQQnbUOFO4-enLAGtzXQgmm_9XLgPu70audHPvj4M4P-rH"
+                  src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80&w=400"
                 />
               </div>
               <div>

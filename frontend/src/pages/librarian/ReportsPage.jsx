@@ -137,7 +137,7 @@ export default function ReportsPage() {
                   category: 'Khoa học Xã hội',
                   count: 124,
                   image:
-                    'https://lh3.googleusercontent.com/aida-public/AB6AXuCfzPGLMKKWGmeLxAZRafGbB9YN4x1mLGNDesyWqIrt-0B-dn-mgjFuLASP4guBgT9C4WLgJJkpycQ2dpJ-VjVjrE9rzJRNfDAlZ4cbp8IDoWo8M_AcYY_nh1KCKhlKTH3Vm3hpu5_HowWx-Fe3HrvoYNrCYvutKcBhaS9uark4Zq_Hn6V6Mm9QqqGddgg55yAv6ilVM8wY6D8-SF-rVqA9TPhei_eSjTkqAHhyxrc4R8MMI1jD9I1UWATYvUie_RhwnUqJjOvNPHSi',
+                    'https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=200',
                 },
                 {
                   id: 2,
@@ -145,7 +145,7 @@ export default function ReportsPage() {
                   category: 'Công nghệ Thông tin',
                   count: 98,
                   image:
-                    'https://lh3.googleusercontent.com/aida-public/AB6AXuDDI-FpwdlZa0SHwCNiE4-yEsOb15xq_dOUmYThj_IseVm2elOsRxU1k9OZNEziTLZq5OkwiBS22ICLE19ez04Iw3z3XP1OMrY1tHqi6R007DXgo2Q53_SXZIU8hTmj7ZGeuoh4-2F3ToJ3PTFoL07apvUJvy9AIOQEF2ydVJOv3DrAJzviWwr1rJ9B1Xhbcr0cLeIMaoMibR9pBqeWmqV1apG3Nmf_zJA9A9T3ldiHb2h12iDghps5_6bdkXcybuZVmiQKEQMeCFb_',
+                    'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80&w=200',
                 },
                 {
                   id: 3,
@@ -153,7 +153,7 @@ export default function ReportsPage() {
                   category: 'Triết học',
                   count: 85,
                   image:
-                    'https://lh3.googleusercontent.com/aida-public/AB6AXuDVREXFiKP5A_Xf9JKFmuYx-ORBvf8aA97FoyHJHkltJ1yv9s0Qyp6Lv0jO0B6-hcBuIo--xG2tp_r0lJtCikNq1Ts-mAgfYTRXVYTYfpYjDGuqCga3dfhh4bVfTTQ0kk7cvQoGQyICGXRqvLNLqqZZ-Qrim14uCAgDnvUwEuQyWeXxjYfPLUOCAXy8ef7Za29_b6les6PW9RVF73VOnSaTCnxcifRDVoJHYjdI-BnEStkvoXofNp-bDI8x6zzp8tBWfveMu07whNZz',
+                    'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=200',
                 },
               ].map((book) => (
                 <li key={book.id} className="flex items-center gap-4 border-b border-outline-variant/30 pb-3">
@@ -180,10 +180,10 @@ export default function ReportsPage() {
           <div className="absolute top-0 right-0 w-64 h-64 bg-secondary-container rounded-full mix-blend-multiply filter blur-[80px] opacity-20 pointer-events-none"></div>
           <div className="flex items-center gap-3 mb-6 relative z-10">
             <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white shadow-md">
-              <span className="material-symbols-outlined">auto_awesome</span>
+              <span className="material-symbols-outlined">trending_up</span>
             </div>
             <div>
-              <h3 className="font-title-lg text-title-lg text-on-background">Dự báo nhu cầu AI</h3>
+              <h3 className="font-title-lg text-title-lg text-on-background">Dự báo nhu cầu</h3>
               <p className="font-label-sm text-label-sm text-on-surface-variant">Phân tích xu hướng mượn sách 3 tháng tới để lên kế hoạch nhập liệu</p>
             </div>
           </div>
@@ -229,14 +229,14 @@ export default function ReportsPage() {
             <div className="flex flex-col gap-3">
               <div className="bg-white p-4 rounded-lg shadow-[0_2px_10px_rgba(13,148,136,0.08)] border-l-2 border-secondary relative overflow-hidden group hover:-translate-y-1 transition-transform">
                 <span className="absolute top-2 right-2 font-label-sm text-[10px] bg-secondary-container/30 text-secondary px-1.5 py-0.5 rounded text-xs font-bold">
-                  AI
+                  Gợi ý
                 </span>
                 <h5 className="font-label-md text-label-md font-semibold text-on-background mb-1">Tăng trưởng: Khoa học dữ liệu</h5>
                 <p className="font-label-sm text-label-sm text-on-surface-variant">Dự kiến nhu cầu tăng 35% trong kỳ thi sắp tới. Đề xuất nhập thêm 50 bản.</p>
               </div>
               <div className="bg-white p-4 rounded-lg shadow-[0_2px_10px_rgba(13,148,136,0.08)] border-l-2 border-primary relative overflow-hidden group hover:-translate-y-1 transition-transform">
                 <span className="absolute top-2 right-2 font-label-sm text-[10px] bg-primary-container/20 text-primary px-1.5 py-0.5 rounded text-xs font-bold">
-                  AI
+                  Gợi ý
                 </span>
                 <h5 className="font-label-md text-label-md font-semibold text-on-background mb-1">Thiếu hụt: Sách Ngoại ngữ</h5>
                 <p className="font-label-sm text-label-sm text-on-surface-variant">Tỷ lệ sách trên giá quá thấp (&lt; 10%). Cần bổ sung tài liệu IELTS/TOEFL.</p>

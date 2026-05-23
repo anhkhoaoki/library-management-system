@@ -1,6 +1,7 @@
 import React from 'react';
 import Sidebar from './Sidebar';
 import Topbar from './Topbar';
+import ChatWidget from '../chat/ChatWidget';
 
 export default function MainLayout({ children, role = 'student', userName, userRole }) {
   return (
@@ -15,7 +16,7 @@ export default function MainLayout({ children, role = 'student', userName, userR
               account_balance
             </span>
             <span className="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary truncate">
-              Intellectual Heritage
+              BkLib
             </span>
           </div>
           <div className="flex items-center gap-stack-sm text-primary dark:text-primary-fixed-dim">
@@ -33,17 +34,9 @@ export default function MainLayout({ children, role = 'student', userName, userR
         </main>
       </div>
 
-      {/* Floating Chatbot AI Button (Common for students) */}
-      {role === 'student' && (
-        <button className="fixed bottom-margin-desktop right-margin-desktop z-50 w-14 h-14 bg-gradient-to-br from-secondary to-primary text-white rounded-full shadow-[0_10px_15px_rgba(0,0,0,0.2)] flex items-center justify-center hover:scale-105 transition-transform group">
-          <span className="material-symbols-outlined text-2xl group-hover:rotate-12 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>
-            forum
-          </span>
-          <span className="absolute -top-2 -right-2 bg-error text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">
-            AI
-          </span>
-        </button>
-      )}
+      {/* Chat Widget – available for students and librarians */}
+      {(role === 'student' || role === 'librarian') && <ChatWidget />}
     </div>
   );
 }
+

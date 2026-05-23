@@ -10,8 +10,8 @@ export default function AdminBranchesPage() {
       phone: '(028) 3812 3456',
       manager: 'Trần Mai Anh',
       status: 'active',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAixle242mnfrCtuXThiWbddhKR8ZJgmFVz9xVbsyz4hE8M5RN3D_RhFQ7Bxkoh2w8L9jikBWEj9RFve6V_CNAUe_zrHwhcmlUv-sUYBx-3qfaGy8nAvuzi7bbTMhEfO6i0DtNodacgvNMc3R-VzU503zwWRsrzPLV2THMnCIgtgDlB9DtPVp27a8-86o3Vo89nBbxemldy8VEsYP7_mt8H3apq6-PPwU2S9iBANneD-V2B0tI75kfk4YR6c_Z1yihZGSmcHmQVndwF',
-      aiSync: '100%',
+      image: 'https://images.unsplash.com/photo-1568667256549-094345857637?auto=format&fit=crop&q=80&w=800',
+      syncStatus: '100%',
     },
     {
       id: 2,
@@ -20,8 +20,8 @@ export default function AdminBranchesPage() {
       phone: '(028) 3999 8888',
       manager: 'Lê Hải Đăng',
       status: 'active',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDs694w3SmnyZWa2V-aDR_aL_PG20u70Npam8JWXeHUVptAo88esx37Ph0PyxG9OWPPh2mMH3_Gj0BTne14ZAcHXokaGzHFimj2mLjjZ_o2BNEJRWXUxxRroJgadaI-gCVwr3UR5jwvI7hMq46kV3XoCDD8Y3XNku1C9Trps26XGERasqKaQxqWgUbMajD3h4H9iWjlecxNVATC6sT3fwzyTyFih5lVjbAZs_SGaFSWYRvnJ6L7vkd-up9hw0z3-OV9l4lU495aqVj5',
-      aiSync: '100%',
+      image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800',
+      syncStatus: '100%',
     },
     {
       id: 3,
@@ -31,7 +31,7 @@ export default function AdminBranchesPage() {
       manager: 'Đang tuyển dụng',
       status: 'maintenance',
       image: null,
-      aiSync: null,
+      syncStatus: null,
     },
   ];
 
@@ -43,7 +43,7 @@ export default function AdminBranchesPage() {
           <div>
             <h2 className="font-headline-lg text-headline-lg text-on-background">Quản lý chi nhánh</h2>
             <p className="font-body-md text-body-md text-on-surface-variant mt-unit max-w-2xl">
-              Giám sát và cấu hình các điểm thư viện vệ tinh trong mạng lưới. Trạng thái đồng bộ và phân bổ tài nguyên tự động được quản lý bằng AI.
+              Giám sát và cấu hình các điểm thư viện vệ tinh trong mạng lưới. Trạng thái đồng bộ và phân bổ tài nguyên được quản lý tự động.
             </p>
           </div>
           <button className="bg-primary text-on-primary px-stack-md py-[10px] rounded-lg font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-primary-fixed-variant transition-colors shadow-sm hover:shadow-md shrink-0 w-full sm:w-auto">
@@ -102,10 +102,10 @@ export default function AdminBranchesPage() {
                 {/* Card Actions */}
                 <div className="mt-stack-md pt-stack-sm border-t border-surface-variant flex justify-between items-center">
                   <div className="flex items-center gap-1">
-                    {branch.aiSync ? (
+                    {branch.syncStatus ? (
                       <>
-                        <span className="material-symbols-outlined text-secondary-fixed-dim text-[16px]">auto_awesome</span>
-                        <span className="font-label-sm text-label-sm text-secondary">Đồng bộ AI {branch.aiSync}</span>
+                        <span className="material-symbols-outlined text-secondary-fixed-dim text-[16px]">cloud_sync</span>
+                        <span className="font-label-sm text-label-sm text-secondary">Đồng bộ {branch.syncStatus}</span>
                       </>
                     ) : (
                       <>

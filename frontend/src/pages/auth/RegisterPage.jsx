@@ -85,7 +85,7 @@ export default function RegisterPage() {
           <img
             alt="Library background"
             className="w-full h-full object-cover opacity-80"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_jRIZ3Fa4yIzRsdchFGx6D3Ne2vftcpEogpl44idT6zL6_H6dNKfAIOB6hHm-K2ItzOb7IReovdObGE677XOlvT7UO7zgZfsVumi3qQUvVNqizwonGbufuHe6v5zLqAKRJ7qWRRGLHHn6hJAsbKBbrPe_QzlPsvwkaOMUDN88bl6OK1tuG0vrIYQXMblsubUaO3sf5-eP08_ipVJ8pmPKbqhoArQ1yGtHLiKYApQ9PsV6cN1cHqebBO6TNqUunaHrdF7xoZW-R5E_"
+            src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&q=80&w=1920"
           />
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-secondary/10 mix-blend-multiply"></div>
@@ -94,24 +94,24 @@ export default function RegisterPage() {
         <div className="relative z-10">
           <div className="flex items-center gap-2 mb-8">
             <span className="material-symbols-outlined text-4xl text-white" style={{ fontVariationSettings: "'FILL' 1" }}>
-              auto_awesome
+              local_library
             </span>
-            <span className="font-headline-md text-headline-md text-white tracking-tight">Intellectual Heritage</span>
+            <span className="font-headline-md text-headline-md text-white tracking-tight">BkLib</span>
           </div>
           <h1 className="font-display-lg text-display-lg text-white max-w-lg mb-6 drop-shadow-md">
             Khám phá tri thức không giới hạn.
           </h1>
           <p className="font-body-lg text-body-lg text-white/90 max-w-md drop-shadow">
-            Hệ thống thư viện thông minh tích hợp AI giúp bạn dễ dàng tìm kiếm, quản lý và mở rộng nguồn tài nguyên học thuật.
+            Hệ thống thư viện hiện đại giúp bạn dễ dàng tìm kiếm, quản lý và mở rộng nguồn tài nguyên học thuật.
           </p>
         </div>
 
         <div className="relative z-10 flex gap-4">
           <div className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-white font-label-md text-label-md flex items-center gap-2">
-            <span className="material-symbols-outlined text-[18px]">verified</span> Hơn 1M+ tài liệu
+            <span className="material-symbols-outlined text-[18px]">verified</span> Hơn 1.000+ tài liệu
           </div>
           <div className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-white font-label-md text-label-md flex items-center gap-2">
-            <span className="material-symbols-outlined text-[18px]">psychology</span> AI Hỗ trợ
+            <span className="material-symbols-outlined text-[18px]">people</span> Dễ sử dụng
           </div>
         </div>
       </div>
@@ -122,13 +122,13 @@ export default function RegisterPage() {
           {/* Mobile Header Logo */}
           <div className="flex lg:hidden items-center gap-2 mb-8 justify-center">
             <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
-              auto_awesome
+              local_library
             </span>
-            <span className="font-headline-md text-headline-md text-primary font-bold">Intellectual Heritage</span>
+            <span className="font-headline-md text-headline-md text-primary font-bold">BkLib</span>
           </div>
 
           <div className="mb-8">
-            <h2 className="font-headline-lg text-headline-lg text-on-surface mb-2">Tham gia Cộng đồng Trí tuệ</h2>
+            <h2 className="font-headline-lg text-headline-lg text-on-surface mb-2">Tạo tài khoản BkLib</h2>
             <p className="font-body-md text-body-md text-on-surface-variant">
               Tạo tài khoản để bắt đầu trải nghiệm hệ thống quản lý thư viện thông minh.
             </p>
