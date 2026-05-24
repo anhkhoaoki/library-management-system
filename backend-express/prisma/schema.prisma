@@ -145,6 +145,7 @@ model User {
   notificationSetting NotificationSetting?
   auditLogs          AuditLog[]
   chatHistory        ChatHistory[]
+  systemConfigs      SystemConfig[]
 
   @@index([email])
   @@index([roleId])
@@ -492,6 +493,8 @@ model SystemConfig {
   description String?
   updatedById String?
   updatedAt   DateTime @updatedAt
+
+  updatedBy   User?    @relation(fields: [updatedById], references: [id])
 
   @@map("system_configs")
 }
