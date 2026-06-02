@@ -3,9 +3,9 @@ Chatbot Service — UC-AI-02
 RAG-based chatbot using LangChain + Gemini for library FAQ and personal queries.
 """
 
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
-from langchain.memory import ConversationBufferWindowMemory
+from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
 from app.core.gemini_client import get_llm
 from typing import List, Optional
 
@@ -72,12 +72,15 @@ def generate_chat_response(
     )
 
     llm = get_llm(temperature=0.5)
-    chain = LLMChain(llm=llm, prompt=prompt)
+    
+    # Sử dụng chuẩn LCEL (LangChain Expression Language) mới thay cho LLMChain
+    chain = prompt | llm | StrOutputParser()
 
+    # Thực thi chuỗi xử lý và trả về kết quả dạng string trực tiếp
     result = chain.invoke({
         "user_context": context_str,
         "chat_history": history_str,
         "user_message": user_message,
     })
 
-    return result["text"].strip()
+    return result.strip()

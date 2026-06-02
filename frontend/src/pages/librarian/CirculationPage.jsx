@@ -17,6 +17,12 @@ export default function CirculationPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Quick Book Lookup State
+  const [lookupBarcode, setLookupBarcode] = useState('');
+  const [lookupResult, setLookupResult] = useState(null);
+  const [lookupLoading, setLookupLoading] = useState(false);
+  const [lookupError, setLookupError] = useState('');
+
   // Selected reservation details for quick borrow processing
   const [selectedResId, setSelectedResId] = useState(null);
   const [availableCopies, setAvailableCopies] = useState([]);
@@ -58,6 +64,20 @@ export default function CirculationPage() {
       setReaderFines([]);
     }
     setLoading(false);
+  };
+
+  const handleQuickLookup = async () => {
+    if (!lookupBarcode) return;
+    setLookupLoading(true);
+    setLookupError('');
+    setLookupResult(null);
+    try {
+      const response = await api.get(`/circulation/lookup/${lookupBarcode}`);
+      setLookupResult(response.data.data);
+    } catch (err) {
+      setLookupError(err.response?.data?.message || 'Không tìm thấy ấn phẩm');
+    }
+    setLookupLoading(false);
   };
 
   const handlePayFine = async (fineId) => {
@@ -269,6 +289,61 @@ export default function CirculationPage() {
                 </div>
               </section>
             )}
+
+            {/* Quick Book Lookup Widget */}
+            <section className="bg-white rounded-xl shadow-sm border border-outline-variant overflow-hidden">
+              <div className="p-stack-md border-b border-outline-variant bg-surface-bright flex items-center justify-between">
+                <h2 className="font-title-lg text-title-lg text-on-surface">Tra cứu sách nhanh</h2>
+                <span className="material-symbols-outlined text-outline">search</span>
+              </div>
+              <div className="p-stack-md flex flex-col gap-stack-sm">
+                <div className="flex gap-2">
+                  <input
+                    className="flex-1 bg-surface-container-low border border-outline-variant rounded-lg px-3 py-2 font-body-md"
+                    placeholder="Nhập mã vạch sách..."
+                    type="text"
+                    value={lookupBarcode}
+                    onChange={(e) => setLookupBarcode(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleQuickLookup()}
+                  />
+                  <button onClick={handleQuickLookup} className="bg-secondary text-on-secondary px-4 py-2 rounded-lg hover:bg-secondary/90 transition-colors">
+                    <span className="material-symbols-outlined">{lookupLoading ? 'progress_activity' : 'barcode_scanner'}</span>
+                  </button>
+                </div>
+                
+                {lookupError && (
+                  <p className="text-sm text-error mt-2 flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[16px]">error</span>
+                    {lookupError}
+                  </p>
+                )}
+                
+                {lookupResult && (
+                  <div className="mt-3 p-3 bg-surface-container-lowest border border-outline-variant rounded-lg animate-in fade-in zoom-in-95 duration-200">
+                    <h4 className="font-bold text-sm text-on-surface mb-1">{lookupResult.book.title}</h4>
+                    <div className="flex flex-col gap-1 text-xs text-on-surface-variant">
+                      <span className="flex items-center justify-between">
+                        Mã vạch: <span className="font-bold">{lookupResult.barcode}</span>
+                      </span>
+                      <span className="flex items-center justify-between">
+                        Trạng thái: 
+                        <span className={`font-bold uppercase ${lookupResult.status === 'AVAILABLE' ? 'text-success' : lookupResult.status === 'BORROWED' ? 'text-error' : 'text-warning'}`}>
+                          {lookupResult.status === 'AVAILABLE' ? 'Sẵn có' : lookupResult.status === 'BORROWED' ? 'Đã mượn' : 'Khác'}
+                        </span>
+                      </span>
+                      <span className="flex items-center justify-between">
+                        Chi nhánh: <span>{lookupResult.branch.name}</span>
+                      </span>
+                      {lookupResult.location && (
+                        <span className="flex items-center justify-between">
+                          Vị trí: <span>{lookupResult.location}</span>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </section>
 
             {/* Reader Unpaid Fines */}
             {reader && readerFines.length > 0 && (

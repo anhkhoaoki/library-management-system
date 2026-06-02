@@ -27,16 +27,22 @@ export const generateBookSummary = async (req: Request, res: Response, next: Nex
   }
 };
 
-// UC-AI-01
+// SỬA LẠI TRONG FILE: ai.controller.ts
 export const naturalLanguageSearch = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { query } = req.body;
-    if (!query) {
-      res.status(400).json({ success: false, message: 'query là bắt buộc' });
-      return;
-    }
+    // Cho phép query có thể là chuỗi rỗng hoặc undefined (không bắt buộc)
+    const { query } = req.body; 
+    
+    // XÓA HOẶC COMMENT ĐOẠN IF (!QUERY) NÀY ĐI
+    // if (!query) {
+    //   res.status(400).json({ success: false, message: 'query là bắt buộc' });
+    //   return;
+    // }
+
     const userId = req.user?.userId;
-    const result = await aiService.naturalLanguageSearch(query, userId);
+    
+    // Truyền query xuống service (nếu trống thì truyền chuỗi rỗng "")
+    const result = await aiService.naturalLanguageSearch(query || "", userId);
     res.status(200).json({ success: true, data: result });
   } catch (err) {
     next(err);

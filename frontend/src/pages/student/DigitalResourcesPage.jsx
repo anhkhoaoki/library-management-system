@@ -1,54 +1,88 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MainLayout from '../../components/layout/MainLayout';
+import api from '../../utils/api';
 
 export default function DigitalResourcesPage() {
-  const [resources] = useState([
-    {
-      id: 1,
-      title: 'Sapiens: Lược sử loài người',
-      author: 'Yuval Noah Harari',
-      type: 'E-book',
-      status: 'available',
-      accessCount: '2/5',
-      image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=400',
-    },
-    {
-      id: 2,
-      title: 'Nghệ thuật quản trị',
-      author: 'Peter Drucker',
-      type: 'Audio',
-      status: 'full',
-      accessCount: '10/10',
-      image: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=400',
-    },
-    {
-      id: 3,
-      title: 'Nhà giả kim',
-      author: 'Paulo Coelho',
-      type: 'EPUB',
-      status: 'available',
-      accessCount: '1/50',
-      image: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=400',
-    },
-    {
-      id: 4,
-      title: 'Tư duy nhanh và chậm',
-      author: 'Daniel Kahneman',
-      type: 'Audio',
-      status: 'available',
-      accessCount: '5/20',
-      image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=400',
-    },
-    {
-      id: 5,
-      title: 'Tạp chí Khoa học & Đời sống',
-      author: 'Số 45 - 2023',
-      type: 'E-book',
-      status: 'full',
-      accessCount: '2/2',
-      image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&q=80&w=400',
-    },
-  ]);
+  const [resources, setResources] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeSession, setActiveSession] = useState(null);
+  
+  // 1. THÊM STATE ĐỂ QUẢN LÝ TAB ĐANG CHỌN (Mặc định là 'ALL')
+  const [activeTab, setActiveTab] = useState('ALL');
+
+  useEffect(() => {
+    const fetchDigitalResources = async () => {
+      try {
+        const res = await api.get('/books?limit=100');
+        const allBooks = res.data.data || [];
+        // Lọc ra các sách có tài nguyên số
+        const digitalBooks = allBooks.filter(b => b.digitalResources && b.digitalResources.length > 0);
+        
+        const mappedResources = digitalBooks.map(book => {
+          const resType = book.digitalResources[0]?.resourceType || 'PDF';
+          
+          // Xác định chữ hiển thị hiển thị ra giao diện dựa trên Enum chuẩn của DB
+          let displayType = 'E-book';
+          if (resType === 'AUDIOBOOK') {
+            displayType = 'Audio';
+          } else if (resType === 'VIDEO') {
+            displayType = 'Tạp chí'; // Dùng tạm VIDEO hoặc ông có thể quy ước ấn bản điện tử là VIDEO/PDF
+          } else if (resType === 'EPUB') {
+            displayType = 'EPUB';
+          }
+
+          return {
+            id: book.id,
+            resourceId: book.digitalResources[0]?.id,
+            title: book.title,
+            author: book.authorNames && book.authorNames.length > 0 ? book.authorNames.join(', ') : 'Chưa rõ',
+            type: displayType, // Truyền displayType đã ép chuẩn vào đây
+            status: 'available',
+            accessCount: '0/10',
+            image: book.coverImageUrl || 'https://via.placeholder.com/400x600?text=No+Cover',
+          };
+        });
+        setResources(mappedResources);
+      } catch (err) {
+        console.error('Lỗi tải tài nguyên số:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDigitalResources();
+  }, []);
+
+  const handleAccessResource = async (bookId, resourceId) => {
+    try {
+      const res = await api.get(`/books/${bookId}/digital/${resourceId}`);
+      if (res.data.success) {
+        alert('Truy cập thành công! Bắt đầu tính thời gian phiên đọc...');
+        setActiveSession(res.data.data);
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || 'Có lỗi khi truy cập tài nguyên');
+    }
+  };
+
+  const handleEndSession = async () => {
+    if (!activeSession) return;
+    try {
+      await api.patch(`/books/digital/sessions/${activeSession.accessLogId}/end`);
+      alert('Đã kết thúc phiên đọc và ghi nhận thời gian.');
+      setActiveSession(null);
+    } catch (err) {
+      alert(err.response?.data?.message || 'Lỗi khi kết thúc phiên');
+    }
+  };
+
+  // 2. LOGIC LỌC TÀI NGUYÊN ĐỘNG THEO TAB ĐANG CHỌN
+  const filteredResources = resources.filter((item) => {
+    if (activeTab === 'ALL') return true;
+    if (activeTab === 'EBOOK') return item.type === 'E-book' || item.type === 'EPUB';
+    if (activeTab === 'AUDIOBOOK') return item.type === 'Audio';
+    if (activeTab === 'JOURNAL') return item.type === 'Journal' || item.type === 'Tạp chí'; // Dự phòng nếu sau này có loại tạp chí
+    return true;
+  });
 
   return (
     <MainLayout role="student" userName="Minh Tuấn" userRole="Sinh viên">
@@ -163,17 +197,64 @@ export default function DigitalResourcesPage() {
           </div>
         </div>
 
-        {/* Tabs/Filters for Grid */}
+        {/* 3. ĐÃ SỬA CÁC TABS: THÊM LỚP DỰA TRÊN STATE VÀ BỔ SUNG ONCLICK ĐỂ CHUYỂN TAB ĐỘNG */}
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
-          <button className="px-4 py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md whitespace-nowrap shadow-sm">Tất cả tài nguyên</button>
-          <button className="px-4 py-2 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface hover:bg-surface-container-low font-label-md text-label-md whitespace-nowrap transition-colors">E-book (PDF/EPUB)</button>
-          <button className="px-4 py-2 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface hover:bg-surface-container-low font-label-md text-label-md whitespace-nowrap transition-colors">Audiobook</button>
-          <button className="px-4 py-2 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface hover:bg-surface-container-low font-label-md text-label-md whitespace-nowrap transition-colors">Tạp chí Khoa học</button>
+          <button 
+            onClick={() => setActiveTab('ALL')}
+            className={`px-4 py-2 rounded-full font-label-md text-label-md whitespace-nowrap shadow-sm transition-colors ${
+              activeTab === 'ALL'
+                ? 'bg-primary text-on-primary'
+                : 'bg-surface-container-lowest border border-outline-variant text-on-surface hover:bg-surface-container-low'
+            }`}
+          >
+            Tất cả tài nguyên
+          </button>
+          
+          <button 
+            onClick={() => setActiveTab('EBOOK')}
+            className={`px-4 py-2 rounded-full font-label-md text-label-md whitespace-nowrap transition-colors ${
+              activeTab === 'EBOOK'
+                ? 'bg-primary text-on-primary shadow-sm'
+                : 'bg-surface-container-lowest border border-outline-variant text-on-surface hover:bg-surface-container-low'
+            }`}
+          >
+            E-book (PDF/EPUB)
+          </button>
+          
+          <button 
+            onClick={() => setActiveTab('AUDIOBOOK')}
+            className={`px-4 py-2 rounded-full font-label-md text-label-md whitespace-nowrap transition-colors ${
+              activeTab === 'AUDIOBOOK'
+                ? 'bg-primary text-on-primary shadow-sm'
+                : 'bg-surface-container-lowest border border-outline-variant text-on-surface hover:bg-surface-container-low'
+            }`}
+          >
+            Audiobook
+          </button>
+          
+          <button 
+            onClick={() => setActiveTab('JOURNAL')}
+            className={`px-4 py-2 rounded-full font-label-md text-label-md whitespace-nowrap transition-colors ${
+              activeTab === 'JOURNAL'
+                ? 'bg-primary text-on-primary shadow-sm'
+                : 'bg-surface-container-lowest border border-outline-variant text-on-surface hover:bg-surface-container-low'
+            }`}
+          >
+            Tạp chí Khoa học
+          </button>
         </div>
 
         {/* Resource Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-gutter">
-          {resources.map((item) => (
+          {loading ? (
+            <div className="col-span-full py-10 text-center text-on-surface-variant font-body-md">
+              Đang tải tài nguyên số...
+            </div>
+          ) : filteredResources.length === 0 ? ( // 4. THAY "resources" THÀNH MẢNG ĐÃ LỌC "filteredResources"
+            <div className="col-span-full py-10 text-center text-on-surface-variant font-body-md">
+              Không tìm thấy tài liệu số phù hợp cho mục này.
+            </div>
+          ) : filteredResources.map((item) => ( // 5. RENDER THEO MẢNG ĐÃ LỌC
             <div key={item.id} className="bg-surface-container-lowest rounded-xl shadow-sm border border-surface-variant overflow-hidden hover:shadow-md transition-shadow group flex flex-col">
               <div className="h-48 md:h-64 bg-surface-container-low relative overflow-hidden">
                 <img alt="Book cover" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src={item.image} />
@@ -198,7 +279,11 @@ export default function DigitalResourcesPage() {
                 <div className="mt-auto flex items-center justify-between">
                   <span className={`font-label-sm text-label-sm ${item.status === 'full' ? 'text-error' : 'text-outline'}`}>Truy cập: {item.accessCount}</span>
                   {item.status === 'available' ? (
-                    <button className="w-8 h-8 rounded bg-primary-container text-on-primary-container flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+                    <button 
+                      onClick={() => handleAccessResource(item.id, item.resourceId)}
+                      className="w-8 h-8 rounded bg-primary-container text-on-primary-container flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
+                      title="Truy cập tài nguyên"
+                    >
                       <span className="material-symbols-outlined text-[18px]">{item.type === 'Audio' ? 'play_arrow' : 'menu_book'}</span>
                     </button>
                   ) : (
@@ -210,6 +295,41 @@ export default function DigitalResourcesPage() {
           ))}
         </div>
       </div>
+
+      {/* Floating Active Session Bar */}
+      {activeSession && (
+        <div className="fixed bottom-0 left-0 right-0 bg-primary text-on-primary shadow-[0_-4px_20px_rgba(0,0,0,0.15)] z-50 animate-in slide-in-from-bottom-full duration-300">
+          <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center animate-pulse">
+                <span className="material-symbols-outlined text-[24px]">
+                  {activeSession.resourceType === 'AUDIO' ? 'headphones' : 'menu_book'}
+                </span>
+              </div>
+              <div>
+                <p className="font-label-sm uppercase tracking-wider text-white/80">Đang {activeSession.resourceType === 'AUDIO' ? 'nghe' : 'đọc'} tài liệu số</p>
+                <h4 className="font-title-md font-bold">{activeSession.bookTitle}</h4>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 w-full md:w-auto">
+              <a 
+                href={activeSession.fileUrl} 
+                target="_blank" 
+                rel="noreferrer"
+                className="flex-1 md:flex-none px-6 py-2.5 rounded-lg bg-white text-primary font-bold hover:bg-white/90 transition-colors text-center"
+              >
+                Mở file ({activeSession.resourceType})
+              </a>
+              <button 
+                onClick={handleEndSession}
+                className="flex-1 md:flex-none px-6 py-2.5 rounded-lg border-2 border-white/30 text-white font-bold hover:bg-white/10 transition-colors text-center"
+              >
+                Kết thúc phiên
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </MainLayout>
   );
 }

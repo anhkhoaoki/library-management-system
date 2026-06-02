@@ -32,7 +32,7 @@ export default function BorrowedBooksPage() {
   const handleRenew = async (loanId) => {
     setRenewing(loanId);
     try {
-      await api.post(`/circulation/renew/${loanId}`);
+      await api.post(`/circulation/borrow-records/${loanId}/renew`);
       alert('Gia hạn thành công!');
       fetchData();
     } catch (err) {

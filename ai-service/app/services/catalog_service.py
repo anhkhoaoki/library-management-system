@@ -7,8 +7,8 @@ Implements:
 
 import httpx
 from typing import Optional
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
+from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
 from app.core.gemini_client import get_llm
 from app.schemas.catalog import IsbnLookupResponse, SummarizeResponse
 from app.core.config import settings
@@ -135,7 +135,7 @@ Tóm tắt:""",
     )
 
     llm = get_llm(temperature=0.6)
-    chain = LLMChain(llm=llm, prompt=prompt_template)
+    chain = prompt_template | llm | StrOutputParser()
 
     result = chain.invoke({
         "title": title,

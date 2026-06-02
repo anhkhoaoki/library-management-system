@@ -54,9 +54,13 @@ export const naturalLanguageSearch = async (query: string, userId?: string) => {
       userId,
       limit: 20,
     });
-    return response.data;
+    
+    // Đảm bảo trả về đúng định dạng mà Frontend mong đợi ở response.data.data
+    return {
+      data: response.data.results || [], 
+      pagination: { total: response.data.results?.length || 0, page: 1, limit: 12, totalPages: 1 }
+    };
   } catch {
-    // UC-AI-01 Fallback: use basic full-text search if AI is down
     console.warn('[AI Search] Falling back to basic keyword search');
     const results = await prisma.book.findMany({
       where: {
@@ -68,24 +72,15 @@ export const naturalLanguageSearch = async (query: string, userId?: string) => {
         ],
       },
       take: 20,
-      select: {
-        id: true,
-        title: true,
-        authorNames: true,
-        coverImageUrl: true,
-        availableCopies: true,
-        averageRating: true,
-      },
     });
 
     return {
-      results,
+      data: results,
       isFallback: true,
       message: 'Tính năng tìm kiếm thông minh đang bảo trì. Đang dùng tìm kiếm cơ bản.',
     };
   }
 };
-
 // ─── UC-AI-02: Chatbot ───────────────────────────────────────
 export const chatWithBot = async (userId: string, message: string) => {
   // Fetch recent chat history for context

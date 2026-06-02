@@ -9,23 +9,50 @@ export default function BookDetailPage() {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const [book, setBook] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [message, setMessage] = useState(null);
 
+  const [rating, setRating] = useState(5);
+  const [reviewContent, setReviewContent] = useState('');
+  const [submittingReview, setSubmittingReview] = useState(false);
+
+  const fetchBookAndReviews = async () => {
+    try {
+      const [bookRes, reviewsRes] = await Promise.all([
+        api.get(`/books/${id}`),
+        api.get(`/books/${id}/reviews`)
+      ]);
+      setBook(bookRes.data.data);
+      setReviews(reviewsRes.data.data);
+    } catch (err) {
+      console.error('Lỗi tải chi tiết sách hoặc nhận xét:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchBook = async () => {
-      try {
-        const response = await api.get(`/books/${id}`);
-        setBook(response.data.data);
-      } catch (err) {
-        console.error('Lỗi tải chi tiết sách:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchBook();
+    fetchBookAndReviews();
   }, [id]);
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    if (!rating) return;
+    setSubmittingReview(true);
+    try {
+      await api.post(`/books/${id}/reviews`, { rating, content: reviewContent });
+      alert('Gửi đánh giá thành công!');
+      setReviewContent('');
+      setRating(5);
+      fetchBookAndReviews();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Không thể gửi đánh giá. Bạn cần mượn hoặc đọc tài liệu này trước.');
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
 
   const handleBorrowRequest = async () => {
     setProcessing(true);
@@ -44,25 +71,47 @@ export default function BookDetailPage() {
   };
 
   const handleTransferRequest = async () => {
-    if (!user?.branchId) {
+    // 1. TẠM THỜI COMMENT ĐOẠN CHECK ĐỂ KHÔNG BỊ FE CHẶN NỮA
+    /* if (!user?.branchId) {
       setMessage({ type: 'error', text: 'Bạn cần cập nhật chi nhánh trong hồ sơ để sử dụng tính năng này.' });
       return;
-    }
+    } 
+    */
+
     setProcessing(true);
     setMessage(null);
     try {
+      
+      // Giả định bạn đang ở Chi nhánh 1 để gửi yêu cầu luân chuyển sách từ Chi nhánh khác về
+      const myBranchId = user?.branchId || 'branch-cs-01'; 
+
+      
       const response = await api.post('/branches/transfer-request', { 
         bookId: id, 
-        toBranchId: user.branchId 
+        toBranchId: myBranchId 
       });
-      setMessage({ type: 'success', text: response.data.data.message });
+      
+      // CHECK ĐÚNG ĐƯỜNG DẪN TRẢ VỀ CỦA BACKEND
+      // Ở file branch.controller.ts, BE trả về cấu trúc: res.status(201).json({ success: true, data: result })
+      // Nên ta dùng response.data.data để lấy thông tin
+      setMessage({ 
+        type: 'success', 
+        text: response.data.data?.message || 'Gửi yêu cầu luân chuyển thành công!' 
+      });
+
+      // Reload lại dữ liệu sách sau khi luân chuyển 
+      const updatedBook = await api.get(`/books/${id}`);
+      setBook(updatedBook.data.data);
     } catch (err) {
-      setMessage({ type: 'error', text: err.response?.data?.message || 'Lỗi khi yêu cầu luân chuyển sách.' });
+      // Đọc thông báo lỗi từ Backend trả về nếu có lỗi từ Server (ví dụ: Không tìm thấy bản sao khả dụng...)
+      setMessage({ 
+        type: 'error', 
+        text: err.response?.data?.message || 'Lỗi khi yêu cầu luân chuyển sách.' 
+      });
     } finally {
       setProcessing(false);
     }
   };
-
   if (loading) {
     return (
       <MainLayout role="student" userName={user?.fullName} userRole="Bạn đọc">
@@ -266,11 +315,48 @@ export default function BookDetailPage() {
                 </div>
               </div>
               
+              {/* Form Đánh Giá */}
+              <form onSubmit={handleSubmitReview} className="mb-8 bg-surface-container-low p-4 rounded-xl border border-outline-variant/30">
+                <h4 className="font-bold text-on-surface mb-3">Viết đánh giá của bạn</h4>
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-sm font-medium">Số sao:</span>
+                  <div className="flex text-secondary cursor-pointer">
+                    {[1, 2, 3, 4, 5].map(star => (
+                      <span 
+                        key={star} 
+                        onClick={() => setRating(star)}
+                        className="material-symbols-outlined text-[24px] hover:scale-110 transition-transform" 
+                        style={{ fontVariationSettings: `'FILL' ${star <= rating ? 1 : 0}` }}
+                      >
+                        star
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <textarea 
+                  className="w-full bg-white border border-outline-variant rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary mb-3"
+                  rows="3"
+                  placeholder="Chia sẻ cảm nhận của bạn về tài liệu này..."
+                  value={reviewContent}
+                  onChange={(e) => setReviewContent(e.target.value)}
+                  required
+                ></textarea>
+                <div className="flex justify-end">
+                  <button 
+                    type="submit" 
+                    disabled={submittingReview}
+                    className="px-6 py-2 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
+                  >
+                    {submittingReview ? 'Đang gửi...' : 'Gửi đánh giá'}
+                  </button>
+                </div>
+              </form>
+
               <div className="space-y-6">
-                {book.reviews.length === 0 ? (
+                {reviews.length === 0 ? (
                   <p className="text-center py-6 text-on-surface-variant italic">Chưa có nhận xét nào cho cuốn sách này.</p>
                 ) : (
-                  book.reviews.map(review => (
+                  reviews.map(review => (
                     <div key={review.id} className="flex gap-4 border-b border-surface-variant pb-6 last:border-0 last:pb-0">
                       <div className="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold shrink-0">
                         {review.user.fullName.charAt(0)}

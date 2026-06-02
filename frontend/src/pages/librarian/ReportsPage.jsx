@@ -1,7 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import MainLayout from '../../components/layout/MainLayout';
+import api from '../../utils/api';
 
 export default function ReportsPage() {
+  const [exporting, setExporting] = useState(false);
+
+  const handleExport = async () => {
+    try {
+      setExporting(true);
+      const response = await api.get('/admin/reports/export?type=most_borrowed');
+      if (response.data.success) {
+        // Simple download as JSON implementation for demo
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(response.data.data, null, 2));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href",     dataStr);
+        downloadAnchorNode.setAttribute("download", "report.json");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+      }
+    } catch (error) {
+      alert('Có lỗi xảy ra khi xuất báo cáo: ' + (error.response?.data?.message || error.message));
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <MainLayout role="librarian" userName="Bùi Thị Chi" userRole="Thủ thư">
       <div className="flex flex-col gap-stack-lg">
@@ -17,10 +41,18 @@ export default function ReportsPage() {
               <span className="font-label-md text-label-md">30 ngày qua</span>
               <span className="material-symbols-outlined text-[20px] ml-2">arrow_drop_down</span>
             </div>
-            <button className="flex items-center bg-primary text-on-primary font-label-md text-label-md px-4 py-2.5 rounded-lg hover:opacity-90 transition-opacity">
-              <span className="material-symbols-outlined text-[20px] mr-2">download</span>
-              Xuất báo cáo
-              <span className="material-symbols-outlined text-[20px] ml-1">arrow_drop_down</span>
+            <button 
+              onClick={handleExport}
+              disabled={exporting}
+              className="flex items-center bg-primary text-on-primary font-label-md text-label-md px-4 py-2.5 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+            >
+              {exporting ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+              ) : (
+                <span className="material-symbols-outlined text-[20px] mr-2">download</span>
+              )}
+              {exporting ? 'Đang xuất...' : 'Xuất báo cáo'}
+              {!exporting && <span className="material-symbols-outlined text-[20px] ml-1">arrow_drop_down</span>}
             </button>
           </div>
         </div>
