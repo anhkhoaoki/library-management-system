@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import MainLayout from '../../components/layout/MainLayout';
 import { AuthContext } from '../../context/AuthContext';
+import { Link } from 'react-router-dom';
 import api from '../../utils/api';
 
 export default function HistoryPage() {
@@ -136,12 +137,19 @@ export default function HistoryPage() {
                       <tr key={item.id} className="hover:bg-surface-bright transition-colors">
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
-                            <img 
-                              src={item.physicalCopy?.book?.coverImageUrl || 'https://via.placeholder.com/40'} 
-                              alt={item.physicalCopy?.book?.title} 
-                              className="w-8 h-12 object-cover rounded" 
-                            />
-                            <span className="font-bold">{item.physicalCopy?.book?.title}</span>
+                            <Link 
+                              to={`/dashboard/student/book/${item.physicalCopy?.book?.id}`}
+                              className="hover:opacity-80 transition-opacity shrink-0"
+                            >
+                              <img 
+                                src={item.physicalCopy?.book?.coverImageUrl || 'https://via.placeholder.com/40'} 
+                                alt={item.physicalCopy?.book?.title} 
+                                className="w-8 h-12 object-cover rounded" 
+                              />
+                            </Link>
+                            <Link to={`/dashboard/student/book/${item.physicalCopy?.book?.id}`} className="font-bold hover:text-primary hover:underline transition-colors">
+                              {item.physicalCopy?.book?.title}
+                            </Link>
                           </div>
                         </td>
                         <td className="px-6 py-4 text-sm">

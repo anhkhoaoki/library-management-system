@@ -129,8 +129,8 @@ export default function LibrarianDashboard() {
                       <div>
                         <h4 className="font-label-md text-on-surface font-bold">{res.book.title}</h4>
                         <p className="text-xs text-on-surface-variant">{res.user.fullName} ({res.user.readerCode || res.user.studentId})</p>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded uppercase font-bold ${res.status === 'READY_FOR_PICKUP' ? 'bg-success text-white' : 'bg-warning text-on-warning'}`}>
-                          {res.status === 'READY_FOR_PICKUP' ? 'Có sẵn - Chờ lấy' : 'Đang chờ sách trả'}
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase font-bold tracking-wide border ${res.status === 'READY_FOR_PICKUP' ? 'bg-success-container text-on-success-container border-success' : 'bg-warning-container text-on-warning-container border-warning'}`}>
+                          {res.status === 'READY_FOR_PICKUP' ? '✓ Có sẵn - Chờ lấy' : '⏳ Đang chờ sách trả'}
                         </span>
                       </div>
                     </div>

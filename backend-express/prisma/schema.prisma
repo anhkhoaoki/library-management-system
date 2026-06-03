@@ -343,7 +343,7 @@ model Reservation {
   user User @relation(fields: [userId], references: [id])
   book Book @relation(fields: [bookId], references: [id])
 
-  @@unique([userId, bookId, status])
+  @@index([userId])
   @@index([bookId])
   @@index([status])
   @@map("reservations")

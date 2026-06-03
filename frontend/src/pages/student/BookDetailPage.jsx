@@ -13,6 +13,7 @@ export default function BookDetailPage() {
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [message, setMessage] = useState(null);
+  const [userReservation, setUserReservation] = useState(null);
 
   const [rating, setRating] = useState(5);
   const [reviewContent, setReviewContent] = useState('');
@@ -20,12 +21,17 @@ export default function BookDetailPage() {
 
   const fetchBookAndReviews = async () => {
     try {
-      const [bookRes, reviewsRes] = await Promise.all([
+      const [bookRes, reviewsRes, reservationsRes] = await Promise.all([
         api.get(`/books/${id}`),
-        api.get(`/books/${id}/reviews`)
+        api.get(`/books/${id}/reviews`),
+        api.get('/users/me/reservations').catch(() => ({ data: { data: [] } })),
       ]);
       setBook(bookRes.data.data);
       setReviews(reviewsRes.data.data);
+      const existing = (reservationsRes.data.data || []).find(
+        r => (r.book?.id === id || r.bookId === id) && ['WAITING', 'READY_FOR_PICKUP'].includes(r.status)
+      );
+      setUserReservation(existing || null);
     } catch (err) {
       console.error('Lỗi tải chi tiết sách hoặc nhận xét:', err);
     } finally {
@@ -58,13 +64,32 @@ export default function BookDetailPage() {
     setProcessing(true);
     setMessage(null);
     try {
-      const response = await api.post('/circulation/reservations', { bookId: id });
-      setMessage({ type: 'success', text: response.data.message });
-      // Refresh book data to show updated availability if needed
+      await api.post('/circulation/reservations', { bookId: id });
+      const reservationsRes = await api.get('/users/me/reservations');
+      const newRes = (reservationsRes.data.data || []).find(
+        r => (r.book?.id === id || r.bookId === id) && ['WAITING', 'READY_FOR_PICKUP'].includes(r.status)
+      );
+      setUserReservation(newRes || { id: null, bookId: id, status: 'WAITING', createdAt: new Date().toISOString() });
       const updatedBook = await api.get(`/books/${id}`);
       setBook(updatedBook.data.data);
     } catch (err) {
       setMessage({ type: 'error', text: err.response?.data?.message || 'Có lỗi xảy ra khi gửi yêu cầu.' });
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const handleCancelReservation = async () => {
+    if (!window.confirm('Bạn có chắc muốn hủy yêu cầu đặt chỗ này không?')) return;
+    setProcessing(true);
+    try {
+      await api.delete(`/circulation/reservations/${userReservation.id}`);
+      setUserReservation(null);
+      setMessage({ type: 'success', text: 'Đã hủy đặt chỗ thành công.' });
+      const updatedBook = await api.get(`/books/${id}`);
+      setBook(updatedBook.data.data);
+    } catch (err) {
+      setMessage({ type: 'error', text: err.response?.data?.message || 'Lỗi khi hủy đặt chỗ.' });
     } finally {
       setProcessing(false);
     }
@@ -175,39 +200,90 @@ export default function BookDetailPage() {
                     : 'Tất cả các bản sao đã được mượn. Bạn có thể đặt chỗ để chờ.'}
               </p>
               
-              <div className="flex flex-col gap-3">
-                {isAvailableAtMyBranch ? (
-                  <button 
-                    onClick={handleBorrowRequest}
-                    disabled={processing}
-                    className="w-full py-4 rounded-xl font-bold text-title-md bg-primary text-on-primary hover:bg-primary/90 shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                  >
-                    <span className="material-symbols-outlined">shopping_cart_checkout</span>
-                    Yêu cầu mượn ngay
-                  </button>
-                ) : isAvailableGlobally ? (
-                  <button 
-                    onClick={handleTransferRequest}
-                    disabled={processing}
-                    className="w-full py-4 rounded-xl font-bold text-title-md bg-tertiary text-on-tertiary hover:bg-tertiary/90 shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                  >
-                    <span className="material-symbols-outlined">local_shipping</span>
-                    Yêu cầu luân chuyển
-                  </button>
-                ) : (
-                  <button 
-                    onClick={handleBorrowRequest}
-                    disabled={processing}
-                    className="w-full py-4 rounded-xl font-bold text-title-md bg-secondary text-on-secondary hover:bg-secondary/90 shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                  >
-                    <span className="material-symbols-outlined">event_seat</span>
-                    Đặt giữ chỗ (Hàng đợi)
-                  </button>
-                )}
-              </div>
+              {userReservation ? (
+                // --- TRẠNG THÁI: ĐÃ ĐẶT CHỖ ---
+                <div className="flex flex-col gap-3">
+                  <div className={`rounded-xl p-4 border-2 ${
+                    userReservation.status === 'READY_FOR_PICKUP'
+                      ? 'bg-success-container border-success'
+                      : 'bg-primary/8 border-primary/30'
+                  }`}>
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className={`material-symbols-outlined text-3xl ${
+                        userReservation.status === 'READY_FOR_PICKUP' ? 'text-success' : 'text-primary'
+                      }`}>
+                        {userReservation.status === 'READY_FOR_PICKUP' ? 'check_circle' : 'pending'}
+                      </span>
+                      <div>
+                        <p className="font-bold text-on-surface">
+                          {userReservation.status === 'READY_FOR_PICKUP' ? 'Sách đã sẵn sàng!' : 'Đang trong hàng đợi'}
+                        </p>
+                        <p className="text-xs text-on-surface-variant">
+                          {userReservation.status === 'READY_FOR_PICKUP'
+                            ? 'Vui lòng đến thư viện nhận sách trong 3 ngày'
+                            : `Đặt chỗ từ ${new Date(userReservation.createdAt).toLocaleDateString('vi-VN')}`}
+                        </p>
+                      </div>
+                    </div>
+                    {userReservation.queuePosition && (
+                      <div className="flex items-center gap-2 text-sm text-primary bg-primary/5 rounded-lg px-3 py-2">
+                        <span className="material-symbols-outlined text-[16px]">format_list_numbered</span>
+                        <span>Vị trí trong hàng đợi: <strong>#{userReservation.queuePosition}</strong></span>
+                      </div>
+                    )}
+                  </div>
+
+                  {userReservation.id && (
+                    <button
+                      onClick={handleCancelReservation}
+                      disabled={processing}
+                      className="w-full py-3 rounded-xl font-bold text-label-md border-2 border-error/40 text-error hover:bg-error/5 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">cancel</span>
+                      {processing ? 'Đang xử lý...' : 'Hủy đặt chỗ'}
+                    </button>
+                  )}
+                </div>
+              ) : (
+                // --- CHƯA ĐẶT CHỖ: HIỆN BUTTON ---
+                <div className="flex flex-col gap-3">
+                  {isAvailableAtMyBranch ? (
+                    <button
+                      onClick={handleBorrowRequest}
+                      disabled={processing}
+                      className="w-full py-4 rounded-xl font-bold text-title-md bg-primary text-on-primary hover:bg-primary/90 shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                    >
+                      <span className="material-symbols-outlined">
+                        {processing ? 'progress_activity' : 'shopping_cart_checkout'}
+                      </span>
+                      {processing ? 'Đang gửi yêu cầu...' : 'Yêu cầu mượn ngay'}
+                    </button>
+                  ) : isAvailableGlobally ? (
+                    <button
+                      onClick={handleTransferRequest}
+                      disabled={processing}
+                      className="w-full py-4 rounded-xl font-bold text-title-md bg-tertiary text-on-tertiary hover:bg-tertiary/90 shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                    >
+                      <span className="material-symbols-outlined">local_shipping</span>
+                      {processing ? 'Đang gửi...' : 'Yêu cầu luân chuyển'}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleBorrowRequest}
+                      disabled={processing}
+                      className="w-full py-4 rounded-xl font-bold text-title-md bg-secondary text-on-secondary hover:bg-secondary/90 shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                    >
+                      <span className="material-symbols-outlined">event_seat</span>
+                      {processing ? 'Đang đặt chỗ...' : 'Đặt giữ chỗ (Hàng đợi)'}
+                    </button>
+                  )}
+                </div>
+              )}
 
               {message && (
-                <div className={`mt-4 p-3 rounded-lg text-sm flex items-start gap-2 ${message.type === 'success' ? 'bg-success-container text-on-success-container' : 'bg-error-container text-on-error-container'}`}>
+                <div className={`mt-4 p-3 rounded-lg text-sm flex items-start gap-2 ${
+                  message.type === 'success' ? 'bg-success-container text-on-success-container' : 'bg-error-container text-on-error-container'
+                }`}>
                   <span className="material-symbols-outlined text-[18px]">
                     {message.type === 'success' ? 'check_circle' : 'error'}
                   </span>

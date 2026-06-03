@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import MainLayout from '../../components/layout/MainLayout';
 import { AuthContext } from '../../context/AuthContext';
+import { Link } from 'react-router-dom';
 import api from '../../utils/api';
 
 export default function BorrowedBooksPage() {
@@ -85,9 +86,12 @@ export default function BorrowedBooksPage() {
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-stack-md">
             {loans.map((loan) => (
               <article key={loan.id} className="bg-white rounded-xl shadow-sm border border-surface-variant p-stack-md flex flex-col sm:flex-row gap-stack-md relative">
-                <div className="w-full sm:w-32 h-48 flex-shrink-0 bg-surface-container rounded-lg overflow-hidden border border-outline-variant">
+                <Link 
+                  to={`/dashboard/student/book/${loan.physicalCopy.book.id}`}
+                  className="w-full sm:w-32 h-48 flex-shrink-0 bg-surface-container rounded-lg overflow-hidden border border-outline-variant block hover:opacity-90 transition-opacity cursor-pointer"
+                >
                   <img src={loan.physicalCopy.book.coverImageUrl || 'https://via.placeholder.com/150'} alt={loan.physicalCopy.book.title} className="w-full h-full object-cover" />
-                </div>
+                </Link>
                 <div className="flex-1 flex flex-col justify-between">
                   <div>
                     <h3 className="font-title-lg text-on-surface line-clamp-2">{loan.physicalCopy.book.title}</h3>

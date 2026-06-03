@@ -123,7 +123,7 @@ export const getBorrowHistory = async (
       orderBy: { borrowedAt: 'desc' },
       include: {
         physicalCopy: {
-          include: { book: { select: { title: true, authorNames: true, coverImageUrl: true } } },
+          include: { book: { select: { id: true, title: true, authorNames: true, coverImageUrl: true } } },
         },
         fine: true,
       },
@@ -159,15 +159,17 @@ export const getDashboardStats = async (userId: string) => {
 // ─── Get User Reservations ───────────────────────────────────
 export const getReservations = async (userId: string, page = 1, limit = 10) => {
   const skip = (page - 1) * limit;
+  // Only return active reservations (WAITING, READY_FOR_PICKUP)
+  const activeStatuses = ['WAITING', 'READY_FOR_PICKUP'] as const;
   const [total, data] = await Promise.all([
-    prisma.reservation.count({ where: { userId } }),
+    prisma.reservation.count({ where: { userId, status: { in: activeStatuses as any } } }),
     prisma.reservation.findMany({
-      where: { userId },
+      where: { userId, status: { in: activeStatuses as any } },
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
       include: {
-        book: { select: { title: true, authorNames: true, coverImageUrl: true } },
+        book: { select: { id: true, title: true, authorNames: true, coverImageUrl: true } },
       },
     }),
   ]);

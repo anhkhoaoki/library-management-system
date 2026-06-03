@@ -100,13 +100,17 @@ export default function StudentDashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-stack-md">
                 {currentLoans.map(loan => (
                   <div key={loan.id} className="bg-white rounded-xl shadow-sm border border-surface-variant p-stack-md flex gap-stack-md">
-                    <img 
-                      src={loan.physicalCopy.book.coverImageUrl || 'https://via.placeholder.com/150'} 
-                      alt={loan.physicalCopy.book.title}
-                      className="w-16 h-24 object-cover rounded shadow-sm"
-                    />
+                    <Link to={`/dashboard/student/book/${loan.physicalCopy.book.id}`} className="hover:opacity-85 transition-opacity shrink-0">
+                      <img 
+                        src={loan.physicalCopy.book.coverImageUrl || 'https://via.placeholder.com/150'} 
+                        alt={loan.physicalCopy.book.title}
+                        className="w-16 h-24 object-cover rounded shadow-sm"
+                      />
+                    </Link>
                     <div className="flex flex-col flex-1 min-w-0">
-                      <h4 className="font-label-md text-label-md text-on-surface truncate font-bold">{loan.physicalCopy.book.title}</h4>
+                      <Link to={`/dashboard/student/book/${loan.physicalCopy.book.id}`} className="hover:text-primary hover:underline transition-colors block truncate">
+                        <h4 className="font-label-md text-label-md text-on-surface truncate font-bold inline">{loan.physicalCopy.book.title}</h4>
+                      </Link>
                       <p className="font-label-sm text-label-sm text-on-surface-variant mb-auto">{loan.physicalCopy.book.authorNames.join(', ')}</p>
                       <div className={`mt-2 flex items-center gap-1 ${loan.status === 'OVERDUE' ? 'text-error' : 'text-secondary'}`}>
                         <span className="material-symbols-outlined text-[14px]">

@@ -124,6 +124,7 @@ export const createBook = async (data: {
   description?: string;
   coverImageUrl?: string;
   createdById?: string;
+  copiesByBranch?: Record<string, { quantity: number; location?: string }>;
 }) => {
   if (data.isbn) {
     const existing = await prisma.book.findUnique({ where: { isbn: data.isbn } });
@@ -142,6 +143,21 @@ export const createBook = async (data: {
     }
   }
 
+  // Validate branches in copiesByBranch
+  let totalCopiesSum = 0;
+  if (data.copiesByBranch) {
+    for (const branchId in data.copiesByBranch) {
+      const quantity = data.copiesByBranch[branchId]?.quantity || 0;
+      if (quantity > 0) {
+        const branch = await prisma.branch.findUnique({ where: { id: branchId } });
+        if (!branch) {
+          throw createError(`Chi nhánh không tồn tại: ${branchId}`, 400);
+        }
+        totalCopiesSum += quantity;
+      }
+    }
+  }
+
   const book = await prisma.book.create({
     data: {
       isbn: data.isbn,
@@ -154,8 +170,48 @@ export const createBook = async (data: {
       description: data.description,
       coverImageUrl: data.coverImageUrl,
       createdById: data.createdById,
+      totalCopies: totalCopiesSum,
+      availableCopies: totalCopiesSum,
     },
   });
+
+  // Create PhysicalCopy records for each branch
+  if (data.copiesByBranch && totalCopiesSum > 0) {
+    const prefix = data.isbn?.replace(/[^0-9]/g, '').slice(-4) || book.id.slice(-4);
+    let copyIndex = 1;
+
+    for (const branchId in data.copiesByBranch) {
+      const branchInfo = data.copiesByBranch[branchId];
+      const quantity = branchInfo?.quantity || 0;
+      const location = branchInfo?.location || null;
+
+      if (quantity > 0) {
+        for (let i = 1; i <= quantity; i++) {
+          const barcode = `BK-${prefix}-${String(copyIndex).padStart(4, '0')}`;
+          const existingCopy = await prisma.physicalCopy.findUnique({ where: { barcode } });
+          let finalBarcode = barcode;
+          if (existingCopy) {
+            const count = await prisma.physicalCopy.count({
+              where: { barcode: { startsWith: `BK-${prefix}-` } }
+            });
+            finalBarcode = `BK-${prefix}-${String(count + copyIndex).padStart(4, '0')}`;
+          }
+
+          await prisma.physicalCopy.create({
+            data: {
+              bookId: book.id,
+              branchId,
+              barcode: finalBarcode,
+              location: location || null,
+              condition: 'GOOD',
+              status: 'AVAILABLE',
+            },
+          });
+          copyIndex++;
+        }
+      }
+    }
+  }
 
   return book;
 };
@@ -172,13 +228,82 @@ export const updateBook = async (bookId: string, data: Partial<{
   aiSummary: string;
   aiSummaryFlag: boolean;
   coverImageUrl: string;
+  copiesByBranch: Record<string, { quantity: number; location?: string }>;
 }>) => {
   const book = await prisma.book.findUnique({ where: { id: bookId } });
   if (!book || book.status === BookStatus.DELETED) {
     throw createError('Tài liệu không tồn tại', 404);
   }
 
-  return prisma.book.update({ where: { id: bookId }, data });
+  const { copiesByBranch, ...bookData } = data;
+
+  if (copiesByBranch) {
+    const prefix = book.isbn?.replace(/[^0-9]/g, '').slice(-4) || book.id.slice(-4);
+
+    for (const branchId in copiesByBranch) {
+      const branchInfo = copiesByBranch[branchId];
+      const targetQty = branchInfo?.quantity || 0;
+      const location = branchInfo?.location || null;
+
+      const currentCopies = await prisma.physicalCopy.findMany({
+        where: { bookId, branchId },
+      });
+      const currentQty = currentCopies.length;
+
+      if (targetQty > currentQty) {
+        const diff = targetQty - currentQty;
+        for (let i = 1; i <= diff; i++) {
+          const barcode = `BK-${prefix}-${String(currentQty + i).padStart(4, '0')}`;
+          const existingCopy = await prisma.physicalCopy.findUnique({ where: { barcode } });
+          let finalBarcode = barcode;
+          if (existingCopy) {
+            const count = await prisma.physicalCopy.count({
+              where: { barcode: { startsWith: `BK-${prefix}-` } }
+            });
+            finalBarcode = `BK-${prefix}-${String(count + i).padStart(4, '0')}`;
+          }
+
+          await prisma.physicalCopy.create({
+            data: {
+              bookId,
+              branchId,
+              barcode: finalBarcode,
+              location,
+              condition: 'GOOD',
+              status: 'AVAILABLE',
+            },
+          });
+        }
+      } else if (targetQty < currentQty) {
+        const diff = currentQty - targetQty;
+        const availableCopies = currentCopies.filter(c => c.status === 'AVAILABLE');
+        const toDeleteCount = Math.min(diff, availableCopies.length);
+        
+        for (let i = 0; i < toDeleteCount; i++) {
+          await prisma.physicalCopy.delete({
+            where: { id: availableCopies[i].id },
+          });
+        }
+      }
+
+      if (location !== undefined) {
+        await prisma.physicalCopy.updateMany({
+          where: { bookId, branchId },
+          data: { location },
+        });
+      }
+    }
+
+    const allCopies = await prisma.physicalCopy.findMany({
+      where: { bookId },
+    });
+    const totalCopies = allCopies.length;
+    const availableCopies = allCopies.filter(c => c.status === 'AVAILABLE').length;
+
+    Object.assign(bookData, { totalCopies, availableCopies });
+  }
+
+  return prisma.book.update({ where: { id: bookId }, data: bookData });
 };
 
 // ─── UC-CAT-01: Soft Delete Book ─────────────────────────────

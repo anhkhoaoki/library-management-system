@@ -183,6 +183,7 @@ export const login = async (
     userId: user.id,
     email: user.email,
     role: user.role.name as Role,
+    branchId: user.branchId || undefined,
   };
 
   const accessToken = generateAccessToken(payload);
@@ -233,6 +234,7 @@ export const refreshToken = async (token: string) => {
       userId: user.id,
       email: user.email,
       role: user.role.name as Role,
+      branchId: user.branchId || undefined,
     };
 
     const newAccessToken = generateAccessToken(payload);

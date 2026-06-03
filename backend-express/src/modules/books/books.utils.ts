@@ -39,7 +39,9 @@ export const fetchBookInfoByIsbn = async (isbn: string): Promise<ExternalBookInf
         publishYear: info.publishedDate ? parseInt(info.publishedDate.substring(0, 4)) : undefined,
         language: info.language,
         description: info.description,
-        coverImageUrl: info.imageLinks?.thumbnail,
+        coverImageUrl: info.imageLinks?.thumbnail
+          ? info.imageLinks.thumbnail.replace(/^http:/, 'https:').replace(/[&?]edge=curl/, '')
+          : `https://covers.openlibrary.org/b/isbn/${cleanIsbn}-L.jpg`,
         isbn: isbn,
       };
     }

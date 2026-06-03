@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import MainLayout from '../../components/layout/MainLayout';
 import { AuthContext } from '../../context/AuthContext';
+import { Link } from 'react-router-dom';
 import api from '../../utils/api';
 
 export default function ReservationsPage() {
@@ -61,9 +62,12 @@ export default function ReservationsPage() {
             ) : (
               reservations.map((item) => (
                 <div key={item.id} className="bg-white rounded-xl shadow-sm border border-surface-variant p-stack-md flex flex-col sm:flex-row gap-stack-md relative">
-                  <div className="w-24 h-32 flex-shrink-0 rounded-lg overflow-hidden border border-outline-variant">
+                  <Link 
+                    to={`/dashboard/student/book/${item.book.id}`}
+                    className="w-24 h-32 flex-shrink-0 rounded-lg overflow-hidden border border-outline-variant block hover:opacity-90 transition-opacity"
+                  >
                     <img src={item.book.coverImageUrl || 'https://via.placeholder.com/100x150'} alt={item.book.title} className="w-full h-full object-cover" />
-                  </div>
+                  </Link>
 
                   <div className="flex-1 flex flex-col">
                     <div className="flex justify-between items-start mb-stack-sm">
@@ -71,24 +75,46 @@ export default function ReservationsPage() {
                         <h3 className="font-title-lg text-on-surface">{item.book.title}</h3>
                         <p className="text-sm text-on-surface-variant">{item.book.authorNames.join(', ')}</p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full font-label-sm flex items-center gap-1 ${
-                        item.status === 'READY_FOR_PICKUP' ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'
-                      }`}>
-                        <span className="material-symbols-outlined text-[16px]">
-                          {item.status === 'READY_FOR_PICKUP' ? 'check_circle' : 'schedule'}
+                      {/* Badge trạng thái */}
+                      {item.status === 'READY_FOR_PICKUP' && (
+                        <span className="px-3 py-1 rounded-full font-label-sm flex items-center gap-1 bg-success/10 text-success">
+                          <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                          Sẵn sàng lấy
                         </span>
-                        {item.status === 'READY_FOR_PICKUP' ? 'Sẵn sàng lấy' : 'Đang chờ'}
-                      </span>
+                      )}
+                      {item.status === 'WAITING' && (
+                        <span className="px-3 py-1 rounded-full font-label-sm flex items-center gap-1 bg-tertiary/10 text-tertiary">
+                          <span className="material-symbols-outlined text-[16px]">schedule</span>
+                          Đang chờ trong hàng
+                        </span>
+                      )}
                     </div>
 
-                    <div className="mt-4 flex justify-end gap-2">
-                      <button 
-                        onClick={() => handleCancel(item.id)}
-                        className="px-4 py-2 text-error font-bold border border-error/20 rounded-lg hover:bg-error/5"
-                      >
-                        Hủy yêu cầu
-                      </button>
-                    </div>
+                    {/* Thông tin hạn lấy nếu READY_FOR_PICKUP */}
+                    {item.status === 'READY_FOR_PICKUP' && item.expiresAt && (
+                      <p className="text-xs text-warning font-semibold mb-2">
+                        ⚠ Hạn lấy sách: {new Date(item.expiresAt).toLocaleDateString('vi-VN')}
+                      </p>
+                    )}
+
+                    {/* Vị trí hàng đợi nếu WAITING */}
+                    {item.status === 'WAITING' && (
+                      <p className="text-xs text-on-surface-variant mb-2">
+                        Vị trí trong hàng đợi: <span className="font-bold text-primary">#{item.queuePosition}</span>
+                      </p>
+                    )}
+
+                    {/* Nút Hủy chỉ hiển thị khi còn active */}
+                    {(item.status === 'WAITING' || item.status === 'READY_FOR_PICKUP') && (
+                      <div className="mt-4 flex justify-end gap-2">
+                        <button 
+                          onClick={() => handleCancel(item.id)}
+                          className="px-4 py-2 text-error font-bold border border-error/20 rounded-lg hover:bg-error/5"
+                        >
+                          Hủy yêu cầu
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))

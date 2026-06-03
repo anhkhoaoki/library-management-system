@@ -7,6 +7,7 @@ export interface AuthPayload {
   userId: string;
   email: string;
   role: Role;
+  branchId?: string;
   iat?: number;
   exp?: number;
 }

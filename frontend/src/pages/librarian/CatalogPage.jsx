@@ -11,6 +11,7 @@ export default function CatalogPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingBook, setEditingBook] = useState(null);
+  const [branches, setBranches] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
     authorNames: '',
@@ -20,6 +21,8 @@ export default function CatalogPage() {
     categoryId: '',
     description: '',
     language: 'vi',
+    coverImageUrl: '',
+    copiesByBranch: {},
   });
   const [isbnLoading, setIsbnLoading] = useState(false);
   const [importLoading, setImportLoading] = useState(false);
@@ -27,6 +30,7 @@ export default function CatalogPage() {
   useEffect(() => {
     fetchBooks();
     fetchCategories();
+    fetchBranches();
   }, [page, searchQuery]);
 
   const fetchBooks = async () => {
@@ -52,6 +56,15 @@ export default function CatalogPage() {
     }
   };
 
+  const fetchBranches = async () => {
+    try {
+      const response = await api.get('/admin/branches');
+      setBranches(response.data.data);
+    } catch (error) {
+      console.error('Error fetching branches:', error);
+    }
+  };
+
   const handleIsbnFill = async () => {
     if (!formData.isbn) return;
     setIsbnLoading(true);
@@ -66,9 +79,12 @@ export default function CatalogPage() {
         publishYear: info.publishYear || formData.publishYear,
         description: info.description || formData.description,
         language: info.language || formData.language,
+        coverImageUrl: info.coverImageUrl || formData.coverImageUrl,
       });
     } catch (error) {
-      alert('Không tìm thấy thông tin sách cho mã ISBN này');
+      console.error('Error fetching book info by ISBN:', error);
+      const message = error.response?.data?.message || 'Không tìm thấy thông tin sách hoặc lỗi kết nối máy chủ';
+      alert(message);
     }
     setIsbnLoading(false);
   };
@@ -129,11 +145,14 @@ export default function CatalogPage() {
       categoryId: '',
       description: '',
       language: 'vi',
+      coverImageUrl: '',
+      copiesByBranch: {},
     });
     setIsModalOpen(true);
   };
 
-  const openEditModal = (book) => {
+  const openEditModal = async (book) => {
+    setIsModalOpen(true);
     setEditingBook(book);
     setFormData({
       title: book.title,
@@ -144,14 +163,43 @@ export default function CatalogPage() {
       categoryId: book.category?.id || '',
       description: book.description || '',
       language: book.language || 'vi',
+      coverImageUrl: book.coverImageUrl || '',
+      copiesByBranch: {},
     });
-    setIsModalOpen(true);
+
+    try {
+      const response = await api.get(`/books/${book.id}`);
+      const fullBook = response.data.data;
+      
+      const copiesByBranch = {};
+      branches.forEach(br => {
+        copiesByBranch[br.id] = { quantity: 0, location: '' };
+      });
+      
+      fullBook.physicalCopies?.forEach(copy => {
+        if (!copiesByBranch[copy.branchId]) {
+          copiesByBranch[copy.branchId] = { quantity: 0, location: '' };
+        }
+        copiesByBranch[copy.branchId].quantity += 1;
+        if (copy.location) {
+          copiesByBranch[copy.branchId].location = copy.location;
+        }
+      });
+
+      setFormData(prev => ({
+        ...prev,
+        copiesByBranch
+      }));
+    } catch (error) {
+      console.error('Error fetching full book details:', error);
+    }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Bạn có chắc chắn muốn xóa tài liệu này?')) return;
+  const handleDelete = async (id, title) => {
+    if (!window.confirm(`Bạn có chắc chắn muốn xóa cuốn sách "${title}" khỏi thư viện?`)) return;
     try {
       await api.delete(`/books/${id}`);
+      alert(`Đã xóa cuốn sách "${title}" thành công!`);
       fetchBooks();
     } catch (error) {
       alert('Lỗi khi xóa sách: ' + (error.response?.data?.message || error.message));
@@ -233,7 +281,7 @@ export default function CatalogPage() {
                         <button onClick={() => openEditModal(book)} className="text-outline hover:text-primary transition-colors p-1">
                           <span className="material-symbols-outlined text-[20px]">edit</span>
                         </button>
-                        <button onClick={() => handleDelete(book.id)} className="text-outline hover:text-error transition-colors p-1">
+                        <button onClick={() => handleDelete(book.id, book.title)} className="text-outline hover:text-error transition-colors p-1">
                           <span className="material-symbols-outlined text-[20px]">delete</span>
                         </button>
                       </div>
@@ -275,7 +323,7 @@ export default function CatalogPage() {
         {/* Add/Edit Modal */}
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
               <div className="p-6 border-b border-outline-variant flex justify-between items-center">
                 <h3 className="font-headline-small text-headline-small text-on-surface">
                   {editingBook ? 'Chỉnh sửa tài liệu' : 'Thêm tài liệu mới'}
@@ -285,84 +333,198 @@ export default function CatalogPage() {
                 </button>
               </div>
               <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="font-label-md text-label-md text-on-surface-variant">Mã ISBN</label>
-                    <div className="flex gap-2">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Left Column: Cover Preview & Image Path */}
+                  <div className="md:col-span-1 flex flex-col items-center justify-start space-y-4">
+                    <label className="font-label-md text-label-md text-on-surface-variant w-full text-left font-semibold">Ảnh bìa tài liệu</label>
+                    <div className="w-full aspect-[3/4] rounded-xl bg-surface-container-high border border-outline-variant flex items-center justify-center overflow-hidden shadow-inner relative">
+                      {formData.coverImageUrl ? (
+                        <img src={formData.coverImageUrl} alt="Book cover preview" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="text-outline-variant flex flex-col items-center p-4 text-center">
+                          <span className="material-symbols-outlined text-6xl text-outline/55">image</span>
+                          <span className="text-[12px] font-label-sm mt-2 text-outline-variant">Chưa có ảnh bìa</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="w-full space-y-1">
+                      <label className="font-label-sm text-label-sm text-on-surface-variant">Đường dẫn ảnh bìa (URL)</label>
                       <input
-                        className="flex-1 px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
-                        value={formData.isbn}
-                        onChange={(e) => setFormData({...formData, isbn: e.target.value})}
-                        placeholder="Ví dụ: 978..."
+                        className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary text-[13px]"
+                        value={formData.coverImageUrl}
+                        onChange={(e) => setFormData({...formData, coverImageUrl: e.target.value})}
+                        placeholder="https://example.com/cover.jpg"
                       />
-                      <button
-                        type="button"
-                        onClick={handleIsbnFill}
-                        disabled={isbnLoading || !formData.isbn}
-                        className="px-3 py-2 bg-secondary text-on-secondary rounded-lg hover:bg-secondary-fixed transition-colors disabled:opacity-50 flex items-center gap-1"
-                      >
-                        <span className="material-symbols-outlined text-[18px]">{isbnLoading ? 'progress_activity' : 'auto_fix'}</span>
-                        Tự nhập
-                      </button>
                     </div>
                   </div>
-                  <div className="space-y-1">
-                    <label className="font-label-md text-label-md text-on-surface-variant">Tiêu đề</label>
-                    <input
-                      required
-                      className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
-                      value={formData.title}
-                      onChange={(e) => setFormData({...formData, title: e.target.value})}
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="font-label-md text-label-md text-on-surface-variant">Tác giả (cách nhau bằng dấu phẩy)</label>
-                    <input
-                      required
-                      className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
-                      value={formData.authorNames}
-                      onChange={(e) => setFormData({...formData, authorNames: e.target.value})}
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="font-label-md text-label-md text-on-surface-variant">Danh mục</label>
-                    <select
-                      className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
-                      value={formData.categoryId}
-                      onChange={(e) => setFormData({...formData, categoryId: e.target.value})}
-                    >
-                      <option value="">Chọn danh mục</option>
-                      {categories.map(cat => (
-                        <option key={cat.id} value={cat.id}>{cat.name}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="space-y-1">
-                    <label className="font-label-md text-label-md text-on-surface-variant">Nhà xuất bản</label>
-                    <input
-                      className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
-                      value={formData.publisher}
-                      onChange={(e) => setFormData({...formData, publisher: e.target.value})}
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="font-label-md text-label-md text-on-surface-variant">Năm xuất bản</label>
-                    <input
-                      type="number"
-                      className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
-                      value={formData.publishYear}
-                      onChange={(e) => setFormData({...formData, publishYear: e.target.value})}
-                    />
+
+                  {/* Right Column: Book Details */}
+                  <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* ISBN - full width in right column */}
+                    <div className="md:col-span-2 space-y-1">
+                      <label className="font-label-md text-label-md text-on-surface-variant font-semibold">Mã ISBN</label>
+                      <div className="flex gap-2">
+                        <input
+                          className="flex-1 px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
+                          value={formData.isbn}
+                          onChange={(e) => setFormData({...formData, isbn: e.target.value})}
+                          placeholder="Ví dụ: 978..."
+                        />
+                        <button
+                          type="button"
+                          onClick={handleIsbnFill}
+                          disabled={isbnLoading || !formData.isbn}
+                          className="px-4 py-2 bg-secondary text-on-secondary rounded-lg hover:bg-secondary-fixed transition-colors disabled:opacity-50 flex items-center gap-1 shrink-0 font-label-md"
+                        >
+                          <span className="material-symbols-outlined text-[18px]">{isbnLoading ? 'progress_activity' : 'auto_fix'}</span>
+                          {isbnLoading ? 'Đang lấy...' : 'Tự động điền'}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Title - full width in right column */}
+                    <div className="md:col-span-2 space-y-1">
+                      <label className="font-label-md text-label-md text-on-surface-variant font-semibold">Tiêu đề</label>
+                      <input
+                        required
+                        className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
+                        value={formData.title}
+                        onChange={(e) => setFormData({...formData, title: e.target.value})}
+                      />
+                    </div>
+
+                    {/* AuthorNames - full width in right column */}
+                    <div className="md:col-span-2 space-y-1">
+                      <label className="font-label-md text-label-md text-on-surface-variant font-semibold">Tác giả (ngăn cách bằng dấu phẩy)</label>
+                      <input
+                        required
+                        className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
+                        value={formData.authorNames}
+                        onChange={(e) => setFormData({...formData, authorNames: e.target.value})}
+                      />
+                    </div>
+
+                    {/* Category */}
+                    <div className="space-y-1">
+                      <label className="font-label-md text-label-md text-on-surface-variant font-semibold">Danh mục</label>
+                      <select
+                        required
+                        className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
+                        value={formData.categoryId}
+                        onChange={(e) => setFormData({...formData, categoryId: e.target.value})}
+                      >
+                        <option value="">Chọn danh mục</option>
+                        {categories.map(cat => (
+                          <option key={cat.id} value={cat.id}>{cat.name}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Language */}
+                    <div className="space-y-1">
+                      <label className="font-label-md text-label-md text-on-surface-variant font-semibold">Ngôn ngữ</label>
+                      <select
+                        className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
+                        value={formData.language}
+                        onChange={(e) => setFormData({...formData, language: e.target.value})}
+                      >
+                        <option value="vi">Tiếng Việt (vi)</option>
+                        <option value="en">Tiếng Anh (en)</option>
+                        <option value="ja">Tiếng Nhật (ja)</option>
+                        <option value="fr">Tiếng Pháp (fr)</option>
+                        <option value="zh">Tiếng Trung (zh)</option>
+                      </select>
+                    </div>
+
+                    {/* Publisher */}
+                    <div className="space-y-1">
+                      <label className="font-label-md text-label-md text-on-surface-variant font-semibold">Nhà xuất bản</label>
+                      <input
+                        className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
+                        value={formData.publisher}
+                        onChange={(e) => setFormData({...formData, publisher: e.target.value})}
+                      />
+                    </div>
+
+                    {/* PublishYear */}
+                    <div className="space-y-1">
+                      <label className="font-label-md text-label-md text-on-surface-variant font-semibold">Năm xuất bản</label>
+                      <input
+                        type="number"
+                        className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
+                        value={formData.publishYear}
+                        onChange={(e) => setFormData({...formData, publishYear: e.target.value})}
+                      />
+                    </div>
                   </div>
                 </div>
+
                 <div className="space-y-1">
-                  <label className="font-label-md text-label-md text-on-surface-variant">Mô tả</label>
+                  <label className="font-label-md text-label-md text-on-surface-variant font-semibold">Mô tả</label>
                   <textarea
                     rows={4}
                     className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
                     value={formData.description}
                     onChange={(e) => setFormData({...formData, description: e.target.value})}
                   />
+                </div>
+
+                <div className="border-t border-outline-variant pt-4 space-y-3">
+                  <h4 className="font-title-medium text-title-medium text-on-surface font-bold">
+                    {editingBook ? 'Quản lý bản sao vật lý theo cơ sở' : 'Khởi tạo bản sao vật lý theo cơ sở'}
+                  </h4>
+                  <div className="space-y-3">
+                    {branches.map(br => (
+                      <div key={br.id} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-surface-container-low p-3 rounded-lg border border-outline-variant/30">
+                        <div className="font-semibold text-on-surface text-sm md:col-span-4">
+                          {br.name}
+                        </div>
+                        <div className="md:col-span-3 space-y-1">
+                          <label className="block text-[11px] font-medium text-on-surface-variant">Số lượng bản sao</label>
+                          <input
+                            type="number"
+                            min="0"
+                            className="w-full px-3 py-1.5 bg-white border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary text-sm"
+                            value={formData.copiesByBranch?.[br.id]?.quantity || ''}
+                            onChange={(e) => {
+                              const val = parseInt(e.target.value) || 0;
+                              setFormData({
+                                ...formData,
+                                copiesByBranch: {
+                                  ...formData.copiesByBranch,
+                                  [br.id]: {
+                                    ...formData.copiesByBranch?.[br.id],
+                                    quantity: val
+                                  }
+                                }
+                              });
+                            }}
+                            placeholder="0"
+                          />
+                        </div>
+                        <div className="md:col-span-5 space-y-1">
+                          <label className="block text-[11px] font-medium text-on-surface-variant">Vị trí kệ sách</label>
+                          <input
+                            className="w-full px-3 py-1.5 bg-white border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary text-sm"
+                            value={formData.copiesByBranch?.[br.id]?.location || ''}
+                            onChange={(e) => {
+                              setFormData({
+                                ...formData,
+                                copiesByBranch: {
+                                  ...formData.copiesByBranch,
+                                  [br.id]: {
+                                    ...formData.copiesByBranch?.[br.id],
+                                    location: e.target.value
+                                  }
+                                }
+                              });
+                            }}
+                            placeholder="Ví dụ: Kệ A1"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
                 <div className="pt-4 flex justify-end gap-3">
                   <button
