@@ -38,7 +38,7 @@ export default function TransferManagementPage() {
         <div className="flex justify-between items-end mb-stack-lg">
           <div>
             <h2 className="font-display-lg text-on-surface mb-stack-sm">Quản lý luân chuyển tài liệu</h2>
-            <p className="font-body-md text-on-surface-variant">Xử lý các yêu cầu chuyển sách giữa các chi nhánh (UC-CIR-06).</p>
+            <p className="font-body-md text-on-surface-variant">Xử lý các yêu cầu chuyển sách giữa các chi nhánh.</p>
           </div>
         </div>
 
@@ -83,19 +83,18 @@ export default function TransferManagementPage() {
                       </div>
                     </td>
                     <td className="px-stack-md py-4">
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                        t.status === 'REQUESTED' ? 'bg-warning/10 text-warning' :
-                        t.status === 'IN_TRANSIT' ? 'bg-info/10 text-info' :
-                        'bg-success/10 text-success'
-                      }`}>
-                        {t.status === 'REQUESTED' ? 'Chờ xác nhận' : 
-                         t.status === 'IN_TRANSIT' ? 'Đang vận chuyển' : t.status}
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${t.status === 'REQUESTED' ? 'bg-warning/10 text-warning' :
+                          t.status === 'IN_TRANSIT' ? 'bg-info/10 text-info' :
+                            'bg-success/10 text-success'
+                        }`}>
+                        {t.status === 'REQUESTED' ? 'Chờ xác nhận' :
+                          t.status === 'IN_TRANSIT' ? 'Đang vận chuyển' : t.status}
                       </span>
                     </td>
                     <td className="px-stack-md py-4">
                       <div className="flex gap-2">
                         {t.status === 'REQUESTED' && (
-                          <button 
+                          <button
                             onClick={() => handleUpdateStatus(t.id, 'IN_TRANSIT')}
                             className="bg-primary text-on-primary px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-primary/90 transition-all"
                           >
@@ -103,7 +102,7 @@ export default function TransferManagementPage() {
                           </button>
                         )}
                         {t.status === 'IN_TRANSIT' && (
-                          <button 
+                          <button
                             onClick={() => handleUpdateStatus(t.id, 'ARRIVED')}
                             className="bg-success text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-success/90 transition-all"
                           >

@@ -119,9 +119,6 @@ export default function AdminDashboard() {
               <div className="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed">
                 <span className="material-symbols-outlined text-2xl">group</span>
               </div>
-              <span className="font-label-sm text-label-sm text-primary bg-primary-container px-2 py-1 rounded-full">
-                Hệ thống
-              </span>
             </div>
             <div>
               <p className="font-body-md text-body-md text-on-surface-variant mb-1">Tổng số thành viên</p>
@@ -141,9 +138,6 @@ export default function AdminDashboard() {
               <div className="w-12 h-12 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed">
                 <span className="material-symbols-outlined text-2xl">library_books</span>
               </div>
-              <span className="font-label-sm text-label-sm text-tertiary bg-tertiary-container px-2 py-1 rounded-full">
-                Đầu sách
-              </span>
             </div>
             <div>
               <p className="font-body-md text-body-md text-on-surface-variant mb-1">Tổng số tài liệu</p>
@@ -187,9 +181,6 @@ export default function AdminDashboard() {
               <div className="w-12 h-12 rounded-full bg-error-container text-on-error-container flex items-center justify-center">
                 <span className="material-symbols-outlined text-2xl">payments</span>
               </div>
-              <span className="font-label-sm text-label-sm text-error bg-error-container px-2 py-1 rounded-full">
-                Phạt tích lũy
-              </span>
             </div>
             <div>
               <p className="font-body-md text-body-md text-on-surface-variant mb-1">Tổng tiền phạt hoãn</p>
