@@ -74,8 +74,8 @@ export default function ChatWidget() {
       .filter(m => m.id !== 1) // Bỏ tin chào mặc định
       .map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text }));
 
-    // Tạo ID cho tin nhắn AI (streaming)
-    const aiMsgId = Date.now() + 1;
+    // Tạo ID độc nhất cho tin nhắn AI (streaming) để tránh trùng lặp với ID của User
+    const aiMsgId = `ai-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
     setMessages(prev => [
       ...prev,
       {
@@ -112,17 +112,27 @@ export default function ChatWidget() {
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let accumulated = '';
+      let buffer = ''; // Buffer lưu lại dòng chưa hoàn chỉnh cuối cùng của chunk
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split('\n');
+        // Cộng chunk mới nhận được vào buffer
+        buffer += decoder.decode(value, { stream: true });
+        
+        // Tách các dòng theo dấu xuống dòng \n
+        const lines = buffer.split('\n');
+        
+        // Dòng cuối cùng có thể chưa hoàn chỉnh, cất đi để nối vào chunk tiếp theo
+        buffer = lines.pop() || '';
 
         for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const jsonStr = line.slice(6).trim();
+          const trimmedLine = line.trim();
+          if (!trimmedLine) continue;
+
+          if (trimmedLine.startsWith('data: ')) {
+            const jsonStr = trimmedLine.slice(6).trim();
             if (!jsonStr) continue;
 
             try {
@@ -140,14 +150,15 @@ export default function ChatWidget() {
               }
 
               accumulated += token;
-              // Cập nhật tin nhắn từng token
+              // Cập nhật tin nhắn từng token đúng theo ID của AI
               setMessages(prev =>
                 prev.map(m =>
                   m.id === aiMsgId ? { ...m, text: accumulated } : m
                 )
               );
-            } catch {
-              // Bỏ qua JSON parse error
+            } catch (err) {
+              // Bỏ qua lỗi JSON parse của các dòng bị đứt quãng
+              console.warn('Lỗi parse dòng SSE:', trimmedLine, err);
             }
           }
         }
@@ -172,7 +183,7 @@ export default function ChatWidget() {
     setMessages(prev => [
       ...prev,
       {
-        id: Date.now(),
+        id: `ai-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
         role: 'assistant',
         text,
         time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
@@ -188,7 +199,7 @@ export default function ChatWidget() {
     setMessages(prev => [
       ...prev,
       {
-        id: Date.now(),
+        id: `user-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
         role: 'user',
         text,
         time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
@@ -203,7 +214,7 @@ export default function ChatWidget() {
     setMessages(prev => [
       ...prev,
       {
-        id: Date.now(),
+        id: `user-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
         role: 'user',
         text: suggestion,
         time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
@@ -218,6 +229,7 @@ export default function ChatWidget() {
       handleSend();
     }
   };
+
 
   // Render text với markdown đơn giản (bold, xuống dòng)
   const renderText = (text) => {
