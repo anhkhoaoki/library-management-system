@@ -1,22 +1,24 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 
-// Mock initial messages to demonstrate the UI
+// Tin nhắn chào mừng ban đầu
 const INITIAL_MESSAGES = [
   {
     id: 1,
     role: 'assistant',
-    text: 'Xin chào! Tôi là trợ lý thư viện BkLib. Tôi có thể giúp bạn tìm kiếm tài liệu, tra cứu sách, hỏi về tình trạng mượn trả hay các dịch vụ của thư viện. Bạn cần hỗ trợ gì?',
+    text: 'Xin chào! Tôi là **Thư Bé** - trợ lý AI của thư viện BkLib 📚\n\nTôi có thể giúp bạn:\n- Tra cứu quy định mượn/trả sách\n- Kiểm tra sách bạn đang mượn\n- Hỏi về tiền phạt và đặt giữ chỗ\n\nBạn cần hỗ trợ gì?',
     time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
   },
 ];
 
 const QUICK_SUGGESTIONS = [
-  'Tìm sách về lập trình Python',
   'Tôi đang mượn bao nhiêu sách?',
-  'Thủ tục đặt chỗ sách như thế nào?',
   'Phí phạt trễ hạn là bao nhiêu?',
+  'Thủ tục đặt giữ chỗ sách như thế nào?',
+  'Tôi có tiền phạt không?',
 ];
+
+const API_BASE = 'http://localhost:3000/api/v1';
 
 export default function ChatWidget() {
   const { user } = useContext(AuthContext);
@@ -24,10 +26,11 @@ export default function ChatWidget() {
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const [inputText, setInputText] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const abortControllerRef = useRef(null);
 
   useEffect(() => {
     if (isOpen && !isMinimized) {
@@ -36,7 +39,7 @@ export default function ChatWidget() {
     }
   }, [isOpen, isMinimized, messages]);
 
-  // Listen for sidebar trigger event
+  // Lắng nghe sự kiện mở chat từ sidebar
   useEffect(() => {
     const handleSidebarOpen = () => {
       setIsOpen(true);
@@ -50,47 +53,136 @@ export default function ChatWidget() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleOpen = () => {
-    setIsOpen(true);
-    setIsMinimized(false);
-  };
-
+  const handleOpen = () => { setIsOpen(true); setIsMinimized(false); };
   const handleClose = () => {
+    // Hủy stream đang chạy nếu có
+    abortControllerRef.current?.abort();
     setIsOpen(false);
   };
+  const handleToggleMinimize = () => setIsMinimized(!isMinimized);
 
-  const handleToggleMinimize = () => {
-    setIsMinimized(!isMinimized);
+  // ─── Gọi API thật với SSE streaming ─────────────────────────────
+  const callChatAPI = async (userMessage) => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      appendAssistantMessage('Bạn cần đăng nhập để sử dụng tính năng này.');
+      return;
+    }
+
+    // Lấy lịch sử chat hiện tại để gửi kèm
+    const history = messages
+      .filter(m => m.id !== 1) // Bỏ tin chào mặc định
+      .map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text }));
+
+    // Tạo ID cho tin nhắn AI (streaming)
+    const aiMsgId = Date.now() + 1;
+    setMessages(prev => [
+      ...prev,
+      {
+        id: aiMsgId,
+        role: 'assistant',
+        text: '',
+        time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+        isStreaming: true,
+      },
+    ]);
+
+    setIsStreaming(true);
+    abortControllerRef.current = new AbortController();
+
+    try {
+      const response = await fetch(`${API_BASE}/ai/chat/stream`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          message: userMessage,
+          chatHistory: history,
+        }),
+        signal: abortControllerRef.current.signal,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      // Đọc SSE stream
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let accumulated = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split('\n');
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const jsonStr = line.slice(6).trim();
+            if (!jsonStr) continue;
+
+            try {
+              const data = JSON.parse(jsonStr);
+              const token = data.token;
+
+              if (token === '[DONE]') {
+                // Stream hoàn thành
+                setMessages(prev =>
+                  prev.map(m =>
+                    m.id === aiMsgId ? { ...m, isStreaming: false } : m
+                  )
+                );
+                break;
+              }
+
+              accumulated += token;
+              // Cập nhật tin nhắn từng token
+              setMessages(prev =>
+                prev.map(m =>
+                  m.id === aiMsgId ? { ...m, text: accumulated } : m
+                )
+              );
+            } catch {
+              // Bỏ qua JSON parse error
+            }
+          }
+        }
+      }
+    } catch (err) {
+      if (err.name === 'AbortError') return;
+      console.error('[Chat SSE Error]', err);
+      setMessages(prev =>
+        prev.map(m =>
+          m.id === aiMsgId
+            ? { ...m, text: 'Xin lỗi, không thể kết nối đến trợ lý lúc này. Vui lòng thử lại sau.', isStreaming: false }
+            : m
+        )
+      );
+    } finally {
+      setIsStreaming(false);
+    }
   };
 
-  const simulateAssistantReply = (userMessage) => {
-    setIsTyping(true);
-    // Simulate network delay
-    setTimeout(() => {
-      setIsTyping(false);
-      const replies = [
-        'Tôi đã ghi nhận yêu cầu của bạn. Hệ thống đang tìm kiếm thông tin liên quan...',
-        'Đây là một câu hỏi thú vị! Để tôi tra cứu trong cơ sở dữ liệu thư viện cho bạn nhé.',
-        'Bạn có thể truy cập mục "Tra cứu tài liệu" để tìm kiếm theo từ khóa, tác giả hoặc ISBN.',
-        'Thư viện BkLib hiện có hơn 31 đầu sách đa dạng. Hãy thử tìm kiếm theo danh mục nhé!',
-        'Để biết thêm chi tiết, bạn có thể liên hệ thủ thư tại quầy hoặc gửi yêu cầu qua hệ thống.',
-      ];
-      const randomReply = replies[Math.floor(Math.random() * replies.length)];
-      setMessages(prev => [
-        ...prev,
-        {
-          id: Date.now(),
-          role: 'assistant',
-          text: randomReply,
-          time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
-        },
-      ]);
-    }, 1200 + Math.random() * 800);
+  // Helper: thêm tin nhắn AI tĩnh (cho lỗi hoặc offline)
+  const appendAssistantMessage = (text) => {
+    setMessages(prev => [
+      ...prev,
+      {
+        id: Date.now(),
+        role: 'assistant',
+        text,
+        time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+      },
+    ]);
   };
 
   const handleSend = () => {
     const text = inputText.trim();
-    if (!text) return;
+    if (!text || isStreaming) return;
 
     setShowSuggestions(false);
     setMessages(prev => [
@@ -103,7 +195,7 @@ export default function ChatWidget() {
       },
     ]);
     setInputText('');
-    simulateAssistantReply(text);
+    callChatAPI(text);
   };
 
   const handleSuggestionClick = (suggestion) => {
@@ -117,7 +209,7 @@ export default function ChatWidget() {
         time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
       },
     ]);
-    simulateAssistantReply(suggestion);
+    callChatAPI(suggestion);
   };
 
   const handleKeyDown = (e) => {
@@ -125,6 +217,22 @@ export default function ChatWidget() {
       e.preventDefault();
       handleSend();
     }
+  };
+
+  // Render text với markdown đơn giản (bold, xuống dòng)
+  const renderText = (text) => {
+    const lines = text.split('\n');
+    return lines.map((line, i) => {
+      const parts = line.split(/\*\*(.*?)\*\*/g);
+      return (
+        <span key={i}>
+          {parts.map((part, j) =>
+            j % 2 === 1 ? <strong key={j}>{part}</strong> : part
+          )}
+          {i < lines.length - 1 && <br />}
+        </span>
+      );
+    });
   };
 
   const userInitial = user?.fullName?.charAt(0) || 'U';
@@ -146,7 +254,6 @@ export default function ChatWidget() {
           >
             forum
           </span>
-          {/* Notification dot */}
           <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-error rounded-full border-2 border-white animate-pulse" />
         </button>
       )}
@@ -171,17 +278,16 @@ export default function ChatWidget() {
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-bold text-sm leading-tight">Trợ lý BkLib</h3>
+              <h3 className="font-bold text-sm leading-tight">Thư Bé — Trợ lý BkLib AI</h3>
               <p className="text-xs text-white/75 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-300 inline-block" />
-                Đang hoạt động
+                {isStreaming ? 'Đang trả lời...' : 'Đang hoạt động'}
               </p>
             </div>
             <div className="flex items-center gap-1">
               <button
                 onClick={handleToggleMinimize}
                 className="w-7 h-7 rounded-full hover:bg-white/20 flex items-center justify-center transition-colors"
-                title={isMinimized ? 'Mở rộng' : 'Thu nhỏ'}
                 aria-label={isMinimized ? 'Mở rộng chat' : 'Thu nhỏ chat'}
               >
                 <span className="material-symbols-outlined text-base">
@@ -191,7 +297,6 @@ export default function ChatWidget() {
               <button
                 onClick={handleClose}
                 className="w-7 h-7 rounded-full hover:bg-white/20 flex items-center justify-center transition-colors"
-                title="Đóng"
                 aria-label="Đóng chat"
               >
                 <span className="material-symbols-outlined text-base">close</span>
@@ -199,7 +304,7 @@ export default function ChatWidget() {
             </div>
           </div>
 
-          {/* Body – only visible when not minimized */}
+          {/* Body */}
           {!isMinimized && (
             <>
               {/* Messages */}
@@ -234,23 +339,28 @@ export default function ChatWidget() {
                             : 'bg-white text-on-surface border border-outline-variant/50 rounded-bl-sm'
                         }`}
                       >
-                        {msg.text}
+                        {msg.role === 'assistant' ? (
+                          <span>
+                            {renderText(msg.text)}
+                            {/* Cursor nhấp nháy khi đang stream */}
+                            {msg.isStreaming && (
+                              <span className="inline-block w-0.5 h-3.5 bg-primary ml-0.5 animate-pulse align-middle" />
+                            )}
+                          </span>
+                        ) : (
+                          msg.text
+                        )}
                       </div>
                       <span className="text-[10px] text-outline mt-0.5 px-1">{msg.time}</span>
                     </div>
                   </div>
                 ))}
 
-                {/* Typing indicator */}
-                {isTyping && (
+                {/* Typing dots khi đang chờ token đầu tiên */}
+                {isStreaming && messages[messages.length - 1]?.text === '' && (
                   <div className="flex items-end gap-2">
                     <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center shrink-0 shadow-sm mb-0.5">
-                      <span
-                        className="material-symbols-outlined text-white text-[14px]"
-                        style={{ fontVariationSettings: "'FILL' 1" }}
-                      >
-                        smart_toy
-                      </span>
+                      <span className="material-symbols-outlined text-white text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>smart_toy</span>
                     </div>
                     <div className="bg-white border border-outline-variant/50 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
                       <div className="flex gap-1 items-center">
@@ -266,7 +376,7 @@ export default function ChatWidget() {
               </div>
 
               {/* Quick Suggestions */}
-              {showSuggestions && !isTyping && (
+              {showSuggestions && !isStreaming && (
                 <div className="px-3 py-2 bg-[#f7fafc] border-t border-outline-variant/40 flex gap-2 flex-wrap">
                   {QUICK_SUGGESTIONS.map((s) => (
                     <button
@@ -289,24 +399,24 @@ export default function ChatWidget() {
                   value={inputText}
                   onChange={(e) => {
                     setInputText(e.target.value);
-                    // auto-resize
                     e.target.style.height = 'auto';
                     e.target.style.height = Math.min(e.target.scrollHeight, 96) + 'px';
                   }}
                   onKeyDown={handleKeyDown}
-                  placeholder="Nhập câu hỏi của bạn..."
-                  className="flex-1 resize-none bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2 text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                  placeholder={isStreaming ? 'Đang trả lời...' : 'Nhập câu hỏi của bạn...'}
+                  disabled={isStreaming}
+                  className="flex-1 resize-none bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2 text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all disabled:opacity-50"
                   style={{ minHeight: '40px', maxHeight: '96px' }}
                 />
                 <button
                   id="chat-send-btn"
                   onClick={handleSend}
-                  disabled={!inputText.trim() || isTyping}
+                  disabled={!inputText.trim() || isStreaming}
                   className="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center hover:bg-primary-container transition-all disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
                   aria-label="Gửi tin nhắn"
                 >
                   <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                    send
+                    {isStreaming ? 'stop_circle' : 'send'}
                   </span>
                 </button>
               </div>
