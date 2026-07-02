@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     GEMINI_MODEL: str = "gemini-2.5-flash"
     EMBEDDING_MODEL: str = "models/text-embedding-004"
 
+    # URL của Node.js Backend (để Function Calling tools gọi ngược lại)
+    BACKEND_URL: str = "http://localhost:3000"
+
     # Cấu hình đọc file .env chuẩn Pydantic v2 (Bắt buộc sửa đoạn này)
     model_config = SettingsConfigDict(
         env_file=".env", 

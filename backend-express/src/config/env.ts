@@ -13,6 +13,7 @@ export const env = {
 
   AI_SERVICE_URL: process.env.AI_SERVICE_URL || 'http://localhost:8000',
   AI_SERVICE_API_KEY: process.env.AI_SERVICE_API_KEY || '',
+  INTERNAL_API_KEY: process.env.INTERNAL_API_KEY || 'internal-api-key',
 
   SMTP_HOST: process.env.SMTP_HOST!,
   SMTP_PORT: parseInt(process.env.SMTP_PORT || '587', 10),
