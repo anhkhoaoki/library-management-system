@@ -20,8 +20,27 @@ export const generateBookSummary = async (req: Request, res: Response, next: Nex
       res.status(400).json({ success: false, message: 'title và authorNames là bắt buộc' });
       return;
     }
-    const result = await aiService.generateBookSummary({ title, authorNames, category, existingDescription });
+    const result = await aiService.generateBookSummary({ title, authorNames, category, existingDescription, tone: req.body.tone });
     res.status(200).json({ success: true, data: result });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const generateBookSummaryStream = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { title, authorNames, category, existingDescription, tone } = req.body;
+    if (!title || !authorNames?.length) {
+      res.status(400).json({ success: false, message: 'title và authorNames là bắt buộc' });
+      return;
+    }
+
+    res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('X-Accel-Buffering', 'no'); // Disable Nginx buffering if any
+
+    await aiService.generateBookSummaryStream({ title, authorNames, category, existingDescription, tone }, res);
   } catch (err) {
     next(err);
   }
@@ -31,8 +50,8 @@ export const generateBookSummary = async (req: Request, res: Response, next: Nex
 export const naturalLanguageSearch = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // Cho phép query có thể là chuỗi rỗng hoặc undefined (không bắt buộc)
-    const { query } = req.body; 
-    
+    const { query } = req.body;
+
     // XÓA HOẶC COMMENT ĐOẠN IF (!QUERY) NÀY ĐI
     // if (!query) {
     //   res.status(400).json({ success: false, message: 'query là bắt buộc' });
@@ -40,7 +59,7 @@ export const naturalLanguageSearch = async (req: Request, res: Response, next: N
     // }
 
     const userId = req.user?.userId;
-    
+
     // Truyền query xuống service (nếu trống thì truyền chuỗi rỗng "")
     const result = await aiService.naturalLanguageSearch(query || "", userId);
     res.status(200).json({ success: true, data: result });

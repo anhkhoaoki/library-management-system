@@ -26,6 +26,8 @@ export default function CatalogPage() {
   });
   const [isbnLoading, setIsbnLoading] = useState(false);
   const [importLoading, setImportLoading] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiTone, setAiTone] = useState("Mặc định");
 
   useEffect(() => {
     fetchBooks();
@@ -87,6 +89,78 @@ export default function CatalogPage() {
       alert(message);
     }
     setIsbnLoading(false);
+  };
+
+  const handleGenerateSummary = async () => {
+    if (!formData.title || !formData.authorNames) {
+      alert("Vui lòng nhập Tiêu đề và Tác giả trước khi tạo tóm tắt AI.");
+      return;
+    }
+    setAiLoading(true);
+    // Xóa mô tả cũ để hiển thị stream mới
+    setFormData(prev => ({ ...prev, description: '' }));
+    
+    try {
+      const category = categories.find(c => c.id === formData.categoryId)?.name || '';
+      const token = localStorage.getItem('accessToken');
+      
+      const response = await fetch(`${api.defaults.baseURL}/ai/catalog/summarize/stream`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          title: formData.title,
+          authorNames: formData.authorNames.split(',').map(a => a.trim()),
+          category,
+          existingDescription: formData.description,
+          tone: aiTone
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Lỗi server: ${response.status}`);
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder('utf-8');
+      
+      let currentDesc = "";
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        
+        // Dòng cuối cùng có thể bị cắt ngang, giữ lại trong buffer
+        buffer = lines.pop() || "";
+        
+        for (const line of lines) {
+          if (line.trim() === '') continue;
+          try {
+            const parsed = JSON.parse(line);
+            if (parsed.error) {
+              alert('Lỗi từ AI: ' + parsed.error);
+              break;
+            }
+            if (parsed.token && parsed.token !== '[DONE]') {
+              currentDesc += parsed.token;
+              setFormData(prev => ({ ...prev, description: currentDesc }));
+            }
+          } catch (e) {
+            console.warn('Lỗi parse JSON chunk (bỏ qua):', line);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error generating AI summary:', error);
+      alert('Lỗi khi tạo tóm tắt AI: Không thể kết nối AI service');
+    }
+    setAiLoading(false);
   };
 
   const handleImportExcel = async (e) => {
@@ -460,12 +534,39 @@ export default function CatalogPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-label-md text-label-md text-on-surface-variant font-semibold">Mô tả</label>
+                  <div className="flex justify-between items-center">
+                    <label className="font-label-md text-label-md text-on-surface-variant font-semibold">Mô tả</label>
+                    <div className="flex items-center gap-2">
+                      <select 
+                        value={aiTone}
+                        onChange={(e) => setAiTone(e.target.value)}
+                        className="px-2 py-1.5 text-sm bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
+                        disabled={aiLoading}
+                      >
+                        <option value="Mặc định">Giọng mặc định</option>
+                        <option value="Học thuật">Học thuật</option>
+                        <option value="Thu hút">Thu hút</option>
+                        <option value="Thiếu nhi">Thiếu nhi</option>
+                      </select>
+                      <button
+                        type="button"
+                        onClick={handleGenerateSummary}
+                        disabled={aiLoading || !formData.title || !formData.authorNames}
+                        className="px-3 py-1.5 bg-tertiary-container text-on-tertiary-container rounded-lg hover:bg-tertiary hover:text-white transition-colors disabled:opacity-50 flex items-center gap-1 font-label-sm text-[12px] shadow-sm"
+                      >
+                        <span className="material-symbols-outlined text-[16px]">
+                          {aiLoading ? 'progress_activity' : 'magic_button'}
+                        </span>
+                        {aiLoading ? 'Đang tạo...' : '✨ Tạo tóm tắt AI'}
+                      </button>
+                    </div>
+                  </div>
                   <textarea
-                    rows={4}
+                    rows={5}
                     className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
                     value={formData.description}
                     onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    placeholder="Nhập mô tả sách hoặc sử dụng AI để tự động sinh dựa trên Tiêu đề và Tác giả..."
                   />
                 </div>
 

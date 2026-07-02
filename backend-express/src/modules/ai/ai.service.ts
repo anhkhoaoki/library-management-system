@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import axios, { AxiosError } from 'axios';
 import aiServiceClient from '../../config/ai-service';
 import { createError } from '../../middlewares/error.middleware';
 import prisma from '../../config/database';
@@ -36,14 +37,51 @@ export const generateBookSummary = async (data: {
     const response = await aiServiceClient.post('/catalog/summarize', data);
     return response.data;
   } catch (error: unknown) {
-    const axiosError = error as { response?: { status: number } };
-    if (axiosError.response?.status === 422) {
-      throw createError(
-        'Thông tin đầu vào không đủ để AI tạo tóm tắt. Vui lòng bổ sung tên tác giả',
-        422
-      );
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 422) {
+        throw createError(
+          'Thông tin đầu vào không đủ để AI tạo tóm tắt. Vui lòng bổ sung tên tác giả',
+          422
+        );
+      }
+
+      const status = error.response?.status;
+      const detail = error.response?.data?.detail || error.message;
+      if (status) {
+        throw createError(
+          `AI service returned ${status}: ${detail}`,
+          status === 500 ? 502 : status,
+        );
+      }
     }
+
     throw createError('Dịch vụ AI đang không khả dụng. Vui lòng thử lại sau', 503);
+  }
+};
+
+export const generateBookSummaryStream = async (data: any, res: import('express').Response) => {
+  try {
+    const response = await aiServiceClient.post('/catalog/summarize/stream', data, {
+      responseType: 'stream',
+    });
+
+    response.data.on('data', (chunk: any) => {
+      res.write(chunk);
+    });
+
+    response.data.on('end', () => {
+      res.end();
+    });
+
+    response.data.on('error', (err: any) => {
+      console.error('[AI Stream Error]:', err);
+      res.write('data: {"error": "Stream error from AI service"}\n\n');
+      res.end();
+    });
+  } catch (error: any) {
+    console.error('[AI Service Error]:', error.message);
+    res.write('data: {"error": "Dịch vụ AI đang không khả dụng."}\n\n');
+    res.end();
   }
 };
 

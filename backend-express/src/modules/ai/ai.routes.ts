@@ -99,6 +99,13 @@ router.post(
   aiController.generateBookSummary
 );
 
+router.post(
+  '/catalog/summarize/stream',
+  authenticate,
+  authorize(Role.LIBRARIAN, Role.ADMIN),
+  aiController.generateBookSummaryStream
+);
+
 /**
  * @swagger
  * /api/v1/ai/search:

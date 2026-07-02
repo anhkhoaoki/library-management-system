@@ -20,6 +20,7 @@ class SummarizeRequest(BaseModel):
     authorNames: List[str]
     category: Optional[str] = None
     existingDescription: Optional[str] = None
+    tone: Optional[str] = "Mặc định"
 
 
 class SummarizeResponse(BaseModel):

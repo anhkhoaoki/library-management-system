@@ -57,3 +57,30 @@ def summarize_book(request: SummarizeRequest):
             status_code=500,
             detail=f"Lỗi tạo tóm tắt AI: {str(e)}"
         )
+
+
+@router.post("/summarize/stream")
+def summarize_book_stream(request: SummarizeRequest):
+    """
+    Generates a book summary and streams the response back token by token.
+    Uses SSE (Server-Sent Events) style JSON lines.
+    """
+    if not request.title or not request.authorNames:
+        raise HTTPException(
+            status_code=422,
+            detail="Cần ít nhất tên sách và tên tác giả để tạo tóm tắt"
+        )
+        
+    from fastapi.responses import StreamingResponse
+    from app.services.catalog_service import generate_book_summary_stream
+    
+    return StreamingResponse(
+        generate_book_summary_stream(
+            title=request.title,
+            author_names=request.authorNames,
+            category=request.category,
+            existing_description=request.existingDescription,
+            tone=request.tone,
+        ),
+        media_type="text/event-stream"
+    )
