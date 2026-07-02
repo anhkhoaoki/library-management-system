@@ -50,18 +50,19 @@ def initialize_rag() -> None:
     existing = [c.name for c in _chroma_client.list_collections()]
     if COLLECTION_NAME in existing:
         _collection = _chroma_client.get_collection(COLLECTION_NAME)
-        print(f"[RAG] Collection '{COLLECTION_NAME}' đã sẵn sàng ({_collection.count()} chunks).")
+        print(f"[RAG] Collection '{COLLECTION_NAME}' ready ({_collection.count()} chunks).")
         return
+
 
     # Đọc file FAQ
     if not FAQ_FILE.exists():
-        print(f"[RAG] CẢNH BÁO: Không tìm thấy file FAQ tại {FAQ_FILE}")
+        print(f"[RAG] WARNING: FAQ file not found at {FAQ_FILE}")
         _collection = _chroma_client.create_collection(COLLECTION_NAME)
         return
 
     raw_text = FAQ_FILE.read_text(encoding="utf-8")
     chunks = chunk_text(raw_text)
-    print(f"[RAG] Đã cắt thành {len(chunks)} chunks từ file FAQ.")
+    print(f"[RAG] Split into {len(chunks)} chunks from FAQ file.")
 
     # Sinh vector embedding cho từng chunk
     embedder = get_embeddings()
@@ -74,7 +75,7 @@ def initialize_rag() -> None:
         embeddings=embeddings,
         ids=[f"chunk_{i}" for i in range(len(chunks))],
     )
-    print(f"[RAG] Đã index {len(chunks)} chunks vào ChromaDB thành công.")
+    print(f"[RAG] Indexed {len(chunks)} chunks into ChromaDB successfully.")
 
 
 # ─── Retrieve top-K chunks ───────────────────────────────────────

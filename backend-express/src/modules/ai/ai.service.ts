@@ -166,15 +166,22 @@ export const chatWithBotStream = async (userId: string, message: string, res: Re
       },
     }, {
       responseType: 'stream',
+      timeout: 0,             // Tắt timeout cho streaming — tránh bị cắt stream giữa chừng
+      headers: {
+        'Connection': 'close', // Buộc mỗi stream dùng TCP connection mới, tránh lỗi connection reuse
+      },
     });
+
+    // Flush headers ngay lập tức để trình duyệt biết đây là SSE
+    res.flushHeaders();
 
     let fullReply = '';
 
     response.data.on('data', (chunk: Buffer) => {
-      // Gửi chunk dữ liệu trực tiếp về frontend
-      res.write(chunk);
+      // Gửi chunk trực tiếp về browser
+      if (!res.writableEnded) res.write(chunk);
 
-      // Phân tích token để ghép lại câu trả lời đầy đủ lưu lịch sử chat
+      // Tích lũy fullReply để lưu lịch sử chat
       const chunkStr = chunk.toString();
       const lines = chunkStr.split('\n');
       for (const line of lines) {
@@ -185,37 +192,39 @@ export const chatWithBotStream = async (userId: string, message: string, res: Re
               fullReply += parsed.token;
             }
           } catch {
-            // bỏ qua lỗi parsing JSON
+            // bỏ qua lỗi parsing JSON cho dòng bị cắt
           }
         }
       }
     });
 
-    response.data.on('end', async () => {
+    // Lưu lịch sử sau khi stream kết thúc (fire-and-forget, không block stream)
+    response.data.on('end', () => {
+      if (!res.writableEnded) res.end();
       if (fullReply) {
-        // Lưu lịch sử chat
-        await prisma.chatHistory.create({
-          data: { userId, role: 'user', content: message },
-        });
-        await prisma.chatHistory.create({
-          data: { userId, role: 'assistant', content: fullReply },
-        });
+        prisma.chatHistory.create({ data: { userId, role: 'user', content: message } })
+          .then(() => prisma.chatHistory.create({ data: { userId, role: 'assistant', content: fullReply } }))
+          .catch((e: Error) => console.error('[Chat History Save Error]', e));
       }
-      res.end();
     });
 
     response.data.on('error', (err: Error) => {
       console.error('[AI Stream Client Error]', err);
-      res.write(`data: ${JSON.stringify({ token: 'Đã xảy ra lỗi kết nối với mô hình AI.' })}\n\n`);
-      res.write(`data: ${JSON.stringify({ token: '[DONE]' })}\n\n`);
-      res.end();
+      if (!res.writableEnded) {
+        res.write(`data: ${JSON.stringify({ token: 'Đã xảy ra lỗi kết nối với mô hình AI.' })}\n\n`);
+        res.write(`data: ${JSON.stringify({ token: '[DONE]' })}\n\n`);
+        res.end();
+      }
     });
+
 
   } catch (error) {
     console.error('[AI Stream Call Error]', error);
-    res.write(`data: ${JSON.stringify({ token: 'Dịch vụ AI đang bận, vui lòng thử lại sau.' })}\n\n`);
-    res.write(`data: ${JSON.stringify({ token: '[DONE]' })}\n\n`);
-    res.end();
+    if (!res.writableEnded) {
+      res.write(`data: ${JSON.stringify({ token: 'Dịch vụ AI đang bận, vui lòng thử lại sau.' })}\n\n`);
+      res.write(`data: ${JSON.stringify({ token: '[DONE]' })}\n\n`);
+      res.end();
+    }
   }
 };
 
