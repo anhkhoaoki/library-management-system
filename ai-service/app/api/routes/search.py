@@ -1,9 +1,14 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import Optional, List
 import httpx
-from app.services.search_service import semantic_search, extract_search_intent
-from app.core.gemini_client import get_embeddings
+from app.services.search_service import (
+    semantic_search,
+    extract_search_intent,
+    normalize_search_text,
+    sanitize_book_result,
+    sanitize_text,
+)
 
 router = APIRouter()
 
@@ -27,8 +32,10 @@ async def get_book_embeddings():
     global BOOK_EMBEDDINGS_CACHE
     if BOOK_EMBEDDINGS_CACHE:
         return BOOK_EMBEDDINGS_CACHE
-        
+
     try:
+        from app.core.gemini_client import get_embeddings
+
         async with httpx.AsyncClient(timeout=15.0) as client:
             # Gọi API lấy sách từ Node.js (cổng 3000)
             res = await client.get("http://localhost:3000/api/v1/books?limit=150")
@@ -95,54 +102,48 @@ async def get_book_embeddings():
 # CHÚ Ý SỬA LẠI THÀNH: SemanticSearchRequest ở dòng này 👇
 @router.post("/semantic", response_model=SemanticSearchResponse)
 async def natural_language_search(request: SemanticSearchRequest):
-    
-    # 1. Lấy toàn bộ danh sách sách từ Cache / DB trước
+    safe_query = sanitize_text(request.query or "")
+    normalized_query = normalize_search_text(safe_query)
+
     book_embeddings = await get_book_embeddings()
 
-    # 🎯 TRƯỜNG HỢP 1: Khi vừa bật chế độ AI, chưa nhập chữ nào (hoặc gõ quá ngắn dưới 3 ký tự)
-    if not request.query or len(request.query.strip()) < 3:
-        # Loại bỏ trường 'embedding' để tránh nặng băng thông khi trả về danh sách lớn
-        cleaned_books = [{k: v for k, v in b.items() if k != "embedding"} for b in book_embeddings]
+    if not safe_query or len(normalized_query) < 3:
+        cleaned_books = [sanitize_book_result(book) for book in book_embeddings]
         return SemanticSearchResponse(
-            results=cleaned_books, # Hiện toàn bộ sách làm mặc định
+            results=cleaned_books,
             intent=None,
-            isFallback=False
+            isFallback=False,
         )
 
-    # 🎯 TRƯỜNG HỢP 2: Người dùng gõ câu lệnh ngữ nghĩa thực sự
     intent = None
     try:
         try:
-            intent_str = extract_search_intent(request.query)
-            intent = intent_str 
-        except Exception as gemini_err:
-            print(f"[Gemini Fallback] Đang chuyển hướng phân tích sang bộ lọc Local Rule")
+            intent_str = extract_search_intent(safe_query)
+            intent = intent_str
+        except Exception:
+            print("[Gemini Fallback] Đang chuyển hướng phân tích sang bộ lọc Local Rule")
             try:
                 from app.services.search_service import extract_search_intent_local
-                intent = extract_search_intent_local(request.query)
+
+                intent = extract_search_intent_local(safe_query)
             except Exception:
                 intent = None
 
-        # Tiến hành so sánh Vector ngữ nghĩa
         results = await semantic_search(
-            query=request.query,
+            query=safe_query,
             book_embeddings=book_embeddings,
-            limit=100, # Quét diện rộng
+            limit=100,
         )
 
-        # Trích xuất ĐÚNG 1 CUỐN duy nhất có điểm tương đồng cao nhất
         final_results = []
         if results:
-            best_match = results[0] # Phần tử đầu tiên luôn có score cao nhất do đã sort giảm dần
-            
-            # Đặt ngưỡng điểm số tin cậy (Ví dụ: lớn hơn hoặc bằng 0.25)
-            # Tránh việc người dùng nhập lung tung không liên quan mà vẫn ra sách
-            if best_match.get("score", 0) >= 0.25: 
-                final_results = [best_match] # Chỉ lấy đúng 1 cuốn này
+            best_match = results[0]
+            if best_match.get("score", 0) >= 0.25:
+                final_results = [best_match]
 
         return SemanticSearchResponse(
-            results=final_results,
-            intent=intent,
+            results=[sanitize_book_result(book) for book in final_results],
+            intent=sanitize_text(intent) if intent else None,
             isFallback=False,
         )
 
