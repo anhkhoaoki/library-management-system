@@ -53,13 +53,21 @@ export const naturalLanguageSearch = async (query: string, userId?: string) => {
     const response = await aiServiceClient.post('/search/semantic', {
       query,
       userId,
-      limit: 20,
+      limit: 12,
     });
-    
-    // Đảm bảo trả về đúng định dạng mà Frontend mong đợi ở response.data.data
+
+    const aiResponse = response.data;
+    const results = aiResponse.results || [];
+
+    // Trả về đầy đủ metadata AI để Frontend hiển thị
     return {
-      data: response.data.results || [], 
-      pagination: { total: response.data.results?.length || 0, page: 1, limit: 12, totalPages: 1 }
+      data: results,
+      searchMode: aiResponse.searchMode || 'semantic',
+      confidenceLevel: aiResponse.confidenceLevel || 'high',
+      suggestedQueries: aiResponse.suggestedQueries || [],
+      isFallback: aiResponse.isFallback || false,
+      intent: aiResponse.intent || null,
+      pagination: { total: results.length, page: 1, limit: 12, totalPages: Math.ceil(results.length / 12) },
     };
   } catch {
     console.warn('[AI Search] Falling back to basic keyword search');
@@ -72,11 +80,14 @@ export const naturalLanguageSearch = async (query: string, userId?: string) => {
           { description: { contains: query, mode: 'insensitive' } },
         ],
       },
-      take: 20,
+      take: 12,
     });
 
     return {
       data: results,
+      searchMode: 'keyword_fallback',
+      confidenceLevel: 'low',
+      suggestedQueries: [],
       isFallback: true,
       message: 'Tính năng tìm kiếm thông minh đang bảo trì. Đang dùng tìm kiếm cơ bản.',
     };
