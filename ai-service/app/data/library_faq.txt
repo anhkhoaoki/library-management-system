@@ -1,0 +1,120 @@
+# NỘI QUY VÀ QUY ĐỊNH THƯ VIỆN ĐẠI HỌC BKLIB
+# Tài liệu này được dùng cho hệ thống RAG của chatbot Thư Bé
+
+## 1. QUY ĐỊNH MƯỢN SÁCH
+
+### 1.1 Đối tượng được mượn sách
+- Sinh viên đang theo học tại trường (có thẻ sinh viên hợp lệ).
+- Giảng viên, cán bộ nhân viên của trường.
+- Người dùng phải đăng nhập vào hệ thống BkLib bằng tài khoản được cấp.
+
+### 1.2 Số lượng sách được mượn cùng lúc
+- Sinh viên đại học: tối đa 3 cuốn sách cùng một lúc.
+- Sinh viên sau đại học và giảng viên: tối đa 5 cuốn sách cùng một lúc.
+
+### 1.3 Thời hạn mượn sách
+- Thời hạn mượn tiêu chuẩn: 14 ngày (2 tuần) kể từ ngày mượn.
+- Tài liệu tham khảo đặc biệt (có ký hiệu [TK]): tối đa 7 ngày.
+
+### 1.4 Gia hạn mượn sách
+- Mỗi cuốn sách được phép gia hạn tối đa 2 lần.
+- Mỗi lần gia hạn được thêm 7 ngày (1 tuần).
+- Điều kiện để gia hạn: sách chưa quá hạn và chưa có người khác đặt giữ chỗ cuốn đó.
+- Sinh viên có thể tự gia hạn trực tuyến qua hệ thống BkLib trong mục "Sách đang mượn".
+
+---
+
+## 2. QUY ĐỊNH TRẢ SÁCH VÀ XỬ PHẠT
+
+### 2.1 Phí phạt trễ hạn
+- Mức phạt: 2.000 đồng (hai nghìn đồng) mỗi ngày cho mỗi cuốn sách trễ hạn.
+- Phí phạt được tính tự động từ ngày hết hạn cho đến ngày thực tế trả sách.
+- Ví dụ: Nếu trả trễ 5 ngày với 2 cuốn sách, tiền phạt = 5 ngày × 2 cuốn × 2.000đ = 20.000đ.
+
+### 2.2 Quy trình nộp phạt
+- Tiền phạt được xác nhận và thanh toán trực tiếp tại quầy thư viện.
+- Sinh viên có thể xem số tiền phạt đang nợ qua mục "Thông tin tài khoản" trên hệ thống BkLib.
+- Không thanh toán tiền phạt sẽ bị khóa quyền mượn sách cho đến khi hoàn thành.
+
+### 2.3 Sách bị mất hoặc hư hỏng
+- Sách bị mất: Sinh viên phải đền bù theo giá trị thị trường hiện hành của cuốn sách đó (thường gấp 2-3 lần giá bìa).
+- Sách hư hỏng nhẹ (bẩn, ghi chú vào sách): phạt từ 20.000đ đến 50.000đ tùy mức độ.
+- Sách hư hỏng nặng (rách trang, ướt, cháy): tương đương mức sách mất.
+
+---
+
+## 3. QUY ĐỊNH ĐẶT GIỮ CHỖ SÁCH (RESERVATION)
+
+### 3.1 Điều kiện đặt giữ chỗ
+- Chỉ có thể đặt giữ chỗ khi tất cả các bản sao của cuốn sách đã được mượn hết (không còn sách để mượn trực tiếp).
+- Mỗi sinh viên chỉ được đặt giữ chỗ tối đa 3 đầu sách cùng lúc.
+
+### 3.2 Thông báo và thời hạn nhận sách
+- Khi sách được trả và đến lượt của bạn, hệ thống sẽ gửi thông báo qua email và thông báo trong hệ thống BkLib.
+- Sau khi nhận thông báo, sinh viên có 3 ngày để đến thư viện nhận sách.
+- Nếu quá 3 ngày không đến nhận, lượt đặt chỗ sẽ bị hủy tự động và chuyển sang người tiếp theo trong hàng chờ.
+
+### 3.3 Hủy đặt giữ chỗ
+- Sinh viên có thể tự hủy đặt giữ chỗ bất kỳ lúc nào qua hệ thống BkLib trong mục "Sách đang đặt".
+
+---
+
+## 4. QUY TRÌNH MƯỢN VÀ TRẢ SÁCH TẠI QUẦY
+
+### 4.1 Mượn sách
+- Bước 1: Tìm kiếm sách trên hệ thống BkLib, kiểm tra còn bản sao và ở cơ sở nào.
+- Bước 2: Đến trực tiếp quầy thư viện tại cơ sở có sách, xuất trình thẻ sinh viên.
+- Bước 3: Thủ thư xác nhận và làm thủ tục mượn sách trên hệ thống.
+
+### 4.2 Trả sách
+- Bước 1: Mang sách đến quầy thư viện (có thể trả ở bất kỳ cơ sở nào).
+- Bước 2: Thủ thư kiểm tra tình trạng sách và xác nhận trả trên hệ thống.
+- Bước 3: Thanh toán tiền phạt nếu có.
+
+---
+
+## 5. CÁC CƠ SỞ THƯ VIỆN
+
+### 5.1 Cơ sở Dĩ An (Campus chính)
+- Địa chỉ: Khu phố 6, phường Linh Trung, thành phố Thủ Đức, TP.HCM (gần cổng ĐHQG).
+- Giờ mở cửa: Thứ 2 đến Thứ 6: 7:30 - 17:30. Thứ 7: 8:00 - 12:00. Chủ Nhật: Đóng cửa.
+- Điện thoại: (028) 3724-4270
+
+### 5.2 Cơ sở Lý Thường Kiệt (Cơ sở 2)
+- Địa chỉ: 268 Lý Thường Kiệt, Phường 14, Quận 10, TP.HCM.
+- Giờ mở cửa: Thứ 2 đến Thứ 6: 8:00 - 17:00. Thứ 7 và Chủ Nhật: Đóng cửa.
+- Điện thoại: (028) 3865-3087
+
+---
+
+## 6. CÂU HỎI THƯỜNG GẶP (FAQ)
+
+**Hỏi: Tôi quên trả sách đúng hạn, phải làm gì?**
+Trả lời: Hãy trả sách càng sớm càng tốt. Hệ thống sẽ tự động tính tiền phạt theo số ngày trễ (2.000đ/ngày/cuốn). Bạn có thể xem số tiền phạt trong mục "Thông tin tài khoản" và thanh toán tại quầy thư viện.
+
+**Hỏi: Tôi có thể mượn sách cho người khác không?**
+Trả lời: Không. Thẻ thư viện và tài khoản BkLib chỉ được sử dụng bởi chính chủ sở hữu. Mỗi lần mượn sách, thủ thư sẽ đối chiếu thẻ sinh viên.
+
+**Hỏi: Sách tôi cần không có ở thư viện, tôi có thể yêu cầu bổ sung không?**
+Trả lời: Có. Sinh viên có thể gửi yêu cầu bổ sung tài liệu qua quầy thư viện hoặc gửi email cho phòng Quản lý Thư viện. Hội đồng thư viện sẽ xem xét bổ sung dựa trên nhu cầu và ngân sách.
+
+**Hỏi: Tôi có thể sao chụp tài liệu trong thư viện không?**
+Trả lời: Được phép sao chụp không quá 10% nội dung của một tài liệu để phục vụ học tập cá nhân. Tuyệt đối không được sao chụp toàn bộ sách hoặc sử dụng cho mục đích thương mại.
+
+**Hỏi: Làm sao để biết sách mình cần đang có ở cơ sở nào?**
+Trả lời: Tìm kiếm tên sách trên hệ thống BkLib. Trang chi tiết của mỗi đầu sách sẽ hiển thị số bản sao còn lại và vị trí kệ sách tại từng cơ sở thư viện.
+
+**Hỏi: Tôi đang có tiền phạt chưa thanh toán, tôi có thể mượn thêm sách không?**
+Trả lời: Không. Khi có tiền phạt chưa thanh toán, tài khoản của bạn sẽ bị hạn chế quyền mượn sách mới. Bạn cần đến quầy thư viện để thanh toán trước.
+
+**Hỏi: Tôi muốn kiểm tra xem sách mình đang mượn hết hạn khi nào?**
+Trả lời: Đăng nhập vào hệ thống BkLib, vào mục "Sách đang mượn" để xem danh sách các cuốn đang mượn kèm ngày đến hạn trả.
+
+**Hỏi: Hotline thư viện là số nào?**
+Trả lời: Cơ sở Dĩ An: (028) 3724-4270. Cơ sở Lý Thường Kiệt: (028) 3865-3087.
+
+**Hỏi: Tôi có thể trả sách ở cơ sở khác với nơi mượn không?**
+Trả lời: Có. Bạn có thể trả sách ở bất kỳ cơ sở thư viện nào trong hệ thống BkLib, không cần phải trả đúng cơ sở đã mượn.
+
+**Hỏi: Mỗi lần mượn sách được mấy quyển?**
+Trả lời: Sinh viên đại học được mượn tối đa 3 cuốn cùng lúc. Sinh viên sau đại học và giảng viên được mượn tối đa 5 cuốn cùng lúc.

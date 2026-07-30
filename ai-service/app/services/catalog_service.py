@@ -144,7 +144,7 @@ Tóm tắt:""",
         "description_hint": desc_str,
     })
 
-    summary_text = result["text"].strip()
+    summary_text = result.strip()
     word_count = len(summary_text.split())
 
     return SummarizeResponse(

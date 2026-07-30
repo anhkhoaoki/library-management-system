@@ -1,3 +1,4 @@
+import { Response } from 'express';
 import aiServiceClient from '../../config/ai-service';
 import { createError } from '../../middlewares/error.middleware';
 import prisma from '../../config/database';
@@ -132,6 +133,101 @@ export const chatWithBot = async (userId: string, message: string) => {
   }
 };
 
+export const chatWithBotStream = async (userId: string, message: string, res: Response) => {
+  // Fetch recent chat history for context
+  const history = await prisma.chatHistory.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'desc' },
+    take: 10,
+  });
+
+  // Fetch user-specific context data for personalized queries
+  const userContext = await prisma.borrowRecord.findMany({
+    where: { userId, status: 'ACTIVE' },
+    select: {
+      dueDate: true,
+      physicalCopy: {
+        select: { book: { select: { title: true } } },
+      },
+    },
+    take: 5,
+  });
+
+  try {
+    const response = await aiServiceClient.post('/chat/stream', {
+      userId,
+      message,
+      chatHistory: history.reverse(),
+      userContext: {
+        activeBorrows: userContext.map((r) => ({
+          title: r.physicalCopy.book.title,
+          dueDate: r.dueDate,
+        })),
+      },
+    }, {
+      responseType: 'stream',
+      timeout: 0,             // Tắt timeout cho streaming — tránh bị cắt stream giữa chừng
+      headers: {
+        'Connection': 'close', // Buộc mỗi stream dùng TCP connection mới, tránh lỗi connection reuse
+      },
+    });
+
+    // Flush headers ngay lập tức để trình duyệt biết đây là SSE
+    res.flushHeaders();
+
+    let fullReply = '';
+
+    response.data.on('data', (chunk: Buffer) => {
+      // Gửi chunk trực tiếp về browser
+      if (!res.writableEnded) res.write(chunk);
+
+      // Tích lũy fullReply để lưu lịch sử chat
+      const chunkStr = chunk.toString();
+      const lines = chunkStr.split('\n');
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          try {
+            const parsed = JSON.parse(line.substring(6).trim());
+            if (parsed.token && parsed.token !== '[DONE]') {
+              fullReply += parsed.token;
+            }
+          } catch {
+            // bỏ qua lỗi parsing JSON cho dòng bị cắt
+          }
+        }
+      }
+    });
+
+    // Lưu lịch sử sau khi stream kết thúc (fire-and-forget, không block stream)
+    response.data.on('end', () => {
+      if (!res.writableEnded) res.end();
+      if (fullReply) {
+        prisma.chatHistory.create({ data: { userId, role: 'user', content: message } })
+          .then(() => prisma.chatHistory.create({ data: { userId, role: 'assistant', content: fullReply } }))
+          .catch((e: Error) => console.error('[Chat History Save Error]', e));
+      }
+    });
+
+    response.data.on('error', (err: Error) => {
+      console.error('[AI Stream Client Error]', err);
+      if (!res.writableEnded) {
+        res.write(`data: ${JSON.stringify({ token: 'Đã xảy ra lỗi kết nối với mô hình AI.' })}\n\n`);
+        res.write(`data: ${JSON.stringify({ token: '[DONE]' })}\n\n`);
+        res.end();
+      }
+    });
+
+
+  } catch (error) {
+    console.error('[AI Stream Call Error]', error);
+    if (!res.writableEnded) {
+      res.write(`data: ${JSON.stringify({ token: 'Dịch vụ AI đang bận, vui lòng thử lại sau.' })}\n\n`);
+      res.write(`data: ${JSON.stringify({ token: '[DONE]' })}\n\n`);
+      res.end();
+    }
+  }
+};
+
 // ─── UC-AI-03: Personalized Recommendations ──────────────────
 export const getRecommendations = async (userId: string) => {
   // Collect user signals
@@ -218,3 +314,81 @@ export const getRecommendations = async (userId: string) => {
     };
   }
 };
+
+// ─── Internal functions cho Function Calling tools ────────────────
+
+export const getInternalUserBorrows = async (userId: string) => {
+  const borrows = await prisma.borrowRecord.findMany({
+    where: { userId, status: 'ACTIVE' },
+    select: {
+      dueDate: true,
+      status: true,
+      physicalCopy: {
+        select: { book: { select: { title: true, isbn: true } } },
+      },
+    },
+    orderBy: { dueDate: 'asc' },
+  });
+
+  return borrows.map((b) => ({
+    title: b.physicalCopy.book.title,
+    isbn: b.physicalCopy.book.isbn,
+    dueDate: b.dueDate.toISOString().split('T')[0],
+    status: b.status,
+  }));
+};
+
+export const getInternalUserFines = async (userId: string) => {
+  const fines = await prisma.fine.findMany({
+    where: { userId, status: 'PENDING' },
+    select: {
+      totalAmount: true,
+      daysOverdue: true,
+      borrowRecord: {
+        select: {
+          physicalCopy: {
+            select: {
+              book: {
+                select: {
+                  title: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const totalFines = fines.reduce((sum, f) => sum + Number(f.totalAmount), 0);
+  return {
+    totalFines,
+    pendingCount: fines.length,
+    details: fines.map((f) => ({
+      amount: Number(f.totalAmount),
+      reason: `Quá hạn ${f.daysOverdue} ngày cuốn "${f.borrowRecord.physicalCopy.book.title}"`,
+    })),
+  };
+};
+
+export const getInternalUserReservations = async (userId: string) => {
+  const reservations = await prisma.reservation.findMany({
+    where: {
+      userId,
+      status: { in: ['WAITING', 'READY_FOR_PICKUP'] },
+    },
+    select: {
+      id: true,
+      createdAt: true,
+      book: { select: { title: true, coverImageUrl: true } },
+    },
+    orderBy: { createdAt: 'asc' },
+  });
+
+  return reservations.map((r, idx) => ({
+    book: { title: r.book.title },
+    queuePosition: idx + 1,
+    reservedAt: r.createdAt.toISOString().split('T')[0],
+  }));
+};
+

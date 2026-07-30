@@ -175,6 +175,8 @@ router.post('/search', aiController.naturalLanguageSearch);
  */
 // UC-AI-02: Chatbot (requires auth for personalized responses)
 router.post('/chat', authenticate, aiController.chatWithBot);
+router.post('/chat/stream', authenticate, aiController.chatWithBotStream);
+
 
 /**
  * @swagger
@@ -214,5 +216,20 @@ router.post('/chat', authenticate, aiController.chatWithBot);
  */
 // UC-AI-03: Recommendations (requires auth)
 router.get('/recommendations', authenticate, aiController.getRecommendations);
+
+// ─── Internal endpoints cho Function Calling tools (Python AI Service) ───────
+// Xác thực bằng X-Internal-Key header thay vì JWT
+const internalKeyMiddleware = (req: import('express').Request, res: import('express').Response, next: import('express').NextFunction): void => {
+  const key = req.headers['x-internal-key'];
+  if (key !== (process.env.INTERNAL_API_KEY || 'internal-api-key')) {
+    res.status(403).json({ success: false, message: 'Forbidden' });
+    return;
+  }
+  next();
+};
+
+router.get('/internal/user/:userId/borrows', internalKeyMiddleware, aiController.getUserBorrows);
+router.get('/internal/user/:userId/fines', internalKeyMiddleware, aiController.getUserFines);
+router.get('/internal/user/:userId/reservations', internalKeyMiddleware, aiController.getUserReservations);
 
 export default router;
