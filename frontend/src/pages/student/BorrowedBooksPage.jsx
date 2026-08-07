@@ -109,17 +109,23 @@ export default function BorrowedBooksPage() {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-on-surface-variant">Gia hạn:</span>
-                        <span>{loan.renewCount} lần</span>
+                        <span>{loan.renewCount}/2 lần</span>
                       </div>
                     </div>
                   </div>
                   <div className="mt-4 flex justify-end">
                     <button 
                       onClick={() => handleRenew(loan.id)}
-                      disabled={renewing === loan.id}
-                      className="bg-primary text-on-primary px-6 py-2 rounded-lg font-bold hover:bg-primary-container transition-all disabled:opacity-50"
+                      disabled={renewing === loan.id || loan.renewCount >= 2 || loan.status === 'OVERDUE'}
+                      className="bg-primary text-on-primary px-6 py-2 rounded-lg font-bold hover:bg-primary-container transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {renewing === loan.id ? 'Đang gia hạn...' : 'Gia hạn'}
+                      {renewing === loan.id 
+                        ? 'Đang gia hạn...' 
+                        : loan.renewCount >= 2 
+                          ? 'Đã hết lượt gia hạn' 
+                          : loan.status === 'OVERDUE'
+                            ? 'Đã quá hạn'
+                            : 'Gia hạn'}
                     </button>
                   </div>
                 </div>

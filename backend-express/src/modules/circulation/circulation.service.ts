@@ -351,6 +351,23 @@ export const payFine = async (fineId: string, processedById: string) => {
 
 // ─── UC-CIR-04: Renew Document ───────────────────────────────
 export const renewBorrowRecord = async (borrowRecordId: string, userId: string) => {
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) throw createError('Người dùng không tồn tại', 404);
+  if (user.status !== 'ACTIVE') {
+    throw createError('Thẻ thư viện của bạn đọc đang bị khóa', 403);
+  }
+
+  // Check unpaid fines
+  const unpaidFines = await prisma.fine.count({
+    where: { userId, status: FineStatus.PENDING },
+  });
+  if (unpaidFines > 0) {
+    throw createError(
+      'Bạn đọc có khoản phạt chưa thanh toán. Vui lòng thanh toán trước khi gia hạn',
+      403
+    );
+  }
+
   const borrowRecord = await prisma.borrowRecord.findUnique({
     where: { id: borrowRecordId },
     include: { physicalCopy: { include: { book: true } } },
@@ -363,7 +380,14 @@ export const renewBorrowRecord = async (borrowRecordId: string, userId: string) 
   }
 
   const now = new Date();
-  if (now > borrowRecord.dueDate) {
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const due = new Date(
+    borrowRecord.dueDate.getFullYear(),
+    borrowRecord.dueDate.getMonth(),
+    borrowRecord.dueDate.getDate()
+  );
+
+  if (today > due) {
     throw createError('Sách đã quá hạn, không thể gia hạn trực tuyến. Vui lòng đến thư viện', 422);
   }
 
@@ -373,16 +397,17 @@ export const renewBorrowRecord = async (borrowRecordId: string, userId: string) 
     throw createError(`Đã đạt giới hạn gia hạn tối đa (${maxRenew} lần)`, 422);
   }
 
-  // Check if someone has reserved this book
+  // Check if someone else has reserved this book and available copies count is zero
   const hasReservation = await prisma.reservation.count({
     where: {
       bookId: borrowRecord.physicalCopy.bookId,
+      userId: { not: userId },
       status: { in: [ReservationStatus.WAITING, ReservationStatus.READY_FOR_PICKUP] },
     },
   });
-  if (hasReservation > 0) {
+  if (hasReservation > 0 && borrowRecord.physicalCopy.book.availableCopies === 0) {
     throw createError(
-      'Tài liệu này đang được người khác yêu cầu. Vui lòng trả đúng hạn',
+      'Tài liệu này đang được người khác yêu cầu giữ chỗ. Vui lòng trả đúng hạn',
       422
     );
   }
@@ -412,6 +437,32 @@ export const reserveBook = async (userId: string, bookId: string) => {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) throw createError('Người dùng không tồn tại', 404);
   if (user.status !== 'ACTIVE') throw createError('Tài khoản bị khóa', 403);
+
+  // Check unpaid fines
+  const unpaidFines = await prisma.fine.count({
+    where: { userId, status: FineStatus.PENDING },
+  });
+  if (unpaidFines > 0) {
+    throw createError(
+      'Bạn đọc có khoản phạt chưa thanh toán. Vui lòng thanh toán trước khi đặt giữ chỗ',
+      403
+    );
+  }
+
+  // Check active overdue records
+  const overdueCount = await prisma.borrowRecord.count({
+    where: {
+      userId,
+      status: BorrowStatus.ACTIVE,
+      dueDate: { lt: new Date() },
+    },
+  });
+  if (overdueCount > 0) {
+    throw createError(
+      'Bạn có tài liệu quá hạn chưa trả. Vui lòng trả sách trước khi đặt giữ chỗ mới',
+      403
+    );
+  }
 
   const book = await prisma.book.findUnique({ where: { id: bookId } });
   if (!book) throw createError('Tài liệu không tồn tại', 404);
@@ -446,6 +497,22 @@ export const reserveBook = async (userId: string, bookId: string) => {
     },
   });
 
+  let reservedCopy = null;
+  if (isAvailable) {
+    reservedCopy = await prisma.physicalCopy.findFirst({
+      where: {
+        bookId,
+        status: CopyStatus.AVAILABLE,
+        ...(user.branchId ? { branchId: user.branchId } : {}),
+      },
+    }) || await prisma.physicalCopy.findFirst({
+      where: {
+        bookId,
+        status: CopyStatus.AVAILABLE,
+      },
+    });
+  }
+
   const reservation = await prisma.reservation.create({
     data: {
       userId,
@@ -461,6 +528,13 @@ export const reserveBook = async (userId: string, bookId: string) => {
       where: { id: bookId },
       data: { availableCopies: { decrement: 1 } },
     });
+
+    if (reservedCopy) {
+      await prisma.physicalCopy.update({
+        where: { id: reservedCopy.id },
+        data: { status: CopyStatus.RESERVED },
+      });
+    }
   }
 
   return {
@@ -530,6 +604,7 @@ export const lookupCopyByBarcode = async (barcode: string) => {
 export const cancelReservation = async (reservationId: string, userId: string, role: string) => {
   const reservation = await prisma.reservation.findUnique({
     where: { id: reservationId },
+    include: { book: true },
   });
 
   if (!reservation) throw createError('Không tìm thấy đặt chỗ', 404);
@@ -542,16 +617,93 @@ export const cancelReservation = async (reservationId: string, userId: string, r
     throw createError('Không thể hủy đặt chỗ ở trạng thái này', 400);
   }
 
+  const previousStatus = reservation.status;
+  const previousQueuePosition = reservation.queuePosition;
+
   await prisma.reservation.update({
     where: { id: reservationId },
     data: { status: ReservationStatus.CANCELLED },
   });
 
-  if (reservation.status === ReservationStatus.READY_FOR_PICKUP) {
-    await prisma.book.update({
-      where: { id: reservation.bookId },
-      data: { availableCopies: { increment: 1 } },
+  if (previousStatus === ReservationStatus.READY_FOR_PICKUP) {
+    // Promote next waiting user if exists
+    const nextReservation = await prisma.reservation.findFirst({
+      where: {
+        bookId: reservation.bookId,
+        status: ReservationStatus.WAITING,
+      },
+      orderBy: { queuePosition: 'asc' },
     });
+
+    if (nextReservation) {
+      await prisma.reservation.update({
+        where: { id: nextReservation.id },
+        data: {
+          status: ReservationStatus.READY_FOR_PICKUP,
+          notifiedAt: new Date(),
+          expiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+        },
+      });
+
+      await prisma.notification.create({
+        data: {
+          userId: nextReservation.userId,
+          type: 'RESERVATION_READY',
+          title: 'Sách đặt giữ chỗ đã sẵn sàng',
+          content: `Cuốn sách "${reservation.book.title}" bạn đặt chỗ đã có tại thư viện. Vui lòng đến nhận trong vòng 3 ngày.`,
+          relatedId: reservation.bookId,
+          relatedType: 'Book',
+        },
+      });
+
+      // Re-index remaining waiting queue
+      const waitingList = await prisma.reservation.findMany({
+        where: { bookId: reservation.bookId, status: ReservationStatus.WAITING },
+        orderBy: { queuePosition: 'asc' },
+      });
+      for (let i = 0; i < waitingList.length; i++) {
+        await prisma.reservation.update({
+          where: { id: waitingList[i].id },
+          data: { queuePosition: i + 1 },
+        });
+      }
+    } else {
+      // No waiting user: free up copy & available count
+      await prisma.book.update({
+        where: { id: reservation.bookId },
+        data: { availableCopies: { increment: 1 } },
+      });
+
+      const reservedCopy = await prisma.physicalCopy.findFirst({
+        where: {
+          bookId: reservation.bookId,
+          status: CopyStatus.RESERVED,
+        },
+      });
+      if (reservedCopy) {
+        await prisma.physicalCopy.update({
+          where: { id: reservedCopy.id },
+          data: { status: CopyStatus.AVAILABLE },
+        });
+      }
+    }
+  } else if (previousStatus === ReservationStatus.WAITING) {
+    // Re-index queue positions of remaining waiting reservations
+    const remainingWaiting = await prisma.reservation.findMany({
+      where: {
+        bookId: reservation.bookId,
+        status: ReservationStatus.WAITING,
+        queuePosition: { gt: previousQueuePosition },
+      },
+      orderBy: { queuePosition: 'asc' },
+    });
+
+    for (const r of remainingWaiting) {
+      await prisma.reservation.update({
+        where: { id: r.id },
+        data: { queuePosition: r.queuePosition - 1 },
+      });
+    }
   }
 
   return { message: 'Đã hủy đặt chỗ thành công' };
