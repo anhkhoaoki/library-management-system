@@ -13,7 +13,7 @@ export const searchBooks = async (query: {
   limit?: number;
 }) => {
   const page = query.page || 1;
-  const limit = Math.min(query.limit || 12, 50);
+  const limit = Math.min(query.limit || 12, 200); // Tăng giới hạn để AI Service có thể lấy đủ sách cho embedding
   const skip = (page - 1) * limit;
   const keyword = query.q?.trim();
   const field = query.field || 'all';
