@@ -1,79 +1,109 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import MainLayout from '../../components/layout/MainLayout';
-import api from '../../utils/api'; // Đường dẫn import api của dự án
+import api from '../../utils/api';
 
 export default function CommunicationsPage() {
-  // Khởi tạo các State quản lý dữ liệu Form nhập liệu
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [channel, setChannel] = useState('IN_APP'); // Mặc định kênh gửi ban đầu
-  const [targetRole, setTargetRole] = useState('');    // Rỗng tức là "Tất cả người dùng"
+  const [channels, setChannels] = useState(['IN_APP']);
+  const [targetRole, setTargetRole] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [history, setHistory] = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyError, setHistoryError] = useState('');
+  const [historySummary, setHistorySummary] = useState({ total: 0, unreadCount: 0 });
 
-  // Danh sách dữ liệu lịch sử tĩnh ban đầu của bạn
-  const [history] = useState([
-    {
-      id: 1,
-      title: 'Thông báo bảo trì hệ thống mượn trả',
-      audience: 'Tất cả',
-      channels: 'App & Email',
-      time: 'Hôm nay, 08:30',
-      status: 'sent',
-    },
-    {
-      id: 2,
-      title: 'Danh sách tài liệu học tập mới cho học kỳ II',
-      audience: 'Sinh viên',
-      channels: 'App',
-      time: 'Hôm qua, 14:15',
-      status: 'sent',
-    },
-    {
-      id: 3,
-      title: 'Cập nhật quy định trả sách muộn',
-      audience: 'Giảng viên',
-      channels: 'Email',
-      time: '20/10/2023',
-      status: 'draft',
-    },
-    {
-      id: 4,
-      title: 'Khảo sát chất lượng dịch vụ thư viện',
-      audience: 'Tất cả',
-      channels: 'Email',
-      time: '18/10/2023',
-      status: 'failed',
-    },
-  ]);
+  useEffect(() => {
+    fetchNotificationsHistory();
+  }, []);
 
-  // Hàm xử lý gọi API gửi thông báo đại trà lên hệ thống
+  const fetchNotificationsHistory = async () => {
+    setHistoryLoading(true);
+    setHistoryError('');
+    try {
+      const response = await api.get('/notifications', { params: { page: 1, limit: 8, allChannels: true } });
+      const items = response.data.data || [];
+      setHistory(items);
+      setHistorySummary({
+        total: response.data.pagination?.total ?? items.length,
+        unreadCount: response.data.unreadCount ?? 0,
+      });
+    } catch (err) {
+      setHistoryError(err.response?.data?.message || 'Không thể tải lịch sử thông báo');
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
+  const formatHistoryTime = (value) => {
+    if (!value) return 'Vừa gửi';
+    try {
+      return new Date(value).toLocaleString('vi-VN', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    } catch {
+      return 'Vừa gửi';
+    }
+  };
+
+  const resolveChannelLabel = (value) => {
+    switch (value) {
+      case 'EMAIL':
+        return 'Email';
+      case 'SMS':
+        return 'SMS';
+      default:
+        return 'Ứng dụng';
+    }
+  };
+
   const handleBroadcast = async () => {
     if (!title.trim() || !content.trim()) {
       alert('Vui lòng nhập đầy đủ tiêu đề và nội dung thông báo!');
       return;
     }
 
+    if (channels.length === 0) {
+      alert('Vui lòng chọn ít nhất 1 kênh gửi!');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      const payload = {
-        title,
-        content,
-        channel, // Nhận giá trị tương ứng: 'IN_APP', 'EMAIL', 'SMS'
-      };
+      const apiResponses = [];
+      for (const ch of channels) {
+        const payload = {
+          title,
+          content,
+          channel: ch,
+        };
 
-      // Chỉ đính kèm targetRole nếu người dùng chọn cụ thể Admin/Librarian/Reader
-      if (targetRole) {
-        payload.targetRole = targetRole;
+        if (targetRole) {
+          payload.targetRole = targetRole;
+        }
+
+        const res = await api.post('/notifications/broadcast', payload);
+        if (res.data && res.data.data && res.data.data.message) {
+          apiResponses.push(res.data.data.message);
+        }
       }
-
-      await api.post('/notifications/broadcast', payload);
-      alert('Gửi thông báo thành công!');
       
-      // Xóa trống Form sau khi gửi thành công để chuẩn bị cho tin mới
+      if (apiResponses.length > 0) {
+        alert('Kết quả gửi:\n\n' + apiResponses.join('\n\n'));
+      } else {
+        alert('Gửi thông báo thành công qua các kênh đã chọn!');
+      }
       setTitle('');
       setContent('');
-      setChannel('IN_APP');
+      setChannels(['IN_APP']);
       setTargetRole('');
+      await fetchNotificationsHistory();
     } catch (err) {
       console.error('Lỗi gửi thông báo đại trà:', err);
       alert(err.response?.data?.message || 'Có lỗi xảy ra khi thực hiện gửi thông báo!');
@@ -82,7 +112,6 @@ export default function CommunicationsPage() {
     }
   };
 
-  // Hàm xử lý lưu nháp dữ liệu hiện tại (giữ nguyên không reset form để làm mẫu tiếp theo)
   const handleSaveDraft = () => {
     if (!title.trim()) {
       alert('Vui lòng nhập ít nhất tiêu đề để lưu bản nháp!');
@@ -129,36 +158,36 @@ export default function CommunicationsPage() {
                   <label className="font-label-md text-label-md text-on-surface font-semibold">Kênh gửi</label>
                   <div className="flex gap-2 flex-wrap sm:flex-nowrap">
                     {/* Checkbox Ứng dụng */}
-                    <label className={`flex items-center gap-2 cursor-pointer p-3 border border-outline-variant rounded-lg flex-1 hover:bg-surface-container-low transition-colors ${channel === 'IN_APP' ? 'bg-surface-container-low border-primary' : 'bg-surface-container-lowest'}`}>
+                    <label className={`flex items-center gap-2 cursor-pointer p-3 border border-outline-variant rounded-lg flex-1 hover:bg-surface-container-low transition-colors ${channels.includes('IN_APP') ? 'bg-surface-container-low border-primary' : 'bg-surface-container-lowest'}`}>
                       <input 
                         className="text-primary focus:ring-primary w-4 h-4 rounded border-outline-variant" 
                         type="checkbox" 
-                        checked={channel === 'IN_APP'}
-                        onChange={() => setChannel('IN_APP')}
+                        checked={channels.includes('IN_APP')}
+                        onChange={(e) => setChannels(prev => e.target.checked ? [...prev, 'IN_APP'] : prev.filter(c => c !== 'IN_APP'))}
                         disabled={isSubmitting}
                       />
                       <span className="font-body-md text-body-md text-on-surface">Ứng dụng</span>
                     </label>
 
                     {/* Checkbox Email */}
-                    <label className={`flex items-center gap-2 cursor-pointer p-3 border border-outline-variant rounded-lg flex-1 hover:bg-surface-container-low transition-colors ${channel === 'EMAIL' ? 'bg-surface-container-low border-primary' : 'bg-surface-container-lowest'}`}>
+                    <label className={`flex items-center gap-2 cursor-pointer p-3 border border-outline-variant rounded-lg flex-1 hover:bg-surface-container-low transition-colors ${channels.includes('EMAIL') ? 'bg-surface-container-low border-primary' : 'bg-surface-container-lowest'}`}>
                       <input 
                         className="text-primary focus:ring-primary w-4 h-4 rounded border-outline-variant" 
                         type="checkbox" 
-                        checked={channel === 'EMAIL'}
-                        onChange={() => setChannel('EMAIL')}
+                        checked={channels.includes('EMAIL')}
+                        onChange={(e) => setChannels(prev => e.target.checked ? [...prev, 'EMAIL'] : prev.filter(c => c !== 'EMAIL'))}
                         disabled={isSubmitting}
                       />
                       <span className="font-body-md text-body-md text-on-surface">Email</span>
                     </label>
 
                     {/* Checkbox SMS */}
-                    <label className={`flex items-center gap-2 cursor-pointer p-3 border border-outline-variant rounded-lg flex-1 hover:bg-surface-container-low transition-colors ${channel === 'SMS' ? 'bg-surface-container-low border-primary' : 'bg-surface-container-lowest'}`}>
+                    <label className={`flex items-center gap-2 cursor-pointer p-3 border border-outline-variant rounded-lg flex-1 hover:bg-surface-container-low transition-colors ${channels.includes('SMS') ? 'bg-surface-container-low border-primary' : 'bg-surface-container-lowest'}`}>
                       <input 
                         className="text-primary focus:ring-primary w-4 h-4 rounded border-outline-variant" 
                         type="checkbox" 
-                        checked={channel === 'SMS'}
-                        onChange={() => setChannel('SMS')}
+                        checked={channels.includes('SMS')}
+                        onChange={(e) => setChannels(prev => e.target.checked ? [...prev, 'SMS'] : prev.filter(c => c !== 'SMS'))}
                         disabled={isSubmitting}
                       />
                       <span className="font-body-md text-body-md text-on-surface">SMS</span>
@@ -188,62 +217,43 @@ export default function CommunicationsPage() {
               </div>
 
               {/* Rich Text Content */}
-              <div className="flex flex-col gap-2 flex-1">
+              <div className="flex flex-col gap-2 flex-1 relative quill-container">
+                <style dangerouslySetInnerHTML={{__html: `
+                  .quill-container .ql-toolbar { border-radius: 0.5rem 0.5rem 0 0; background: var(--surface-container); border-color: var(--outline-variant); }
+                  .quill-container .ql-container { border-radius: 0 0 0.5rem 0.5rem; background: var(--surface-container-lowest); border-color: var(--outline-variant); font-family: inherit; font-size: 0.875rem; min-height: 250px;}
+                `}} />
                 <label className="font-label-md text-label-md text-on-surface font-semibold flex justify-between items-center">
                   Nội dung chi tiết
-                  <button type="button" className="text-secondary flex items-center gap-1 font-label-sm text-label-sm hover:underline">
-                    <span className="material-symbols-outlined text-[16px]">auto_awesome</span>
-                    AI Hỗ trợ viết
-                  </button>
                 </label>
-                <div className="border border-outline-variant rounded-lg flex flex-col flex-1 overflow-hidden">
-                  {/* Toolbar */}
-                  <div className="bg-surface-container border-b border-outline-variant p-2 flex gap-1 flex-wrap">
-                    <button type="button" className="p-1.5 hover:bg-surface-variant rounded text-on-surface-variant">
-                      <span className="material-symbols-outlined text-[20px]">format_bold</span>
-                    </button>
-                    <button type="button" className="p-1.5 hover:bg-surface-variant rounded text-on-surface-variant">
-                      <span className="material-symbols-outlined text-[20px]">format_italic</span>
-                    </button>
-                    <button type="button" className="p-1.5 hover:bg-surface-variant rounded text-on-surface-variant">
-                      <span className="material-symbols-outlined text-[20px]">format_underlined</span>
-                    </button>
-                    <div className="w-px bg-outline-variant mx-1 my-1"></div>
-                    <button type="button" className="p-1.5 hover:bg-surface-variant rounded text-on-surface-variant">
-                      <span className="material-symbols-outlined text-[20px]">format_list_bulleted</span>
-                    </button>
-                    <button type="button" className="p-1.5 hover:bg-surface-variant rounded text-on-surface-variant">
-                      <span className="material-symbols-outlined text-[20px]">format_list_numbered</span>
-                    </button>
-                    <div className="w-px bg-outline-variant mx-1 my-1"></div>
-                    <button type="button" className="p-1.5 hover:bg-surface-variant rounded text-on-surface-variant">
-                      <span className="material-symbols-outlined text-[20px]">link</span>
-                    </button>
-                    <button type="button" className="p-1.5 hover:bg-surface-variant rounded text-on-surface-variant">
-                      <span className="material-symbols-outlined text-[20px]">image</span>
-                    </button>
-                  </div>
-                  {/* Text Area */}
-                  <textarea
-                    className="w-full flex-1 min-h-[200px] p-4 bg-surface-container-lowest outline-none font-body-md text-body-md resize-y text-on-surface"
+                <div className="flex flex-col flex-1">
+                  <ReactQuill 
+                    theme="snow" 
+                    value={content} 
+                    onChange={setContent} 
+                    readOnly={isSubmitting}
                     placeholder="Soạn nội dung thông báo tại đây..."
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    disabled={isSubmitting}
-                  ></textarea>
+                    modules={{
+                      toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['link', 'image'],
+                        ['clean']
+                      ],
+                    }}
+                  />
                 </div>
               </div>
 
               {/* Actions */}
               <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-surface-variant">
-                <button 
+                {/* <button 
                   type="button"
                   onClick={handleSaveDraft}
                   disabled={isSubmitting}
                   className="px-6 py-2.5 rounded-lg border border-primary text-primary font-label-md text-label-md font-semibold hover:bg-primary-fixed-dim transition-colors"
                 >
                   Lưu nháp
-                </button>
+                </button> */}
                 <button 
                   type="button"
                   onClick={handleBroadcast}
@@ -264,8 +274,8 @@ export default function CommunicationsPage() {
             {/* Analytics Mini Card */}
             <div className="bg-surface-container-lowest rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant p-5 flex items-center justify-between">
               <div>
-                <p className="font-label-sm text-label-sm text-on-surface-variant mb-1">Đã gửi trong tháng</p>
-                <p className="font-display-lg text-display-lg text-primary">24</p>
+                <p className="font-label-sm text-label-sm text-on-surface-variant mb-1">Thông báo mới</p>
+                <p className="font-display-lg text-display-lg text-primary">{historySummary.total}</p>
               </div>
               <div className="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed">
                 <span className="material-symbols-outlined">mark_email_read</span>
@@ -276,32 +286,37 @@ export default function CommunicationsPage() {
             <div className="bg-surface-container-lowest rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant flex-1 flex flex-col overflow-hidden">
               <div className="px-5 py-4 border-b border-surface-variant bg-surface-bright flex justify-between items-center">
                 <h3 className="font-title-lg text-title-lg text-on-surface">Lịch sử gửi</h3>
-                <button type="button" className="text-primary font-label-sm text-label-sm hover:underline">Xem tất cả</button>
+                <span className="text-primary font-label-sm text-label-sm">{historySummary.unreadCount} chưa đọc</span>
               </div>
               <div className="flex-1 overflow-y-auto p-2">
-                {history.map((item) => (
+                {historyLoading ? (
+                  <div className="p-3 text-sm text-on-surface-variant">Đang tải lịch sử thông báo...</div>
+                ) : historyError ? (
+                  <div className="p-3 text-sm text-error">{historyError}</div>
+                ) : history.length === 0 ? (
+                  <div className="p-3 text-sm text-on-surface-variant">Chưa có thông báo nào được gửi.</div>
+                ) : history.map((item) => (
                   <div
                     key={item.id}
-                    className="p-3 hover:bg-surface-container-low rounded-lg transition-colors border-b border-surface-variant last:border-0 cursor-pointer"
+                    className="p-3 hover:bg-surface-container-low rounded-lg transition-colors border-b border-surface-variant last:border-0"
                   >
                     <div className="flex justify-between items-start mb-1">
                       <h4 className="font-label-md text-label-md text-on-surface font-semibold line-clamp-1">{item.title}</h4>
                       <span
                         className={`px-2 py-0.5 rounded-full font-label-sm text-[10px] whitespace-nowrap ml-2 ${
-                          item.status === 'sent'
-                            ? 'bg-[#e6f4ea] text-[#1e8e3e]'
-                            : item.status === 'draft'
-                            ? 'bg-surface-variant text-on-surface-variant'
-                            : 'bg-error-container text-on-error-container'
+                          item.isRead ? 'bg-[#e6f4ea] text-[#1e8e3e]' : 'bg-error-container text-on-error-container'
                         }`}
                       >
-                        {item.status === 'sent' ? 'Đã gửi' : item.status === 'draft' ? 'Bản nháp' : 'Thất bại'}
+                        {item.isRead ? 'Đã xem' : 'Mới'}
                       </span>
                     </div>
-                    <p className="font-label-sm text-label-sm text-on-surface-variant mb-2">
-                      {item.audience} • {item.channels}
+                    <div 
+                      className="font-label-sm text-label-sm text-on-surface-variant mb-2 line-clamp-3 overflow-hidden text-ellipsis [&>p]:inline"
+                      dangerouslySetInnerHTML={{ __html: item.content || 'Không có nội dung chi tiết.' }}
+                    />
+                    <p className="font-label-sm text-label-sm text-outline text-xs">
+                      {resolveChannelLabel(item.channel)} • {formatHistoryTime(item.createdAt)}
                     </p>
-                    <p className="font-label-sm text-label-sm text-outline text-xs">{item.time}</p>
                   </div>
                 ))}
               </div>

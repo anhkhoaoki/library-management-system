@@ -1,15 +1,21 @@
 import prisma from '../../config/database';
 import { createError } from '../../middlewares/error.middleware';
 import { NotificationType, NotificationChannel } from '@prisma/client';
+import nodemailer from 'nodemailer';
 
 // ─── UC-NOT-02: Get Notifications ────────────────────────────
-export const getNotifications = async (userId: string, page = 1, limit = 20) => {
+export const getNotifications = async (userId: string, page = 1, limit = 20, allChannels = false) => {
   const skip = (page - 1) * limit;
+  const whereClause: any = { userId };
+  
+  if (!allChannels) {
+    whereClause.channel = NotificationChannel.IN_APP;
+  }
 
   const [total, notifications] = await Promise.all([
-    prisma.notification.count({ where: { userId } }),
+    prisma.notification.count({ where: whereClause }),
     prisma.notification.findMany({
-      where: { userId },
+      where: whereClause,
       orderBy: { createdAt: 'desc' },
       skip,
       take: limit,
@@ -17,7 +23,7 @@ export const getNotifications = async (userId: string, page = 1, limit = 20) => 
   ]);
 
   const unreadCount = await prisma.notification.count({
-    where: { userId, isRead: false },
+    where: { ...whereClause, isRead: false },
   });
 
   if (total === 0) {
@@ -129,7 +135,7 @@ export const broadcastNotification = async (data: {
 
   const users = await prisma.user.findMany({
     where: userWhere,
-    select: { id: true },
+    select: { id: true, email: true, phone: true },
   });
 
   if (users.length === 0) {
@@ -154,6 +160,48 @@ export const broadcastNotification = async (data: {
     created += batch.length;
   }
 
+  // Handle external channel dispatch
+  if (data.channel === NotificationChannel.EMAIL) {
+    try {
+      let transporter;
+      if (process.env.SMTP_HOST && process.env.SMTP_USER) {
+        transporter = nodemailer.createTransport({
+          host: process.env.SMTP_HOST,
+          port: Number(process.env.SMTP_PORT) || 587,
+          secure: false,
+          auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+        });
+      } else {
+        const testAccount = await nodemailer.createTestAccount();
+        transporter = nodemailer.createTransport({
+          host: "smtp.ethereal.email",
+          port: 587,
+          secure: false,
+          auth: {
+            user: testAccount.user,
+            pass: testAccount.pass,
+          },
+        });
+      }
+      
+      const emails = users.map(u => u.email).filter(Boolean);
+      if (emails.length > 0) {
+        const info = await transporter.sendMail({
+          from: '"BkLib System" <no-reply@bklib.edu.vn>',
+          bcc: emails.join(','),
+          subject: data.title,
+          html: data.content,
+        });
+        console.log("Email sent! Preview URL: %s", nodemailer.getTestMessageUrl(info));
+      }
+    } catch (error) {
+      console.error("Lỗi gửi Email (Nodemailer):", error);
+    }
+  } else if (data.channel === NotificationChannel.SMS) {
+    const phones = users.map(u => u.phone).filter(Boolean);
+    console.log(`[SMS Gateway] Giả lập gửi tin nhắn SMS đến ${phones.length} số điện thoại. Tiêu đề: ${data.title}`);
+  }
+
   // Write audit log
   await prisma.auditLog.create({
     data: {
@@ -169,8 +217,15 @@ export const broadcastNotification = async (data: {
     },
   });
 
+  let responseMessage = `Gửi thông báo thành công đến ${created} người dùng`;
+  if (data.channel === NotificationChannel.SMS) {
+    responseMessage = `Đã giả lập gửi SMS thành công đến ${created} số điện thoại! (Vì SMS yêu cầu dịch vụ trả phí 3rd-party nên hệ thống giả lập gửi tin nhắn).`;
+  } else if (data.channel === NotificationChannel.EMAIL) {
+    responseMessage = `Đã gửi Email thành công đến ${created} địa chỉ!`;
+  }
+
   return {
-    message: `Gửi thông báo thành công đến ${created} người dùng`,
+    message: responseMessage,
     recipientCount: created,
   };
 };

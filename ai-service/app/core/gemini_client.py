@@ -13,7 +13,7 @@ from app.core.config import settings
 _google_client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
 _embedding_model = SentenceTransformer(
-    "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    "sentence-transformers/all-MiniLM-L6-v2"
 )
 
 # Tạo một Class Wrapper tùy chỉnh tương thích hoàn toàn với hệ thống LangChain hiện tại

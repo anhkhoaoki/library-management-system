@@ -2,6 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import * as adminService from './admin.service';
 import { UserStatus } from '@prisma/client';
 import { Role } from '../../types/roles';
+import path from 'path';
+
+// Define backup directory for download
+const BACKUP_DIR = path.join(process.cwd(), 'backups');
+
 
 // ─── UC-ACC-06: User Management ──────────────────────────────
 export const listUsers = async (req: Request, res: Response, next: NextFunction) => {
@@ -127,3 +132,59 @@ export const getAuditLogs = async (req: Request, res: Response, next: NextFuncti
     res.status(200).json({ success: true, ...result });
   } catch (err) { next(err); }
 };
+
+// ─── UC-ADM-07: Backup Management ────────────────────────────
+export const getBackups = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const backups = await adminService.getBackups();
+    res.status(200).json({ success: true, data: backups });
+  } catch (err) { next(err); }
+};
+
+export const createBackup = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await adminService.createBackup(req.user!.userId);
+    res.status(201).json({ success: true, ...result });
+  } catch (err) { next(err); }
+};
+
+export const restoreBackup = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { filename } = req.body;
+    if (!filename) {
+      res.status(400).json({ success: false, message: 'Thiếu tên file phục hồi' });
+      return;
+    }
+    const result = await adminService.restoreBackup(filename, req.user!.userId);
+    res.status(200).json({ success: true, ...result });
+  } catch (err) { next(err); }
+};
+
+export const deleteBackup = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { filename } = req.params;
+    if (!filename) {
+      res.status(400).json({ success: false, message: 'Thiếu tên file' });
+      return;
+    }
+    const result = await adminService.deleteBackup(filename, req.user!.userId);
+    res.status(200).json({ success: true, ...result });
+  } catch (err) { next(err); }
+};
+
+export const downloadBackup = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { filename } = req.params;
+    if (!filename) {
+      res.status(400).json({ success: false, message: 'Thiếu tên file' });
+      return;
+    }
+    const filePath = path.join(BACKUP_DIR, filename);
+    res.download(filePath, filename, (err) => {
+      if (err) {
+        next(err);
+      }
+    });
+  } catch (err) { next(err); }
+};
+

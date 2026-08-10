@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MainLayout from '../../components/layout/MainLayout';
 import { AuthContext } from '../../context/AuthContext';
 import api from '../../utils/api';
 
 export default function ProfilePage() {
+  const navigate = useNavigate();
   const { user, setUser } = useContext(AuthContext);
   const [profileData, setProfileData] = useState({
     fullName: '',
@@ -20,6 +22,14 @@ export default function ProfilePage() {
     newPassword: '',
     confirmPassword: '',
   });
+
+  // Notification Settings
+  const [notificationSettings, setNotificationSettings] = useState({
+    dueDateReminder: true,
+    reservationReady: true,
+    broadcast: true
+  });
+  const [savingSettings, setSavingSettings] = useState(false);
 
   // UI state
   const [loading, setLoading] = useState(true);
@@ -53,10 +63,36 @@ export default function ProfilePage() {
         role: data.role || 'READER',
         branchName: branchName,
       });
+
+      // Fetch Notification Settings
+      const notifRes = await api.get('/notifications/settings');
+      if (notifRes.data?.data) {
+        setNotificationSettings({
+          dueDateReminder: notifRes.data.data.dueDateReminder ?? true,
+          reservationReady: notifRes.data.data.reservationReady ?? true,
+          broadcast: notifRes.data.data.broadcast ?? true,
+        });
+      }
     } catch (err) {
       setErrorMsg('Không thể tải thông tin hồ sơ của bạn.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleToggleSetting = async (key) => {
+    const newValue = !notificationSettings[key];
+    setNotificationSettings(prev => ({ ...prev, [key]: newValue }));
+    
+    try {
+      await api.put('/notifications/settings', {
+        [key]: newValue
+      });
+    } catch (err) {
+      console.error('Lỗi lưu cài đặt thông báo:', err);
+      // Revert if failed
+      setNotificationSettings(prev => ({ ...prev, [key]: !newValue }));
+      setErrorMsg('Lưu cài đặt thất bại.');
     }
   };
 
@@ -315,7 +351,12 @@ export default function ProfilePage() {
                     <p className="font-label-sm text-label-sm text-on-surface-variant">Nhận email trước ngày hết hạn</p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
-                    <input className="sr-only peer" type="checkbox" defaultChecked />
+                    <input 
+                      className="sr-only peer" 
+                      type="checkbox" 
+                      checked={notificationSettings.dueDateReminder} 
+                      onChange={() => handleToggleSetting('dueDateReminder')} 
+                    />
                     <div className="w-11 h-6 bg-outline rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                   </label>
                 </div>
@@ -325,7 +366,12 @@ export default function ProfilePage() {
                     <p className="font-label-sm text-label-sm text-on-surface-variant">Nhận thông báo khi sách sẵn sàng</p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
-                    <input className="sr-only peer" type="checkbox" defaultChecked />
+                    <input 
+                      className="sr-only peer" 
+                      type="checkbox" 
+                      checked={notificationSettings.reservationReady} 
+                      onChange={() => handleToggleSetting('reservationReady')} 
+                    />
                     <div className="w-11 h-6 bg-outline rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                   </label>
                 </div>
@@ -335,7 +381,12 @@ export default function ProfilePage() {
                     <p className="font-label-sm text-label-sm text-on-surface-variant">Các thông báo, sự kiện của BkLib</p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
-                    <input className="sr-only peer" type="checkbox" />
+                    <input 
+                      className="sr-only peer" 
+                      type="checkbox" 
+                      checked={notificationSettings.broadcast} 
+                      onChange={() => handleToggleSetting('broadcast')} 
+                    />
                     <div className="w-11 h-6 bg-outline rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                   </label>
                 </div>
@@ -367,8 +418,11 @@ export default function ProfilePage() {
                     <p className="font-body-md text-body-md text-on-surface-variant mb-4 leading-relaxed">
                       Bạn đang đăng nhập với tư cách **{userRoleText}**. Bạn có toàn quyền thực hiện các nghiệp vụ quản lý kho sách, lưu thông tài liệu và hỗ trợ bạn đọc tại chi nhánh **{profileData.branchName}**.
                     </p>
-                    <span className="text-primary font-label-md text-label-md font-bold flex items-center gap-1 cursor-pointer hover:underline">
-                      Xem nhật ký hoạt động <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                    <span 
+                      onClick={() => navigate(profileData.role === 'ADMIN' ? '/dashboard/admin' : '/dashboard/librarian')} 
+                      className="text-primary font-label-md text-label-md font-bold flex items-center gap-1 cursor-pointer hover:underline"
+                    >
+                      Vào trang Dashboard quản lý <span className="material-symbols-outlined text-sm">arrow_forward</span>
                     </span>
                   </div>
                 </div>

@@ -534,6 +534,84 @@ router.delete('/branches/:id', authorize(Role.ADMIN), adminController.deleteBran
  *               $ref: '#/components/schemas/ErrorResponse'
  */
 // UC-ADM-06
-router.get('/audit-logs', authorize(Role.ADMIN), adminController.getAuditLogs);
+router.get('/audit-logs', authorize(Role.ADMIN, Role.LIBRARIAN), adminController.getAuditLogs);
+
+// ─── Backup Management (Admin only) ──────────────────────────
+
+/**
+ * @swagger
+ * /api/v1/admin/backups:
+ *   get:
+ *     summary: Lấy danh sách các bản sao lưu (Admin only)
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Danh sách bản sao lưu
+ */
+// UC-ADM-07
+router.get('/backups', authorize(Role.ADMIN), adminController.getBackups);
+
+/**
+ * @swagger
+ * /api/v1/admin/backups:
+ *   post:
+ *     summary: Tạo bản sao lưu mới (Admin only)
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       201:
+ *         description: Bản sao lưu được tạo thành công
+ */
+router.post('/backups', authorize(Role.ADMIN), adminController.createBackup);
+
+/**
+ * @swagger
+ * /api/v1/admin/backups/restore:
+ *   post:
+ *     summary: Phục hồi dữ liệu từ bản sao lưu (Admin only)
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [filename]
+ *             properties:
+ *               filename:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Phục hồi thành công
+ */
+router.post('/backups/restore', authorize(Role.ADMIN), adminController.restoreBackup);
+
+router.delete('/backups/:filename', authorize(Role.ADMIN), adminController.deleteBackup);
+
+/**
+ * @swagger
+ * /api/v1/admin/backups/{filename}/download:
+ *   get:
+ *     summary: Tải file sao lưu (Admin only)
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: filename
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: File sao lưu
+ */
+router.get('/backups/:filename/download', authorize(Role.ADMIN), adminController.downloadBackup);
 
 export default router;
+
