@@ -241,12 +241,12 @@ export const chatWithBotStream = async (userId: string, message: string, res: Re
 
 // ─── UC-AI-03: Personalized Recommendations ──────────────────
 export const getRecommendations = async (userId: string) => {
-  // Collect user signals
+  // ── Thu thập signals của user hiện tại ────────────────────
   const [borrowHistory, reviews] = await Promise.all([
     prisma.borrowRecord.findMany({
       where: { userId },
       orderBy: { borrowedAt: 'desc' },
-      take: 20,
+      take: 30,
       select: {
         physicalCopy: {
           select: {
@@ -261,12 +261,12 @@ export const getRecommendations = async (userId: string) => {
     }),
   ]);
 
-  // Cold start: return popular books if no history
+  // ── Cold start: chưa có lịch sử → trả về sách phổ biến ───
   if (borrowHistory.length === 0) {
     const popularBooks = await prisma.book.findMany({
       where: { status: 'ACTIVE', availableCopies: { gt: 0 } },
       orderBy: [{ reviewCount: 'desc' }, { averageRating: 'desc' }],
-      take: 10,
+      take: 8,
       select: {
         id: true,
         title: true,
@@ -274,52 +274,138 @@ export const getRecommendations = async (userId: string) => {
         coverImageUrl: true,
         averageRating: true,
         availableCopies: true,
+        category: { select: { name: true } },
       },
     });
 
     return {
-      recommendations: popularBooks,
+      recommendations: popularBooks.map((b) => ({
+        ...b,
+        reasonLabel: 'Phổ biến tại thư viện',
+        reason: 'popular',
+        categoryName: b.category?.name ?? '',
+      })),
       reason: 'popular',
       message: 'Các tài liệu phổ biến nhất tại thư viện',
     };
   }
 
-  try {
-    const borrowedBookIds = borrowHistory.map(
-      (r) => r.physicalCopy.book.id
-    );
+  const borrowedBookIds = borrowHistory.map((r) => r.physicalCopy.book.id);
 
+  // ── Thu thập Collaborative Signals ────────────────────────
+  // Tìm những user khác đã mượn ít nhất 1 cuốn sách giống user hiện tại
+  // Dùng raw query vì Prisma không hỗ trợ GROUP BY cross-relation trực tiếp
+  let similarUsersBorrows: { userId: string; borrowedBookIds: string[]; overlap: number }[] = [];
+  try {
+    // Bước 1: Tìm các physicalCopyId của sách user đã mượn
+    const userCopyIds = await prisma.borrowRecord.findMany({
+      where: { userId },
+      select: { physicalCopyId: true },
+    });
+    const copyIds = userCopyIds.map((r) => r.physicalCopyId);
+
+    if (copyIds.length > 0) {
+      // Bước 2: Tìm users khác mượn cùng bản sao
+      const overlappingRecords = await prisma.borrowRecord.findMany({
+        where: {
+          physicalCopyId: { in: copyIds },
+          userId: { not: userId },
+        },
+        select: { userId: true, physicalCopyId: true },
+        distinct: ['userId', 'physicalCopyId'],
+      });
+
+      // Đếm overlap per user
+      const overlapMap = new Map<string, number>();
+      for (const r of overlappingRecords) {
+        overlapMap.set(r.userId, (overlapMap.get(r.userId) ?? 0) + 1);
+      }
+
+      // Chỉ lấy top 5 users có overlap cao nhất
+      const topSimilarUsers = [...overlapMap.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(([uid]) => uid);
+
+      // Bước 3: Lấy lịch sử mượn của những users tương tự
+      if (topSimilarUsers.length > 0) {
+        const similarRecords = await prisma.borrowRecord.findMany({
+          where: { userId: { in: topSimilarUsers } },
+          select: {
+            userId: true,
+            physicalCopy: { select: { bookId: true } },
+          },
+          orderBy: { borrowedAt: 'desc' },
+          take: 200,
+        });
+
+        // Group by userId
+        const groupedByUser = new Map<string, string[]>();
+        for (const r of similarRecords) {
+          const uid = r.userId;
+          const bookId = r.physicalCopy.bookId;
+          if (!groupedByUser.has(uid)) groupedByUser.set(uid, []);
+          const list = groupedByUser.get(uid)!;
+          if (!list.includes(bookId)) list.push(bookId);
+        }
+
+        similarUsersBorrows = [...groupedByUser.entries()].map(([uid, bookIds]) => ({
+          userId: uid,
+          borrowedBookIds: bookIds,
+          overlap: overlapMap.get(uid) ?? 1,
+        }));
+      }
+    }
+  } catch (err) {
+    console.warn('[Recommend] Lỗi khi thu thập collaborative signals:', err);
+    // Tiếp tục với collaborative trống — sẽ chỉ dùng content-based
+  }
+
+  // ── Gọi AI Service ─────────────────────────────────────────
+  try {
     const response = await aiServiceClient.post('/recommend/personalized', {
       userId,
       borrowedBookIds,
       ratings: reviews,
+      similarUsersBorrows,
+      limit: 8,
     });
+
+    // Nếu AI service trả về cold_start → dùng fallback phổ biến
+    if (response.data?.reason === 'cold_start' || !response.data?.recommendations?.length) {
+      throw new Error('cold_start');
+    }
 
     return response.data;
   } catch {
-    // Fallback: content-based recommendation using same category
+    // ── Fallback: Category-based nếu AI service không khả dụng ──
     const topCategory = borrowHistory[0]?.physicalCopy.book.categoryId;
     const fallback = await prisma.book.findMany({
       where: {
         status: 'ACTIVE',
         categoryId: topCategory ?? undefined,
-        id: {
-          notIn: borrowHistory.map((r) => r.physicalCopy.book.id),
-        },
+        id: { notIn: borrowedBookIds },
       },
       orderBy: { averageRating: 'desc' },
-      take: 10,
+      take: 8,
       select: {
         id: true,
         title: true,
         authorNames: true,
         coverImageUrl: true,
         averageRating: true,
+        availableCopies: true,
+        category: { select: { name: true } },
       },
     });
 
     return {
-      recommendations: fallback,
+      recommendations: fallback.map((b) => ({
+        ...b,
+        reasonLabel: 'Cùng thể loại bạn thích',
+        reason: 'category_based',
+        categoryName: b.category?.name ?? '',
+      })),
       reason: 'category_based',
       message: 'Dựa trên thể loại bạn thường đọc',
     };
