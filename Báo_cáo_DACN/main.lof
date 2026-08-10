@@ -1,0 +1,67 @@
+\thispagestyle {empty}
+\contentsline {figure}{\numberline {1}{\ignorespaces Giao diện trang chủ Cổng thông tin Thư viện lib.hcmut.edu.vn và danh mục tài liệu in}}{4}{figure.caption.9}%
+\contentsline {figure}{\numberline {2}{\ignorespaces Giao diện Tra cứu Tài liệu Nội sinh và phân hệ Đăng nhập tài khoản trên cổng OPAC}}{4}{figure.caption.10}%
+\contentsline {figure}{\numberline {3}{\ignorespaces Giao diện tra cứu tập trung và công cụ hỗ trợ trực tuyến tại The Online Library - UoL}}{5}{figure.caption.11}%
+\contentsline {figure}{\numberline {4}{\ignorespaces Giao diện dịch vụ khám phá hợp nhất DELCAT và công cụ AI hỗ trợ tại UD Library}}{6}{figure.caption.12}%
+\contentsline {figure}{\numberline {5}{\ignorespaces Giao diện phân hệ quản trị (Staff Client) của hệ thống Koha}}{7}{figure.caption.13}%
+\contentsline {figure}{\numberline {6}{\ignorespaces Sơ đồ Use-case Quản lý tài khoản và truy cập}}{14}{figure.caption.21}%
+\contentsline {figure}{\numberline {7}{\ignorespaces Sơ đồ Use-case Quản lý danh mục \& Biên mục AI}}{17}{figure.caption.22}%
+\contentsline {figure}{\numberline {8}{\ignorespaces Sơ đồ Use-case Quản lý lưu thông tài liệu}}{20}{figure.caption.23}%
+\contentsline {figure}{\numberline {9}{\ignorespaces Sơ đồ Use-case Truy cập \& khai thác tài nguyên}}{24}{figure.caption.24}%
+\contentsline {figure}{\numberline {10}{\ignorespaces Sơ đồ Use-case Tương tác thông minh \& AI}}{27}{figure.caption.25}%
+\contentsline {figure}{\numberline {11}{\ignorespaces Sơ đồ Use-case Thông báo \& truyền thông}}{29}{figure.caption.26}%
+\contentsline {figure}{\numberline {12}{\ignorespaces Sơ đồ Use-case Báo cáo \& Quản trị}}{32}{figure.caption.27}%
+\contentsline {figure}{\numberline {13}{\ignorespaces Sơ đồ kiến trúc tổng thể hệ thống Quản lý Thư viện Trực tuyến}}{35}{figure.caption.28}%
+\contentsline {figure}{\numberline {14}{\ignorespaces Sơ đồ EERD Hệ thống Quản lý thư viện trực tuyến}}{38}{figure.caption.30}%
+\contentsline {figure}{\numberline {15}{\ignorespaces Lược đồ cơ sở dữ liệu Hệ thống Quản lý thư viện trực tuyến}}{40}{figure.caption.31}%
+\contentsline {figure}{\numberline {16}{\ignorespaces Sơ đồ lớp Quản lý tài khoản và truy cập}}{41}{figure.caption.32}%
+\contentsline {figure}{\numberline {17}{\ignorespaces Sơ đồ lớp Quản lý danh mục sách}}{42}{figure.caption.33}%
+\contentsline {figure}{\numberline {18}{\ignorespaces Sơ đồ lớp Quản lý lưu thông tài liệu}}{43}{figure.caption.34}%
+\contentsline {figure}{\numberline {19}{\ignorespaces Sơ đồ lớp Tìm kiếm và khai thác tài nguyên}}{44}{figure.caption.35}%
+\contentsline {figure}{\numberline {20}{\ignorespaces Sơ đồ lớp Trợ lý ảo AI và gợi ý}}{45}{figure.caption.36}%
+\contentsline {figure}{\numberline {21}{\ignorespaces Sơ đồ lớp Thông báo và truyền thông}}{46}{figure.caption.37}%
+\contentsline {figure}{\numberline {22}{\ignorespaces Sơ đồ lớp Quản trị hệ thống}}{47}{figure.caption.38}%
+\contentsline {figure}{\numberline {23}{\ignorespaces Sơ đồ hoạt động đăng kí tài khoản}}{48}{figure.caption.39}%
+\contentsline {figure}{\numberline {24}{\ignorespaces Sơ đồ hoạt động đăng nhập hệ thống}}{50}{figure.caption.40}%
+\contentsline {figure}{\numberline {25}{\ignorespaces Sơ đồ hoạt động đặt lại mật khẩu}}{52}{figure.caption.41}%
+\contentsline {figure}{\numberline {26}{\ignorespaces Sơ đồ hoạt động Xem lịch sử mượn/trả}}{54}{figure.caption.42}%
+\contentsline {figure}{\numberline {27}{\ignorespaces Sơ đồ hoạt động Quản lý tài khoản người dùng}}{56}{figure.caption.43}%
+\contentsline {figure}{\numberline {28}{\ignorespaces Sơ đồ hoạt động Thêm / Sửa / Xóa bản ghi tài liệu}}{58}{figure.caption.44}%
+\contentsline {figure}{\numberline {29}{\ignorespaces Sơ đồ hoạt động Nhập danh mục tài liệu hàng loạt}}{60}{figure.caption.45}%
+\contentsline {figure}{\numberline {30}{\ignorespaces Sơ đồ hoạt động Biên mục tự động bằng mã ISBN}}{62}{figure.caption.46}%
+\contentsline {figure}{\numberline {31}{\ignorespaces Sơ đồ hoạt động Mượn tài liệu vật lý}}{64}{figure.caption.47}%
+\contentsline {figure}{\numberline {32}{\ignorespaces Sơ đồ hoạt động Trả tài liệu}}{66}{figure.caption.48}%
+\contentsline {figure}{\numberline {33}{\ignorespaces Sơ đồ hoạt động Tính và cập nhật phí phạt trễ hạn}}{69}{figure.caption.49}%
+\contentsline {figure}{\numberline {34}{\ignorespaces Sơ đồ hoạt động Gia hạn tài liệu trực tuyến}}{71}{figure.caption.50}%
+\contentsline {figure}{\numberline {35}{\ignorespaces Sơ đồ hoạt động Đặt giữ chỗ tài liệu}}{74}{figure.caption.51}%
+\contentsline {figure}{\numberline {36}{\ignorespaces Sơ đồ hoạt động Tra cứu tài liệu}}{76}{figure.caption.52}%
+\contentsline {figure}{\numberline {37}{\ignorespaces Sơ đồ tuần tự Đăng kí tài khoản}}{77}{figure.caption.53}%
+\contentsline {figure}{\numberline {38}{\ignorespaces Sơ đồ tuần tự Đăng nhập tài khoản}}{78}{figure.caption.54}%
+\contentsline {figure}{\numberline {39}{\ignorespaces Sơ đồ tuần tự Đặt lại mật khẩu tài khoản}}{79}{figure.caption.55}%
+\contentsline {figure}{\numberline {40}{\ignorespaces Sơ đồ tuần tự Tìm kiếm tài liệu}}{80}{figure.caption.56}%
+\contentsline {figure}{\numberline {41}{\ignorespaces Sơ đồ tuần tự Thêm tài liệu}}{81}{figure.caption.57}%
+\contentsline {figure}{\numberline {42}{\ignorespaces Sơ đồ tuần tự Sửa tài liệu}}{82}{figure.caption.58}%
+\contentsline {figure}{\numberline {43}{\ignorespaces Sơ đồ tuần tự Xóa tài liệu}}{83}{figure.caption.59}%
+\contentsline {figure}{\numberline {44}{\ignorespaces Sơ đồ tuần tự Thêm tài liệu hàng loạt}}{84}{figure.caption.60}%
+\contentsline {figure}{\numberline {45}{\ignorespaces Sơ đồ tuần tự Đặt mượn tài liệu}}{85}{figure.caption.61}%
+\contentsline {figure}{\numberline {46}{\ignorespaces Sơ đồ tuần tự Cập nhật tiền phạt}}{86}{figure.caption.62}%
+\contentsline {figure}{\numberline {47}{\ignorespaces Sơ đồ tuần tự Xử lý mượn Tài liệu}}{87}{figure.caption.63}%
+\contentsline {figure}{\numberline {48}{\ignorespaces Sơ đồ tuần tự Gia hạn mượn tài liệu}}{88}{figure.caption.64}%
+\contentsline {figure}{\numberline {49}{\ignorespaces Sơ đồ tuần tự Trả tài liệu}}{89}{figure.caption.65}%
+\contentsline {figure}{\numberline {50}{\ignorespaces Giao diện Trang chủ phân hệ Bạn đọc}}{90}{figure.caption.66}%
+\contentsline {figure}{\numberline {51}{\ignorespaces Giao diện Trang Tra cứu tài liệu}}{90}{figure.caption.67}%
+\contentsline {figure}{\numberline {52}{\ignorespaces Giao diện Trang quản lý sách đang mượn}}{91}{figure.caption.68}%
+\contentsline {figure}{\numberline {53}{\ignorespaces Giao diện Trang Lịch sử mượn trả}}{91}{figure.caption.69}%
+\contentsline {figure}{\numberline {54}{\ignorespaces Giao diện Trang sách đang đặt giữ chỗ}}{92}{figure.caption.70}%
+\contentsline {figure}{\numberline {55}{\ignorespaces Giao diện Khung tương tác Trợ lý ảo}}{92}{figure.caption.71}%
+\contentsline {figure}{\numberline {56}{\ignorespaces Giao diện Trang Hồ sơ cá nhân và Cài đặt}}{93}{figure.caption.72}%
+\contentsline {figure}{\numberline {57}{\ignorespaces Giao diện Trang chủ phân hệ Thủ thư}}{93}{figure.caption.73}%
+\contentsline {figure}{\numberline {58}{\ignorespaces Giao diện Trang Quản lý lưu thông tài liệu}}{94}{figure.caption.74}%
+\contentsline {figure}{\numberline {59}{\ignorespaces Giao diện Trang Quản lý danh mục tài liệu}}{95}{figure.caption.75}%
+\contentsline {figure}{\numberline {60}{\ignorespaces Giao diện Trang Quản lý truyền thông}}{95}{figure.caption.76}%
+\contentsline {figure}{\numberline {61}{\ignorespaces Giao diện Trang Báo cáo và Thống kê dành cho Thủ thư}}{96}{figure.caption.77}%
+\contentsline {figure}{\numberline {62}{\ignorespaces Giao diện Trang tổng quan hệ thống của Quản trị viên}}{96}{figure.caption.78}%
+\contentsline {figure}{\numberline {63}{\ignorespaces Giao diện Trang Quản lý tài khoản người dùng}}{97}{figure.caption.79}%
+\contentsline {figure}{\numberline {64}{\ignorespaces Giao diện Trang Quản lý chi nhánh}}{97}{figure.caption.80}%
+\contentsline {figure}{\numberline {65}{\ignorespaces Giao diện Trang Nhật ký kiểm toán hệ thống}}{98}{figure.caption.81}%
+\contentsline {figure}{\numberline {66}{\ignorespaces Giao diện Trang Sao lưu và Phục hồi dữ liệu}}{98}{figure.caption.82}%

@@ -1,0 +1,43 @@
+\section{Tổng kết và Hướng phát triển}
+
+\subsection{Nhận xét (Kết quả đạt được trong Giai đoạn 1)}
+Giai đoạn 1 của Đồ án Chuyên ngành, nhóm đã hoàn thành việc khảo sát, phân tích nghiệp vụ quản trị thư viện và hiện thực hóa thành công mô hình nền tảng. Các kết quả cụ thể bao gồm:
+
+\begin{itemize}
+    \item \textbf{Phân tích và Thiết kế hệ thống:} Khảo sát toàn diện quy trình vận hành thư viện truyền thống; hoàn thiện hệ thống tài liệu kỹ thuật chuẩn mực bao gồm sơ đồ kiến trúc ba tầng, sơ đồ thực thể mối quan hệ mở rộng, sơ đồ lớp nghiệp vụ, sơ đồ hoạt động và sơ đồ tuần tự cho các luồng công việc cốt lõi.
+    \item \textbf{Xây dựng hạ tầng cơ sở:} Triển khai và vận hành ổn định hệ thống mã nguồn phía máy chủ sử dụng môi trường Node.js kết hợp Express.js, TypeScript và Prisma ORM kết nối cơ sở dữ liệu quan hệ PostgreSQL. Hệ thống giao diện máy trạm được xây dựng đồng bộ bằng React.js và Vite.
+    \item \textbf{Hiện thực hóa các phân hệ:} Các luồng nghiệp vụ cơ bản đã được kết nối đồng bộ qua hệ thống giao tiếp lập trình ứng dụng bao gồm phân hệ xác thực tài khoản qua chuỗi mã bảo mật và mã OTP mã hóa; luồng xử lý mượn trả sách vật lý trực tiếp tại bàn quầy; và phân hệ biên mục danh mục tài liệu tự động dựa trên mã số tiêu chuẩn quốc tế ISBN.
+    \item \textbf{Thiết kế giao diện trực quan:} Hoàn thiện bản vẽ giao diện chi tiết phân rã theo ba nhóm đối tượng sử dụng hệ thống là Bạn đọc, Thủ thư và Quản trị viên, đảm bảo tính nhất quán trong trải nghiệm và tư duy thẩm mỹ hiện đại.
+\end{itemize}
+
+Hệ thống cơ sở đạt được trong Giai đoạn 1 hoạt động ổn định và chính xác, tạo bệ phóng kỹ thuật vững chắc để nhóm tiếp tục phát triển các phân hệ thông minh nâng cao ở giai đoạn tiếp theo.
+
+\subsection{Hướng phát triển đồ án tốt nghiệp }
+Trong Giai đoạn 2 Đồ án tốt nghiệp, nhóm nghiên cứu sẽ tập trung hiện thực hóa toàn bộ các phân hệ quản trị còn lại, đồng thời tích hợp các giải pháp trí tuệ nhân tạo để tối ưu hóa hiệu quả khai thác tài nguyên và cá nhân hóa trải nghiệm người dùng.
+
+\bigskip
+\noindent{\textbf{Lịch trình thực hiện Đồ án tốt nghiệp (Từ 15/06/2026 đến hết 27/09/2026)}}
+
+\begin{longtable}{|p{1.8cm}|p{2.6cm}|p{3.5cm}|p{8.1cm}|}
+\hline
+\textbf{Tuần} & \textbf{Ngày (dự kiến)} & \textbf{Công việc chính} & \textbf{Chi tiết nội dung công việc} \\
+\hline
+Tuần 1 & 15/06/2026 -- 21/06/2026 & Rà soát mã nguồn và Chuẩn bị cơ sở dữ liệu vector & $\bullet$ Đánh giá lại toàn bộ mã nguồn và tối ưu hóa hệ thống cơ sở dữ liệu đạt được ở Giai đoạn 1. \newline $\bullet$ Tiến hành cài đặt và cấu hình tiện ích mở rộng pgvector trực tiếp trên hệ quản trị cơ sở dữ liệu PostgreSQL hiện tại để chuẩn bị vùng nhớ cho việc lưu trữ dữ liệu chuỗi nhúng sau này. \newline $\bullet$ Viết báo cáo hàng tuần. \\
+\hline
+Tuần 2 -- 3 & 22/06/2026 -- 05/07/2026 & Hiện thực Phân hệ Luân chuyển sách và Quản lý tài liệu số  & $\bullet$ Xây dựng các đường dẫn API kết nối bảng dữ liệu tài nguyên số để xử lý luồng tải lên, lưu trữ đường dẫn tệp tin và giới hạn quyền đọc trực tuyến các tài liệu điện tử định dạng PDF cho bạn đọc. \newline $\bullet$ Hiện thực logic nghiệp vụ luân chuyển sách vật lý: xây dựng mã xử lý dữ liệu và giao diện điều phối trạng thái luân chuyển các bản sao sách giữa các cơ sở chi nhánh thư viện. \newline $\bullet$ Thiết lập và tinh chỉnh các thành phần giao diện máy trạm tương ứng cho thủ thư. \newline $\bullet$ Viết báo cáo hàng tuần. \\
+\hline
+Tuần 4 -- 5 & 06/07/2026 -- 19/07/2026 & Phát triển mô-đun tìm kiếm ngữ nghĩa & $\bullet$ Xây dựng logic gọi mô hình nhúng để tự động chuyển đổi các trường dữ liệu văn bản của đầu sách (tiêu đề, tác giả, mô tả) thành chuỗi vector nhúng và lưu vào cơ sở dữ liệu thông qua Prisma ORM. \newline $\bullet$ Hiện thực thuật toán tính toán độ tương đồng cosine giữa chuỗi vector truy vấn của người dùng và dữ liệu sách có sẵn. \newline $\bullet$ Hiện thực giao diện bộ lọc tra cứu tài liệu bằng ngôn ngữ tự nhiên bên phía bạn đọc. \newline $\bullet$ Viết báo cáo hàng tuần. \\
+\hline
+Tuần 6 -- 8 & 20/07/2026 -- 09/08/2026 & Triển khai liên kết tích hợp Trợ lý ảo Chatbot AI & $\bullet$ Kết nối mô hình ngôn ngữ lớn thông qua việc gọi trực tiếp gói thư viện phát triển ứng dụng của Google Gemini API từ phía máy chủ. \newline $\bullet$ Xây dựng đường ống trích xuất tài liệu tăng cường dựa trên ngữ cảnh để cung cấp dữ liệu nội quy thư viện cho mô hình ngôn ngữ sinh văn bản trả lời chuẩn xác. \newline $\bullet$ Hoàn thiện giao diện khung chat trực tuyến của bạn đọc, tích hợp lưu trữ lịch sử cuộc trò chuyện và các nút câu hỏi mẫu gợi ý nhanh. \newline $\bullet$ Viết báo cáo hàng tuần. \\
+\hline
+Tuần 9 -- 10 & 10/08/2026 -- 23/08/2026 & Phát triển tính năng Sinh tóm tắt và Hệ thống gợi ý cá nhân hóa & $\bullet$ Xây dựng hàm gọi mô hình trí tuệ nhân tạo để tự động trích xuất và sinh đoạn văn bản tóm tắt nội dung ngắn khi thủ thư biên mục đầu sách mới. \newline $\bullet$ Hiện thực thuật toán gợi ý tài liệu tự động bằng cách rà soát tần suất danh mục thể loại sách và lịch sử mượn trả trong quá khứ của từng tài khoản bạn đọc. \newline $\bullet$ Cập nhật giao diện chi tiết sách để hiển thị phần tóm tắt của AI và vùng sách đề xuất trên trang chủ bạn đọc. \newline $\bullet$ Viết báo cáo hàng tuần. \\
+\hline
+Tuần 11 -- 13 & 24/08/2026 -- 13/09/2026 & Thực hiện kiểm thử phần mềm và Tối ưu hóa an ninh hệ thống & $\bullet$ Thực hiện kiểm thử đơn vị, kiểm thử tích hợp luồng nghiệp vụ; tối ưu hóa các câu lệnh truy vấn để triệt tiêu lỗi lặp truy vấn hệ thống (N+1 query). \newline $\bullet$ Kiểm tra và xử lý lỗi phân quyền gián tiếp (IDOR) trên các API mượn trả và thông tin cá nhân. \newline $\bullet$ Áp dụng cơ chế kiểm soát giao dịch toàn vẹn để đảm bảo dữ liệu tự động đồng bộ rollback ngay lập tức khi xảy ra lỗi phát sinh trên nhiều bảng một lúc. \newline $\bullet$ Cấu hình ràng buộc dữ liệu đầu vào sử dụng các thư viện tiền xử lý dữ liệu ở cả giao diện lẫn máy chủ. \newline $\bullet$ Viết báo cáo hàng tuần. \\
+\hline
+Tuần 14 & 14/09/2026 -- 20/09/2026 & Triển khai máy chủ và Cấu hình an ninh hạ tầng & $\bullet$ Triển khai toàn bộ hệ thống lên máy chủ vận hành thực tế. \newline $\bullet$ Cấu hình khoảng thời gian chờ (timeout) cho máy chủ khi dành tài nguyên để xử lý cho một yêu cầu (request). \newline $\bullet$ Cấu hình tường lửa iptables để hạn chế số lượng yêu cầu mà một địa chỉ IP có thể gửi trong một giây, thực hiện chặn các địa chỉ IP gửi quá số lượng cho phép nhằm hạn chế ảnh hưởng của các cuộc tấn công từ chối dịch vụ (DoS/DDoS). \newline $\bullet$ Cấu hình mạng phân phối nội dung CDN Cloudflare để tăng tốc độ truyền tải tài nguyên số và hạn chế các cuộc tấn công từ chối dịch vụ. \newline $\bullet$ Viết báo cáo hàng tuần. \\
+\hline
+Tuần 15 & 21/09/2026 -- 27/09/2026 & Hoàn thiện tài liệu kỹ thuật & $\bullet$ Thực hiện quay phim màn hình, chụp ảnh tư liệu minh họa quy trình demo vận hành của sản phẩm hoàn chỉnh. \newline $\bullet$ Hoàn thiện toàn bộ nội dung báo cáo Đồ án tốt nghiệp. \newline $\bullet$ Chuẩn bị slide thuyết trình.  \\
+\hline
+\end{longtable}
+
+\bigskip
