@@ -7,7 +7,8 @@ export const getNotifications = async (req: Request, res: Response, next: NextFu
   try {
     const page = req.query.page ? parseInt(req.query.page as string) : 1;
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
-    const result = await notificationsService.getNotifications(req.user!.userId, page, limit);
+    const allChannels = req.query.allChannels === 'true';
+    const result = await notificationsService.getNotifications(req.user!.userId, page, limit, allChannels);
     res.status(200).json({ success: true, ...result });
   } catch (err) { next(err); }
 };

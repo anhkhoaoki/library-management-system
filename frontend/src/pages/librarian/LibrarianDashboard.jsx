@@ -147,26 +147,46 @@ export default function LibrarianDashboard() {
           </div>
 
           {/* Recent Activities */}
-          <div className="bg-white rounded-xl shadow-sm border border-outline-variant p-stack-md">
-            <h3 className="font-title-lg text-on-surface mb-6">Hoạt động gần đây</h3>
-            <div className="space-y-6">
+          <div className="bg-white rounded-xl shadow-sm border border-outline-variant p-stack-md flex flex-col h-full">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="font-title-lg text-on-surface">Hoạt động gần đây</h3>
+              <Link to="/dashboard/admin/logs" className="font-label-sm text-label-sm text-primary hover:underline">
+                Xem nhật ký
+              </Link>
+            </div>
+            <div className="space-y-6 flex-1 overflow-y-auto">
               {recentActivities.length === 0 ? (
                 <p className="text-on-surface-variant text-center py-10 italic">Chưa có hoạt động.</p>
               ) : (
-                recentActivities.map((act, index) => (
-                  <div key={act.id} className="flex gap-4 relative">
-                    <div className="w-8 h-8 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center shrink-0 z-10">
-                      <span className="material-symbols-outlined text-sm">
-                        {act.action === 'BORROW' ? 'how_to_reg' : act.action === 'RETURN' ? 'keyboard_return' : 'edit'}
-                      </span>
+                recentActivities.map((act, index) => {
+                  let iconName = 'info';
+                  let iconColor = 'text-blue-500';
+                  switch (act.action?.toUpperCase()) {
+                    case 'LOGIN': iconName = 'login'; iconColor = 'text-primary'; break;
+                    case 'LOGOUT': iconName = 'logout'; iconColor = 'text-outline'; break;
+                    case 'CREATE': iconName = 'add_circle'; iconColor = 'text-secondary'; break;
+                    case 'UPDATE': iconName = 'edit'; iconColor = 'text-tertiary'; break;
+                    case 'DELETE': iconName = 'delete'; iconColor = 'text-error'; break;
+                    case 'BORROW': iconName = 'how_to_reg'; iconColor = 'text-primary'; break;
+                    case 'RETURN': iconName = 'keyboard_return'; iconColor = 'text-emerald-500'; break;
+                  }
+                  
+                  return (
+                    <div key={act.id} className="flex gap-4 relative">
+                      <div className={`w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 z-10 ${iconColor}`}>
+                        <span className="material-symbols-outlined text-sm">
+                          {iconName}
+                        </span>
+                      </div>
+                      <div>
+                        <p className="text-xs text-on-surface">
+                          <span className="font-bold">{act.user?.fullName || 'Hệ thống'}</span> đã thực hiện hành động <span className="font-mono bg-surface-variant px-1 rounded text-secondary">{act.action}</span> trên mục {act.entityType}
+                        </p>
+                        <p className="text-[10px] text-outline mt-1">{new Date(act.createdAt).toLocaleString('vi-VN')}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-xs font-bold text-on-surface">{act.user?.fullName} - {act.action}</p>
-                      <p className="text-[10px] text-on-surface-variant">{act.entityType}: {act.entityId}</p>
-                      <p className="text-[10px] text-outline mt-1">{new Date(act.createdAt).toLocaleString('vi-VN')}</p>
-                    </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           </div>

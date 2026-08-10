@@ -96,7 +96,7 @@ export default function Topbar({ userName = 'Người dùng', userRole = 'Vai tr
   return (
     <div className="hidden md:flex justify-between items-center px-margin-desktop py-stack-md bg-white border-b border-outline-variant sticky top-0 z-30">
       <div className="flex-1 max-w-2xl relative">
-        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+        {/* <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
         <input
           className="w-full bg-surface-container-low border-none rounded-full py-3 pl-12 pr-12 focus:ring-2 focus:ring-secondary focus:bg-white transition-all font-body-md text-body-md text-on-surface placeholder:text-outline"
           placeholder="Tìm kiếm tài liệu, tác giả, ISBN..."
@@ -109,7 +109,7 @@ export default function Topbar({ userName = 'Người dùng', userRole = 'Vai tr
           <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
             auto_awesome
           </span>
-        </button>
+        </button> */}
       </div>
 
       <div className="flex items-center gap-stack-md ml-stack-lg">
@@ -169,9 +169,10 @@ export default function Topbar({ userName = 'Người dùng', userRole = 'Vai tr
                         {notif.title}
                       </h5>
                       {/* Thay đổi từ .message thành .content để khớp với schema database backend */}
-                      <p className="text-xs text-on-surface-variant line-clamp-2">
-                        {notif.content || "Không có nội dung chi tiết"}
-                      </p>
+                      <p 
+                        className="text-xs text-on-surface-variant line-clamp-2 overflow-hidden text-ellipsis [&>p]:inline"
+                        dangerouslySetInnerHTML={{ __html: notif.content || "Không có nội dung chi tiết" }}
+                      />
                       <span className="text-[10px] text-outline mt-1">{new Date(notif.createdAt).toLocaleString('vi-VN')}</span>
                     </div>
                   ))

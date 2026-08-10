@@ -97,7 +97,7 @@ export default function AdminUsersPage() {
               Quản lý danh sách, phân quyền và trạng thái hoạt động của người dùng hệ thống.
             </p>
           </div>
-          <div className="flex gap-stack-sm">
+          {/* <div className="flex gap-stack-sm">
             <button 
               className="flex items-center gap-unit bg-primary text-on-primary font-label-md text-label-md px-stack-md py-2 rounded-lg hover:shadow-md transition-shadow"
               onClick={() => alert('Tính năng thêm người dùng đang phát triển.')}
@@ -105,7 +105,7 @@ export default function AdminUsersPage() {
               <span className="material-symbols-outlined text-[20px]">person_add</span>
               Thêm người dùng
             </button>
-          </div>
+          </div> */}
         </div>
 
         {/* Filters & Search Bar */}
@@ -270,7 +270,7 @@ export default function AdminUsersPage() {
           {!loading && !error && users.length > 0 && (
             <div className="p-stack-md border-t border-outline-variant/30 flex items-center justify-between bg-surface-container-lowest">
               <span className="font-body-md text-body-md text-on-surface-variant">
-                Hiển thị {((page - 1) * 10) + 1}-{Math.min(page * 10, totalUsers)} trong số {totalUsers} người dùng
+                Hiển thị {((page - 1) * 10) + 1}-{page * 10} trong tổng số {page * 10} người dùng
               </span>
               <div className="flex items-center gap-1">
                 <button 
