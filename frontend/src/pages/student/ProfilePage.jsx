@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import MainLayout from '../../components/layout/MainLayout';
 import { AuthContext } from '../../context/AuthContext';
 import api from '../../utils/api';
@@ -403,9 +403,13 @@ export default function ProfilePage() {
                     <p className="font-body-md text-body-md text-on-surface-variant mb-4 leading-relaxed">
                       Chào <strong>{profileData.fullName}</strong>! Dựa trên sở thích của bạn, hệ thống AI khuyên bạn nên khám phá các tài liệu mới trong danh mục <strong>Khoa học Máy tính</strong> được cập nhật tuần này.
                     </p>
-                    <span className="text-secondary font-label-md text-label-md font-bold flex items-center gap-1 cursor-pointer hover:underline">
+                    {/* NÚT ĐỘNG: ĐIỀU HƯỚNG TỚI TRANG TÌM KIẾM SÁCH Theo DẠNG LINK */}
+                    <Link 
+                      to="/dashboard/student/search?query=Khoa%20học%20Máy%20tính"
+                      className="text-secondary font-label-md text-label-md font-bold flex items-center gap-1 hover:underline transition-all"
+                    >
                       Xem danh mục gợi ý <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                    </span>
+                    </Link>
                   </div>
                 </div>
               </section>

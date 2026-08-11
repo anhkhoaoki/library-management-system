@@ -115,6 +115,10 @@ router.get('/search', booksController.searchBooks);          // UC-EXP-01
  */
 router.get('/categories', booksController.getCategories);
 
+router.get('/digital-resources', booksController.listDigitalResources);
+router.get('/digital/view/:resourceId', authenticate, booksController.renderDigitalView);
+router.get('/digital/sessions/active', authenticate, booksController.getActiveDigitalSession);
+
 /**
  * @swagger
  * /api/v1/books/digital/sessions/{logId}/end:
