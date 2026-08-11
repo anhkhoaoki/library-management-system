@@ -3,6 +3,11 @@ import { createError } from '../../middlewares/error.middleware';
 import { BookStatus } from '@prisma/client';
 import * as xlsx from 'xlsx';
 import { fetchBookInfoByIsbn } from './books.utils';
+import {
+  buildAudiobookHtml,
+  buildEbookHtml,
+  resolveContentForResource,
+} from './digital-content.service';
 
 // ─── UC-EXP-01: Search / List Books ─────────────────────────
 export const searchBooks = async (query: {
@@ -387,14 +392,138 @@ export const submitReview = async (
   return review;
 };
 
+// ─── UC-EXP-02: List Digital Resources ───────────────────────
+export const listDigitalResources = async (query: {
+  resourceType?: string;
+  q?: string;
+  page?: number;
+  limit?: number;
+}) => {
+  const page = query.page || 1;
+  const limit = Math.min(query.limit || 50, 100);
+  const skip = (page - 1) * limit;
+  const keyword = query.q?.trim();
+
+  const where: Record<string, unknown> = {
+    book: { status: BookStatus.ACTIVE },
+  };
+
+  if (query.resourceType) {
+    where['resourceType'] = query.resourceType;
+  }
+
+  if (keyword) {
+    where['book'] = {
+      status: BookStatus.ACTIVE,
+      OR: [
+        { title: { contains: keyword, mode: 'insensitive' } },
+        { authorNames: { hasSome: [keyword] } },
+      ],
+    };
+  }
+
+  const [total, resources] = await Promise.all([
+    prisma.digitalResource.count({ where }),
+    prisma.digitalResource.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        book: {
+          select: {
+            id: true,
+            title: true,
+            authorNames: true,
+            coverImageUrl: true,
+            category: { select: { id: true, name: true } },
+          },
+        },
+        _count: { select: { accessLogs: true } },
+      },
+    }),
+  ]);
+
+  const data = resources.map((r) => ({
+    id: r.id,
+    bookId: r.bookId,
+    resourceType: r.resourceType,
+    maxConcurrentUsers: r.maxConcurrentUsers,
+    currentUsers: r.currentUsers,
+    accessCount: r._count.accessLogs,
+    isAvailable: r.currentUsers < r.maxConcurrentUsers,
+    book: r.book,
+  }));
+
+  return {
+    data,
+    pagination: { total, page, limit, totalPages: Math.ceil(total / limit) },
+  };
+};
+
+// ─── UC-EXP-02: Active digital session ───────────────────────
+export const getUserActiveDigitalSession = async (userId: string) => {
+  const log = await prisma.digitalAccessLog.findFirst({
+    where: { userId, endedAt: null },
+    orderBy: { accessedAt: 'desc' },
+    include: {
+      digitalResource: {
+        include: {
+          book: {
+            select: { id: true, title: true, coverImageUrl: true, authorNames: true },
+          },
+        },
+      },
+    },
+  });
+
+  if (!log) return null;
+
+  return {
+    accessLogId: log.id,
+    fileUrl: log.digitalResource.fileUrl,
+    resourceType: log.digitalResource.resourceType,
+    bookTitle: log.digitalResource.book.title,
+    bookId: log.digitalResource.bookId,
+    resourceId: log.digitalResource.id,
+    coverImageUrl: log.digitalResource.book.coverImageUrl,
+    authorNames: log.digitalResource.book.authorNames,
+    accessedAt: log.accessedAt,
+  };
+};
+
 // ─── UC-EXP-02: Digital Access ───────────────────────────────
 export const accessDigitalResource = async (resourceId: string, userId: string) => {
   const resource = await prisma.digitalResource.findUnique({
     where: { id: resourceId },
-    include: { book: { select: { title: true } } },
+    include: {
+      book: {
+        select: {
+          id: true,
+          title: true,
+          authorNames: true,
+          description: true,
+          publisher: true,
+          publishYear: true,
+          coverImageUrl: true,
+        },
+      },
+    },
   });
 
   if (!resource) throw createError('Tài nguyên kỹ thuật số không tồn tại', 404);
+
+  // Đồng bộ slot với số phiên thực tế (tránh báo đầy oan)
+  const activeCount = await prisma.digitalAccessLog.count({
+    where: { digitalResourceId: resourceId, endedAt: null },
+  });
+  if (activeCount !== resource.currentUsers) {
+    await prisma.digitalResource.update({
+      where: { id: resourceId },
+      data: { currentUsers: activeCount },
+    });
+    resource.currentUsers = activeCount;
+  }
 
   if (resource.currentUsers >= resource.maxConcurrentUsers) {
     throw createError(
@@ -402,6 +531,9 @@ export const accessDigitalResource = async (resourceId: string, userId: string) 
       429
     );
   }
+
+  // Tự kết thúc phiên cũ của cùng user trước khi mở phiên mới
+  await endAllUserDigitalSessions(userId);
 
   // Increment concurrent user count
   await prisma.digitalResource.update({
@@ -414,33 +546,167 @@ export const accessDigitalResource = async (resourceId: string, userId: string) 
     data: { digitalResourceId: resourceId, userId },
   });
 
+  const accessCount = await prisma.digitalAccessLog.count({
+    where: { digitalResourceId: resourceId },
+  });
+
+  const content = resolveContentForResource(
+    resource.book.title,
+    resource.resourceType as 'PDF' | 'EPUB' | 'AUDIOBOOK' | 'VIDEO',
+  );
+
   return {
     accessLogId: accessLog.id,
-    fileUrl: resource.fileUrl,
+    contentMode: content.mode,
+    embedUrl: content.embedUrl || null,
+    streamUrl: content.streamUrl || null,
+    contentLabel: content.label || null,
+    viewUrl: `/books/digital/view/${resourceId}`,
     resourceType: resource.resourceType,
     bookTitle: resource.book.title,
+    bookId: resource.book.id,
+    resourceId,
+    coverImageUrl: resource.book.coverImageUrl,
+    authorNames: resource.book.authorNames,
+    description: resource.book.description,
+    publisher: resource.book.publisher,
+    publishYear: resource.book.publishYear,
+    accessCount,
+    maxConcurrentUsers: resource.maxConcurrentUsers,
   };
 };
 
-// ─── UC-EXP-02: End Digital Session ─────────────────────────
-export const endDigitalSession = async (accessLogId: string) => {
-  const log = await prisma.digitalAccessLog.findUnique({ where: { id: accessLogId } });
-  if (!log || log.endedAt) return;
+// ─── UC-EXP-02: Render e-book HTML (PDF/EPUB) ────────────────
+export const renderDigitalView = async (resourceId: string, userId: string) => {
+  const activeLog = await prisma.digitalAccessLog.findFirst({
+    where: { userId, digitalResourceId: resourceId, endedAt: null },
+    orderBy: { accessedAt: 'desc' },
+  });
 
+  if (!activeLog) {
+    throw createError('Bạn cần bắt đầu phiên truy cập trước khi xem tài liệu', 403);
+  }
+
+  const resource = await prisma.digitalResource.findUnique({
+    where: { id: resourceId },
+    include: {
+      book: {
+        select: {
+          title: true,
+          authorNames: true,
+          description: true,
+          publisher: true,
+          publishYear: true,
+          isbn: true,
+          coverImageUrl: true,
+        },
+      },
+    },
+  });
+
+  if (!resource) throw createError('Tài nguyên kỹ thuật số không tồn tại', 404);
+
+  const book = resource.book;
+
+  if (resource.resourceType === 'PDF' || resource.resourceType === 'EPUB') {
+    return buildEbookHtml({
+      title: book.title,
+      authorNames: book.authorNames,
+      description: book.description,
+      publisher: book.publisher,
+      publishYear: book.publishYear,
+      isbn: book.isbn,
+      coverImageUrl: book.coverImageUrl,
+      resourceType: resource.resourceType,
+    });
+  }
+
+  if (resource.resourceType === 'AUDIOBOOK') {
+    return buildAudiobookHtml({
+      title: book.title,
+      authorNames: book.authorNames,
+      description: book.description,
+    });
+  }
+
+  throw createError('Loại tài liệu này không hỗ trợ xem qua trình duyệt HTML', 400);
+};
+
+// ─── UC-EXP-02: End Digital Session ─────────────────────────
+const finalizeDigitalSession = async (log: {
+  id: string;
+  accessedAt: Date;
+  digitalResourceId: string;
+  digitalResource: { currentUsers: number; book: { title: string }; resourceType: string };
+}) => {
   const endedAt = new Date();
   const durationSeconds = Math.floor((endedAt.getTime() - log.accessedAt.getTime()) / 1000);
 
   await prisma.digitalAccessLog.update({
-    where: { id: accessLogId },
+    where: { id: log.id },
     data: { endedAt, durationSeconds },
   });
 
+  const nextUsers = Math.max(0, log.digitalResource.currentUsers - 1);
   await prisma.digitalResource.update({
     where: { id: log.digitalResourceId },
-    data: { currentUsers: { decrement: 1 } },
+    data: { currentUsers: nextUsers },
   });
 
-  return { message: 'Phiên đọc đã kết thúc' };
+  return {
+    message: 'Phiên đọc đã kết thúc',
+    durationSeconds,
+    bookTitle: log.digitalResource.book.title,
+    resourceType: log.digitalResource.resourceType,
+  };
+};
+
+export const endDigitalSession = async (accessLogId: string, userId?: string) => {
+  const log = await prisma.digitalAccessLog.findUnique({
+    where: { id: accessLogId },
+    include: {
+      digitalResource: {
+        include: { book: { select: { title: true } } },
+      },
+    },
+  });
+
+  if (!log) {
+    return { message: 'Phiên đọc không tồn tại', durationSeconds: 0, bookTitle: undefined };
+  }
+
+  if (userId && log.userId !== userId) {
+    throw createError('Không có quyền kết thúc phiên này', 403);
+  }
+
+  if (log.endedAt) {
+    return {
+      message: 'Phiên đọc đã kết thúc',
+      durationSeconds: log.durationSeconds ?? 0,
+      bookTitle: log.digitalResource.book.title,
+      resourceType: log.digitalResource.resourceType,
+    };
+  }
+
+  return finalizeDigitalSession(log);
+};
+
+/** Kết thúc mọi phiên đang mở của user — tránh chồng phiên / tắc nghẽn slot */
+export const endAllUserDigitalSessions = async (userId: string) => {
+  const activeLogs = await prisma.digitalAccessLog.findMany({
+    where: { userId, endedAt: null },
+    include: {
+      digitalResource: {
+        include: { book: { select: { title: true } } },
+      },
+    },
+  });
+
+  for (const log of activeLogs) {
+    await finalizeDigitalSession(log);
+  }
+
+  return { endedCount: activeLogs.length };
 };
 
 // ─── Get All Categories ───────────────────────────────────────

@@ -7,6 +7,7 @@ import {
   ReservationStatus,
   AuditAction,
 } from '@prisma/client';
+import { notifyReservationReady, notifyBorrowApproved } from '../notifications/notifications.service';
 
 // ─── Configuration keys ──────────────────────────────────────
 const CONFIG_KEYS = {
@@ -161,6 +162,14 @@ export const borrowDocument = async (data: {
       where: { id: reservationToFulfill.id },
       data: { status: ReservationStatus.FULFILLED },
     });
+
+    // Chỉ thông báo "đã duyệt" khi thủ thư xác nhận cho mượn
+    await notifyBorrowApproved(
+      data.userId,
+      physicalCopy.book.title,
+      physicalCopy.bookId,
+      dueDate,
+    );
   }
 
   // Step 11: Write audit log
@@ -268,17 +277,12 @@ export const returnDocument = async (data: {
       },
     });
 
-    // Create notification for the user
-    await prisma.notification.create({
-      data: {
-        userId: nextReservation.userId,
-        type: 'RESERVATION_READY',
-        title: 'Sách đặt giữ chỗ đã sẵn sàng',
-        content: `Cuốn sách "${physicalCopy.book.title}" bạn đặt chỗ đã có tại thư viện. Vui lòng đến nhận trong vòng 3 ngày.`,
-        relatedId: physicalCopy.bookId,
-        relatedType: 'Book',
-      },
-    });
+    // Notify next user in queue
+    await notifyReservationReady(
+      nextReservation.userId,
+      physicalCopy.book.title,
+      physicalCopy.bookId,
+    );
   } else {
     // No reservation queue - set copy to available
     await prisma.physicalCopy.update({
@@ -535,6 +539,7 @@ export const reserveBook = async (userId: string, bookId: string) => {
         data: { status: CopyStatus.RESERVED },
       });
     }
+    // Không gửi thông báo duyệt ở đây — chỉ gửi khi thủ thư xác nhận mượn tại quầy
   }
 
   return {
@@ -645,16 +650,11 @@ export const cancelReservation = async (reservationId: string, userId: string, r
         },
       });
 
-      await prisma.notification.create({
-        data: {
-          userId: nextReservation.userId,
-          type: 'RESERVATION_READY',
-          title: 'Sách đặt giữ chỗ đã sẵn sàng',
-          content: `Cuốn sách "${reservation.book.title}" bạn đặt chỗ đã có tại thư viện. Vui lòng đến nhận trong vòng 3 ngày.`,
-          relatedId: reservation.bookId,
-          relatedType: 'Book',
-        },
-      });
+      await notifyReservationReady(
+        nextReservation.userId,
+        reservation.book.title,
+        reservation.bookId,
+      );
 
       // Re-index remaining waiting queue
       const waitingList = await prisma.reservation.findMany({

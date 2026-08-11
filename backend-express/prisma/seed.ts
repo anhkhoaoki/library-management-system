@@ -13,6 +13,7 @@
  */
 
 import { PrismaClient, Role, UserStatus } from '@prisma/client';
+import { resolveDigitalContentUrl, resolveDirectStreamUrl } from '../src/modules/books/digital-content.map';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -1265,167 +1266,125 @@ async function main() {
   console.log(`✅ ${totalCopiesCreated} physical copies created`);
   console.log('✅ Books and physical copies seeded');
 
-// ─── TỰ ĐỘNG BƠM ĐẦY ĐỦ CÁC LOẠI TÀI NGUYÊN SỐ ĐỂ TEST BỘ LỌC ─────────────────
-console.log('🌱 Adding diverse digital resources for testing filters...');
+// ─── Tài nguyên số — gắn nhiều sách với nội dung phù hợp định dạng ─────────
+console.log('🌱 Seeding digital resources...');
 
-// 1. Tìm cuốn sách thuộc thể loại Khoa học máy tính (Ví dụ: Clean Code)
-const cleanCodeBook = await prisma.book.findFirst({
-  where: { title: { contains: 'Clean Code' } }
+// Dọn toàn bộ tài nguyên số cũ để phân loại lại sạch
+const oldDigital = await prisma.digitalResource.findMany({
+  where: { id: { startsWith: 'res-digital-' } },
+  select: { id: true },
 });
-
-if (cleanCodeBook) {
-  // Tạo Ebook dạng PDF/EPUB cho tab "E-book"
-  await prisma.digitalResource.upsert({
-    where: { id: 'res-ebook-pdf' },
-    update: {},
-    create: {
-      id: 'res-ebook-pdf',
-      bookId: cleanCodeBook.id,
-      resourceType: 'PDF', // Khớp với Enum trong schema.prisma
-      fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-    },
+if (oldDigital.length > 0) {
+  await prisma.digitalAccessLog.deleteMany({
+    where: { digitalResourceId: { in: oldDigital.map((r) => r.id) } },
   });
-  console.log(`✅ Added PDF Ebook to: "${cleanCodeBook.title}"`);
+  await prisma.digitalResource.deleteMany({
+    where: { id: { in: oldDigital.map((r) => r.id) } },
+  });
 }
-
-// 2. Tìm một cuốn sách khác để làm Audiobook (Ví dụ: Nhà Giả Kim)
-const alchemistBook = await prisma.book.findFirst({
-  where: { title: { contains: 'Nhà Giả Kim' } }
+await prisma.digitalAccessLog.deleteMany({
+  where: { digitalResourceId: { in: ['res-ebook-pdf', 'res-audio-001', 'res-journal-001'] } },
+});
+await prisma.digitalResource.deleteMany({
+  where: { id: { in: ['res-ebook-pdf', 'res-audio-001', 'res-journal-001'] } },
 });
 
-if (alchemistBook) {
-  // Tạo Audiobook dạng AUDIOBOOK cho tab "Audiobook"
-  await prisma.digitalResource.upsert({
-    where: { id: 'res-audio-001' },
-    update: {},
-    create: {
-      id: 'res-audio-001',
-      bookId: alchemistBook.id,
-      resourceType: 'AUDIOBOOK', // Khớp với Enum trong schema.prisma
-      fileUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', // File nhạc test
-    },
-  });
-  console.log(`✅ Added Audiobook to: "${alchemistBook.title}"`);
-}
+/** Phân loại: PDF/EPUB = đọc | AUDIOBOOK = nghe | VIDEO = xem bài giảng */
+const digitalPlan: Array<{ match: string; type: 'PDF' | 'EPUB' | 'AUDIOBOOK' | 'VIDEO'; exact?: boolean }> = [
+  // E-book PDF — giáo trình, kỹ thuật, tham khảo
+  { match: 'Clean Code', type: 'PDF' },
+  { match: 'Design Patterns', type: 'PDF' },
+  { match: 'Introduction to Algorithms', type: 'PDF' },
+  { match: 'JavaScript: The Good Parts', type: 'PDF' },
+  { match: 'Giải tích 1', type: 'PDF', exact: true },
+  { match: 'Giải tích 2', type: 'PDF', exact: true },
+  { match: 'Nghệ thuật Học', type: 'PDF' },
+  { match: 'Lập trình Python cơ bản', type: 'PDF' },
+  { match: 'Cơ sở Dữ liệu', type: 'PDF' },
+  { match: 'The Pragmatic Programmer', type: 'PDF' },
 
-// 3. Tìm một cuốn sách thuộc nhóm Triết học / Khoa học để làm Tạp chí (Ví dụ: Sapiens)
-const sapiensBook = await prisma.book.findFirst({
-  where: { title: { contains: 'Sapiens' } }
-});
+  // E-book EPUB — nhân văn, văn học, khoa học xã hội
+  { match: 'Đại số Tuyến tính', type: 'EPUB', exact: true },
+  { match: 'Vật lý Đại cương', type: 'EPUB', exact: true },
+  { match: 'Văn hóa Việt Nam', type: 'EPUB' },
+  { match: 'Lãnh đạo bằng Cảm xúc', type: 'EPUB' },
+  { match: 'Số Đỏ', type: 'EPUB', exact: true },
+  { match: 'Lịch sử Việt Nam Từ Nguồn Gốc', type: 'EPUB' },
+  { match: 'Learning Python', type: 'EPUB' },
 
-if (sapiensBook) {
-  // Tạo tài nguyên dạng VIDEO hoặc tài liệu đặc biệt cho tab Tạp chí
-  await prisma.digitalResource.upsert({
-    where: { id: 'res-journal-001' },
-    update: {},
-    create: {
-      id: 'res-journal-001',
-      bookId: sapiensBook.id,
-      resourceType: 'VIDEO', // Hoặc type tương ứng trong schema của ông dành cho tạp chí
-      fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-    },
-  });
-  console.log(`✅ Added Scientific Journal Resource to: "${sapiensBook.title}"`);
-}
+  // Audiobook — văn học, phát triển bản thân (nghe)
+  { match: 'Nhà Giả Kim', type: 'AUDIOBOOK', exact: true },
+  { match: 'Sapiens', type: 'AUDIOBOOK' },
+  { match: 'Atomic Habits', type: 'AUDIOBOOK' },
+  { match: 'Great Expectations', type: 'AUDIOBOOK' },
+  { match: 'Thinking, Fast and Slow', type: 'AUDIOBOOK' },
+  { match: "Man's Search for Meaning", type: 'AUDIOBOOK' },
+  { match: 'Cho Tôi Xin Một Vé Đi Tuổi Thơ', type: 'AUDIOBOOK' },
+  { match: 'Homo Deus', type: 'AUDIOBOOK' },
+  { match: 'Đắc Nhân Tâm', type: 'AUDIOBOOK' },
 
+  // Video — bài giảng, khóa học (xem)
+  { match: 'Học máy với Python', type: 'VIDEO' },
+  { match: 'Trí tuệ Nhân tạo', type: 'VIDEO' },
+  { match: 'Hands-On Machine Learning', type: 'VIDEO' },
+  { match: 'Xác suất Thống kê', type: 'VIDEO', exact: true },
+  { match: 'Tư duy Phản biện', type: 'VIDEO', exact: true },
+  { match: 'Mạng Máy Tính', type: 'VIDEO' },
+];
 
-// ============================================================
-// 🚀 BỔ SUNG DỮ LIỆU MẪU ĐỂ TEST TRÊN GIAO DIỆN HISTORYPAGE
-// ============================================================
+let digitalCount = 0;
 
-console.log('\n⏳ Generating rich mock history for HistoryPage...');
+for (const plan of digitalPlan) {
+  const book = plan.exact
+    ? await prisma.book.findFirst({
+        where: { title: { equals: plan.match, mode: 'insensitive' } },
+      })
+    : (await prisma.book.findFirst({
+        where: { title: { equals: plan.match, mode: 'insensitive' } },
+      })) ||
+      (await prisma.book.findFirst({
+        where: { title: { contains: plan.match, mode: 'insensitive' } },
+        orderBy: { title: 'asc' },
+      }));
+  if (!book) continue;
 
-// Lấy user test
-const targetReader = await prisma.user.findFirst({
-  where: {
-    email: 'reader1@student.edu.vn',
-  },
-});
-
-if (targetReader) {
-
-  // Lấy nhiều physical copy khác nhau
-  const sampleCopies = await prisma.physicalCopy.findMany({
-    include: {
-      book: true,
-    },
-    take: 15, // số lượng sách muốn hiển thị
-  });
-
-  // Xóa history cũ để tránh duplicate
-  await prisma.fine.deleteMany({
-    where: {
-      userId: targetReader.id,
-    },
-  });
-
-  await prisma.borrowRecord.deleteMany({
-    where: {
-      userId: targetReader.id,
-    },
-  });
-
-  let index = 0;
-
-  for (const copy of sampleCopies) {
-
-    const borrowedDate = new Date(2026, 3, index + 1);
-
-    const dueDate = new Date(borrowedDate);
-    dueDate.setDate(dueDate.getDate() + 14);
-
-    const returnedDate = new Date(dueDate);
-
-    // Random trả trễ
-    const isLate = index % 3 === 0;
-
-    if (isLate) {
-      returnedDate.setDate(returnedDate.getDate() + 5);
-    } else {
-      returnedDate.setDate(returnedDate.getDate() - 1);
-    }
-
-    const borrowRecord = await prisma.borrowRecord.create({
-      data: {
-        userId: targetReader.id,
-        physicalCopyId: copy.id,
-        status: 'RETURNED',
-        borrowedAt: borrowedDate,
-        dueDate,
-        returnedAt: returnedDate,
-      },
-    });
-
-    // Nếu trễ thì tạo fine
-    if (isLate) {
-
-      const daysLate = 5;
-      const fineAmount = daysLate * 10000;
-
-      await prisma.fine.create({
-        data: {
-          userId: targetReader.id,
-          borrowRecordId: borrowRecord.id,
-          daysOverdue: daysLate,
-          dailyRate: 10000,
-          totalAmount: fineAmount,
-          status: index % 2 === 0 ? 'PENDING' : 'PAID',
-        },
-      });
-    }
-
-    console.log(`✅ Added history for: ${copy.book.title}`);
-
-    index++;
+  const contentUrl = resolveDigitalContentUrl(book.title, plan.type, 'https://archive.org/embed/gutenberg');
+  let fileUrl = contentUrl;
+  if (plan.type === 'AUDIOBOOK' || plan.type === 'VIDEO') {
+    const direct = resolveDirectStreamUrl(book.title, plan.type);
+    if (direct) fileUrl = direct;
   }
 
-  console.log('✅ Rich HistoryPage mock data generated');
-
-} else {
-
-  console.log('⚠️ Reader not found. Cannot generate history mock data.');
-
+  const resourceId = `res-digital-${digitalCount.toString().padStart(3, '0')}`;
+  await prisma.digitalResource.upsert({
+    where: { id: resourceId },
+    update: { fileUrl, resourceType: plan.type, bookId: book.id, maxConcurrentUsers: 10 },
+    create: {
+      id: resourceId,
+      bookId: book.id,
+      resourceType: plan.type,
+      fileUrl,
+      maxConcurrentUsers: 10,
+    },
+  });
+  digitalCount++;
+  console.log(`✅ Digital [${plan.type}]: "${book.title}"`);
 }
+
+console.log(`✅ ${digitalCount} digital resources seeded`);
+
+// Dọn dữ liệu mượn trả giả cũ (nếu còn từ lần seed trước) — lịch sử thật chỉ từ thủ thư
+const readerForCleanup = await prisma.user.findFirst({ where: { email: 'reader1@student.edu.vn' } });
+if (readerForCleanup) {
+  await prisma.fine.deleteMany({ where: { userId: readerForCleanup.id } });
+  const deletedBorrows = await prisma.borrowRecord.deleteMany({ where: { userId: readerForCleanup.id } });
+  await prisma.reservation.deleteMany({ where: { userId: readerForCleanup.id } });
+  if (deletedBorrows.count > 0) {
+    console.log(`🧹 Removed ${deletedBorrows.count} seeded borrow records for reader1 (use librarian circulation for real data)`);
+  }
+}
+
+console.log('ℹ️  Borrow/return history is created only via librarian circulation (no fake seed).');
   console.log('\n🎉 Seed completed successfully!');
   console.log('─────────────────────────────────────');
   console.log('Login credentials:');

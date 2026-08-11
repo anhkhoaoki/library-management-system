@@ -66,6 +66,26 @@ export const getReviews = async (req: Request, res: Response, next: NextFunction
   } catch (err) { next(err); }
 };
 
+export const listDigitalResources = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { resourceType, q, page, limit } = req.query;
+    const result = await booksService.listDigitalResources({
+      resourceType: resourceType as string,
+      q: q as string,
+      page: page ? parseInt(page as string) : 1,
+      limit: limit ? parseInt(limit as string) : 50,
+    });
+    res.status(200).json({ success: true, ...result });
+  } catch (err) { next(err); }
+};
+
+export const getActiveDigitalSession = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const session = await booksService.getUserActiveDigitalSession(req.user!.userId);
+    res.status(200).json({ success: true, data: session });
+  } catch (err) { next(err); }
+};
+
 // UC-EXP-02
 export const accessDigitalResource = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -76,8 +96,16 @@ export const accessDigitalResource = async (req: Request, res: Response, next: N
 
 export const endDigitalSession = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await booksService.endDigitalSession(req.params.logId);
+    const result = await booksService.endDigitalSession(req.params.logId, req.user!.userId);
     res.status(200).json({ success: true, data: result });
+  } catch (err) { next(err); }
+};
+
+export const renderDigitalView = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const html = await booksService.renderDigitalView(req.params.resourceId, req.user!.userId);
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.status(200).send(html);
   } catch (err) { next(err); }
 };
 

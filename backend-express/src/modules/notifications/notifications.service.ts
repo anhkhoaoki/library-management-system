@@ -2,6 +2,115 @@ import prisma from '../../config/database';
 import { createError } from '../../middlewares/error.middleware';
 import { NotificationType, NotificationChannel } from '@prisma/client';
 import nodemailer from 'nodemailer';
+import { sendMail } from '../../config/mailer';
+
+// ─── Yêu cầu mượn đã được thủ thư duyệt ─────────────────────
+export const notifyBorrowApproved = async (
+  userId: string,
+  bookTitle: string,
+  bookId: string,
+  dueDate: Date,
+) => {
+  const dueStr = dueDate.toLocaleDateString('vi-VN');
+  const title = 'Yêu cầu mượn sách đã được duyệt';
+  const content = `Thủ thư đã xác nhận cho bạn mượn cuốn "${bookTitle}". Hạn trả: ${dueStr}.`;
+
+  await prisma.notification.create({
+    data: {
+      userId,
+      type: NotificationType.SYSTEM,
+      channel: NotificationChannel.IN_APP,
+      title,
+      content,
+      relatedId: bookId,
+      relatedType: 'Book',
+    },
+  });
+
+  const [user, settings] = await Promise.all([
+    prisma.user.findUnique({ where: { id: userId }, select: { email: true, fullName: true } }),
+    prisma.notificationSetting.findUnique({ where: { userId } }),
+  ]);
+
+  const emailEnabled = settings?.emailEnabled !== false;
+  const reservationReady = settings?.reservationReady !== false;
+
+  if (emailEnabled && reservationReady && user?.email) {
+    try {
+      const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 24px; border: 1px solid #e5e7eb; border-radius: 8px;">
+          <h2 style="color: #1a1a2e; margin-bottom: 8px;">✅ Yêu cầu mượn sách đã được duyệt</h2>
+          <p style="color: #4b5563;">Xin chào ${user.fullName || 'bạn đọc'},</p>
+          <p style="color: #4b5563;">Thủ thư đã xác nhận cho bạn mượn cuốn <strong>"${bookTitle}"</strong>.</p>
+          <p style="color: #6b7280; font-size: 14px;">Hạn trả: <strong>${dueStr}</strong>. Bạn có thể xem sách tại mục "Sách đang mượn".</p>
+        </div>
+      `;
+      await sendMail({ to: user.email, subject: `[Thư viện] ${title}`, html });
+    } catch (error) {
+      console.error('[Email] Failed to send borrow approved notification:', error);
+    }
+  }
+};
+
+// ─── Sách đặt chỗ đã có sẵn (chờ đến quầy — không phải duyệt mượn) ──
+export const notifyReservationReady = async (
+  userId: string,
+  bookTitle: string,
+  bookId: string,
+) => {
+  const title = 'Sách đặt giữ chỗ đã sẵn sàng';
+  const content = `Cuốn sách "${bookTitle}" bạn đặt chỗ đã có tại thư viện. Vui lòng đến quầy thủ thư để xác nhận mượn trong vòng 3 ngày.`;
+
+  await prisma.notification.create({
+    data: {
+      userId,
+      type: NotificationType.RESERVATION_READY,
+      channel: NotificationChannel.IN_APP,
+      title,
+      content,
+      relatedId: bookId,
+      relatedType: 'Book',
+    },
+  });
+
+  const [user, settings] = await Promise.all([
+    prisma.user.findUnique({ where: { id: userId }, select: { email: true, fullName: true } }),
+    prisma.notificationSetting.findUnique({ where: { userId } }),
+  ]);
+
+  const emailEnabled = settings?.emailEnabled !== false;
+  const reservationReady = settings?.reservationReady !== false;
+
+  if (emailEnabled && reservationReady && user?.email) {
+    try {
+      const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 24px; border: 1px solid #e5e7eb; border-radius: 8px;">
+          <h2 style="color: #1a1a2e; margin-bottom: 8px;">📚 Sách đặt giữ chỗ đã sẵn sàng</h2>
+          <p style="color: #4b5563;">Xin chào ${user.fullName || 'bạn đọc'},</p>
+          <p style="color: #4b5563;">Cuốn sách <strong>"${bookTitle}"</strong> bạn đặt chỗ đã có tại thư viện.</p>
+          <p style="color: #6b7280; font-size: 14px;">Vui lòng đến quầy thủ thư để xác nhận mượn trong vòng <strong>3 ngày</strong> kể từ hôm nay.</p>
+          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 16px 0;" />
+          <p style="color: #9ca3af; font-size: 12px;">Đây là email tự động từ hệ thống Thư viện số.</p>
+        </div>
+      `;
+      await sendMail({ to: user.email, subject: `[Thư viện] ${title}`, html });
+
+      await prisma.notification.create({
+        data: {
+          userId,
+          type: NotificationType.RESERVATION_READY,
+          channel: NotificationChannel.EMAIL,
+          title,
+          content,
+          relatedId: bookId,
+          relatedType: 'Book',
+        },
+      });
+    } catch (error) {
+      console.error('[Email] Failed to send reservation ready notification:', error);
+    }
+  }
+};
 
 // ─── UC-NOT-02: Get Notifications ────────────────────────────
 export const getNotifications = async (userId: string, page = 1, limit = 20, allChannels = false) => {
