@@ -27,11 +27,21 @@ export const register = async (data: {
   password: string;
   fullName: string;
   phone?: string;
+  studentId?: string;
+  branchId?: string;
 }) => {
   // Check duplicate email
   const existing = await prisma.user.findUnique({ where: { email: data.email } });
   if (existing) {
     throw createError('Email đã được đăng ký trong hệ thống', 409);
+  }
+
+  // Check duplicate studentId
+  if (data.studentId) {
+    const existingStudent = await prisma.user.findUnique({ where: { studentId: data.studentId } });
+    if (existingStudent) {
+      throw createError('Mã số sinh viên đã được sử dụng', 409);
+    }
   }
 
   const passwordHash = await bcrypt.hash(data.password, env.BCRYPT_ROUNDS);
@@ -49,6 +59,8 @@ export const register = async (data: {
       phone: data.phone,
       status: UserStatus.PENDING_VERIFICATION,
       roleId: readerRole.id,
+      ...(data.studentId && { studentId: data.studentId }),
+      ...(data.branchId && { branchId: data.branchId }),
     },
   });
 

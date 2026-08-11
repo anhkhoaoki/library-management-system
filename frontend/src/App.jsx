@@ -8,7 +8,7 @@ import BookDetailPage from './pages/student/BookDetailPage';
 import BorrowedBooksPage from './pages/student/BorrowedBooksPage';
 import ReservationsPage from './pages/student/ReservationsPage';
 import HistoryPage from './pages/student/HistoryPage';
-import DigitalResourcesPage from './pages/student/DigitalResourcesPage';
+// import DigitalResourcesPage from './pages/student/DigitalResourcesPage';
 import ProfilePage from './pages/student/ProfilePage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
@@ -42,7 +42,7 @@ function App() {
           <Route path="/dashboard/student/borrowed-books" element={<BorrowedBooksPage />} />
           <Route path="/dashboard/student/reservations" element={<ReservationsPage />} />
           <Route path="/dashboard/student/history" element={<HistoryPage />} />
-          <Route path="/dashboard/student/digital-resources" element={<DigitalResourcesPage />} />
+          {/* <Route path="/dashboard/student/digital-resources" element={<DigitalResourcesPage />} /> */}
           <Route path="/dashboard/student/profile" element={<ProfilePage />} />
           <Route path="/dashboard/student/settings" element={<ProfilePage />} />
 

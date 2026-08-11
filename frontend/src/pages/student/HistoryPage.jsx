@@ -67,7 +67,7 @@ export default function HistoryPage() {
     <MainLayout role="student" userName={user?.fullName} userRole="Bạn đọc">
       <div className="flex flex-col gap-stack-lg">
         <div>
-          <h2 className="font-display-lg text-on-surface">Lịch sử mượn trả</h2>
+          <h2 className="font-display-lg text-display-lg text-on-surface">Lịch sử mượn trả</h2>
           <p className="font-body-md text-on-surface-variant mt-1">
             Dữ liệu từ hệ thống lưu thông — cùng nguồn với giao diện thủ thư khi xử lý trả sách.
           </p>

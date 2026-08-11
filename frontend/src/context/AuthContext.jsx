@@ -35,9 +35,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (fullName, email, password, phone) => {
+  const register = async (fullName, email, password, phone, studentId, branchId) => {
     try {
-      await api.post('/auth/register', { fullName, email, password, phone });
+      await api.post('/auth/register', { fullName, email, password, phone, studentId, branchId });
       return { success: true };
     } catch (error) {
       return {
@@ -46,6 +46,7 @@ export const AuthProvider = ({ children }) => {
       };
     }
   };
+
 
   const verifyOtp = async (email, token, type) => {
     try {

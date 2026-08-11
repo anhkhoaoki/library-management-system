@@ -13,7 +13,10 @@ export default function ProfilePage() {
     phone: '',
     avatarUrl: '',
     role: '',
+    branchId: '',
     branchName: '',
+    studentId: '',
+    readerCode: '',
   });
 
   // Password fields
@@ -61,7 +64,10 @@ export default function ProfilePage() {
         phone: data.phone || '',
         avatarUrl: data.avatarUrl || '',
         role: data.role || 'READER',
-        branchName: branchName,
+        branchId: data.branchId || '',
+        branchName: data.branch?.name || (data.branchId === 'branch-cs-02' ? 'Thư viện Cơ sở 2 - Dĩ An' : 'Thư viện Cơ sở 1 - Lý Thường Kiệt'),
+        studentId: data.studentId || '',
+        readerCode: data.readerCode || '',
       });
 
       // Fetch Notification Settings
@@ -106,6 +112,8 @@ export default function ProfilePage() {
         fullName: profileData.fullName,
         phone: profileData.phone,
         avatarUrl: profileData.avatarUrl,
+        studentId: profileData.studentId,
+        branchId: profileData.branchId,
       });
       const updatedUser = response.data.data;
 
@@ -260,16 +268,38 @@ export default function ProfilePage() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="font-label-md text-label-md text-on-surface-variant font-bold">
-                      {profileData.role === 'READER' ? 'Chi nhánh sinh hoạt chính' : 'Chi nhánh công tác'}
-                    </label>
+                    <label className="font-label-md text-label-md text-on-surface-variant font-bold">Mã số sinh viên</label>
                     <input
-                      className="w-full bg-surface-container-low border border-outline-variant rounded-lg font-body-md text-body-md text-outline px-4 py-3 cursor-not-allowed opacity-75"
+                      className="w-full bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg font-body-md text-body-md text-on-surface px-4 py-3"
                       type="text"
-                      value={profileData.branchName}
-                      disabled
+                      placeholder="Nhập MSSV nếu chưa có"
+                      value={profileData.studentId}
+                      onChange={(e) => setProfileData(prev => ({ ...prev, studentId: e.target.value }))}
                     />
                   </div>
+                  <div className="space-y-1">
+                    <label className="font-label-md text-label-md text-on-surface-variant font-bold">Chi nhánh sinh hoạt</label>
+                    <select
+                      className="w-full bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg font-body-md text-body-md text-on-surface px-4 py-3"
+                      value={profileData.branchId}
+                      onChange={(e) => setProfileData(prev => ({ ...prev, branchId: e.target.value }))}
+                    >
+                      <option value="">-- Chưa chọn --</option>
+                      <option value="branch-cs-01">CS1 - Lý Thường Kiệt</option>
+                      <option value="branch-cs-02">CS2 - Dĩ An</option>
+                    </select>
+                  </div>
+                  {profileData.readerCode && (
+                    <div className="space-y-1">
+                      <label className="font-label-md text-label-md text-on-surface-variant font-bold">Mã bạn đọc</label>
+                      <input
+                        className="w-full bg-surface-container-low border border-outline-variant rounded-lg font-body-md text-body-md text-outline px-4 py-3 cursor-not-allowed opacity-75"
+                        type="text"
+                        value={profileData.readerCode}
+                        disabled
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="mt-stack-lg flex justify-end">

@@ -11,6 +11,8 @@ export const registerDto = Joi.object({
   }),
   fullName: Joi.string().min(2).max(100).required(),
   phone: Joi.string().pattern(/^[0-9]{10,11}$/).optional(),
+  studentId: Joi.string().max(20).optional().allow(''),
+  branchId: Joi.string().optional().allow(''),
 });
 
 export const loginDto = Joi.object({

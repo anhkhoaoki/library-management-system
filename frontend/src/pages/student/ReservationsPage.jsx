@@ -51,7 +51,7 @@ export default function ReservationsPage() {
     <MainLayout role="student" userName={user?.fullName} userRole="Bạn đọc">
       <div className="max-w-container-max mx-auto space-y-stack-lg">
         <div className="mb-stack-lg">
-          <h2 className="font-display-lg text-on-surface mb-stack-sm">Yêu cầu mượn sách</h2>
+          <h2 className="font-display-lg text-display-lg text-on-surface mb-stack-sm">Yêu cầu mượn sách</h2>
           <p className="font-body-md text-on-surface-variant">
             Các sách bạn đã yêu cầu mượn và đang chờ thủ thư xác nhận tại quầy.
           </p>

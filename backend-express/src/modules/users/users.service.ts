@@ -13,9 +13,12 @@ export const getProfile = async (userId: string) => {
       fullName: true,
       phone: true,
       avatarUrl: true,
+      studentId: true,
+      readerCode: true,
       role: { select: { name: true } },
       status: true,
       branchId: true,
+      branch: { select: { id: true, name: true } },
       lastLoginAt: true,
       createdAt: true,
     },
@@ -63,10 +66,16 @@ export const lookupUserByCode = async (code: string) => {
 // ─── UC-ACC-04: Update Profile ───────────────────────────────
 export const updateProfile = async (
   userId: string,
-  data: { fullName?: string; phone?: string; avatarUrl?: string }
+  data: { fullName?: string; phone?: string; avatarUrl?: string; studentId?: string; branchId?: string }
 ) => {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) throw createError('Người dùng không tồn tại', 404);
+
+  // Check duplicate studentId if provided
+  if (data.studentId) {
+    const dup = await prisma.user.findUnique({ where: { studentId: data.studentId } });
+    if (dup && dup.id !== userId) throw createError('Mã số sinh viên đã được sử dụng', 409);
+  }
 
   const updated = await prisma.user.update({
     where: { id: userId },
@@ -74,6 +83,8 @@ export const updateProfile = async (
       ...(data.fullName && { fullName: data.fullName }),
       ...(data.phone !== undefined && { phone: data.phone }),
       ...(data.avatarUrl !== undefined && { avatarUrl: data.avatarUrl }),
+      ...(data.studentId !== undefined && { studentId: data.studentId || null }),
+      ...(data.branchId !== undefined && { branchId: data.branchId || null }),
     },
     select: {
       id: true,
@@ -81,6 +92,9 @@ export const updateProfile = async (
       fullName: true,
       phone: true,
       avatarUrl: true,
+      studentId: true,
+      branchId: true,
+      branch: { select: { id: true, name: true } },
       updatedAt: true,
     },
   });

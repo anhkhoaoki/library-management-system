@@ -11,6 +11,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [loginRole, setLoginRole] = useState('READER'); // 'READER' | 'STAFF'
 
   // Forgot Password State
   const [showForgotModal, setShowForgotModal] = useState(false);
@@ -50,6 +51,19 @@ export default function LoginPage() {
     
     if (result.success) {
       const role = result.user.role;
+      
+      // Enforce role-based login separation
+      if (loginRole === 'READER' && role !== 'READER') {
+        setError('Tài khoản này không phải là bạn đọc/sinh viên. Vui lòng chuyển sang tab Cán bộ.');
+        setLoading(false);
+        return;
+      }
+      if (loginRole === 'STAFF' && role === 'READER') {
+        setError('Tài khoản này không có quyền truy cập hệ thống dành cho Cán bộ.');
+        setLoading(false);
+        return;
+      }
+
       if (role === 'ADMIN') navigate('/dashboard/admin');
       else if (role === 'LIBRARIAN') navigate('/dashboard/librarian');
       else navigate('/dashboard/student');
@@ -185,8 +199,32 @@ export default function LoginPage() {
             </p>
           </div>
 
+          {/* Role Tabs */}
+          <div className="flex bg-surface-container p-1 rounded-lg mb-stack-lg">
+            <button
+              onClick={() => { setLoginRole('READER'); setError(''); setErrors({}); }}
+              className={`flex-1 py-2 font-label-md text-label-md font-bold rounded-md transition-all ${
+                loginRole === 'READER' 
+                  ? 'bg-white text-primary shadow-sm' 
+                  : 'text-on-surface-variant hover:text-on-surface'
+              }`}
+            >
+              Bạn đọc / Sinh viên
+            </button>
+            <button
+              onClick={() => { setLoginRole('STAFF'); setError(''); setErrors({}); }}
+              className={`flex-1 py-2 font-label-md text-label-md font-bold rounded-md transition-all ${
+                loginRole === 'STAFF' 
+                  ? 'bg-white text-primary shadow-sm' 
+                  : 'text-on-surface-variant hover:text-on-surface'
+              }`}
+            >
+              Cán bộ / Quản trị
+            </button>
+          </div>
+
           {error && (
-            <div className="mb-6 p-3 bg-error-container text-on-error-container rounded-lg text-sm flex items-center gap-2">
+            <div className="mb-6 p-3 bg-error-container text-on-error-container rounded-lg text-sm flex items-center gap-2 animate-in fade-in">
               <span className="material-symbols-outlined text-[18px]">error</span>
               {error}
             </div>

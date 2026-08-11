@@ -7,6 +7,8 @@ export default function RegisterPage() {
     fullName: '',
     email: '',
     phone: '',
+    studentId: '',
+    branchId: '',
     password: '',
     confirmPassword: '',
     terms: false,
@@ -14,6 +16,8 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
   const { register } = useAuth();
 
@@ -28,6 +32,12 @@ export default function RegisterPage() {
     if (formData.phone && !/^[0-9]{10,11}$/.test(formData.phone)) {
       newErrors.phone = 'Số điện thoại phải có 10-11 chữ số';
     }
+
+    if (formData.studentId && !/^[0-9A-Za-z]{6,12}$/.test(formData.studentId)) {
+      newErrors.studentId = 'Mã số sinh viên không hợp lệ (6-12 ký tự)';
+    }
+
+    if (!formData.branchId) newErrors.branchId = 'Vui lòng chọn chi nhánh đăng ký';
     
     if (!formData.password) newErrors.password = 'Mật khẩu không được để trống';
     else if (formData.password.length < 8) newErrors.password = 'Mật khẩu phải có ít nhất 8 ký tự';
@@ -65,7 +75,9 @@ export default function RegisterPage() {
       formData.fullName,
       formData.email,
       formData.password,
-      formData.phone
+      formData.phone,
+      formData.studentId,
+      formData.branchId,
     );
     
     if (result.success) {
@@ -193,7 +205,7 @@ export default function RegisterPage() {
             {/* Phone */}
             <div>
               <label htmlFor="phone" className="block font-label-md text-label-md text-on-surface-variant mb-1">
-                Số điện thoại
+                Số điện thoại <span className="text-outline text-xs">(không bắt buộc)</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -214,7 +226,59 @@ export default function RegisterPage() {
               {errors.phone && <p className="mt-1 text-xs text-error font-label-sm">{errors.phone}</p>}
             </div>
 
-            {/* Password Row */}
+            {/* Student ID + Branch row */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Student ID */}
+              <div>
+                <label htmlFor="studentId" className="block font-label-md text-label-md text-on-surface-variant mb-1">
+                  Mã số SV <span className="text-outline text-xs">(không bắt buộc)</span>
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <span className={`material-symbols-outlined ${errors.studentId ? 'text-error' : 'text-outline'}`}>badge</span>
+                  </div>
+                  <input
+                    id="studentId"
+                    name="studentId"
+                    type="text"
+                    value={formData.studentId}
+                    onChange={handleChange}
+                    placeholder="2212345"
+                    className={`w-full pl-10 pr-4 py-2.5 bg-surface-container-low border rounded-lg font-body-md text-body-md text-on-surface focus:bg-surface focus:ring-1 transition-all placeholder:text-outline-variant outline-none ${
+                      errors.studentId ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-secondary focus:ring-secondary'
+                    }`}
+                  />
+                </div>
+                {errors.studentId && <p className="mt-1 text-xs text-error font-label-sm">{errors.studentId}</p>}
+              </div>
+
+              {/* Branch */}
+              <div>
+                <label htmlFor="branchId" className="block font-label-md text-label-md text-on-surface-variant mb-1">
+                  Chi nhánh đăng ký <span className="text-error text-xs">*</span>
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <span className={`material-symbols-outlined ${errors.branchId ? 'text-error' : 'text-outline'}`}>storefront</span>
+                  </div>
+                  <select
+                    id="branchId"
+                    name="branchId"
+                    value={formData.branchId}
+                    onChange={handleChange}
+                    className={`w-full pl-10 pr-4 py-2.5 bg-surface-container-low border rounded-lg font-body-md text-body-md text-on-surface focus:bg-surface focus:ring-1 transition-all outline-none appearance-none ${
+                      errors.branchId ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-secondary focus:ring-secondary'
+                    }`}
+                  >
+                    <option value="">-- Chọn chi nhánh --</option>
+                    <option value="branch-cs-01">CS1 - Lý Thường Kiệt</option>
+                    <option value="branch-cs-02">CS2 - Dĩ An</option>
+                  </select>
+                </div>
+                {errors.branchId && <p className="mt-1 text-xs text-error font-label-sm">{errors.branchId}</p>}
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {/* Password */}
               <div>
@@ -228,14 +292,23 @@ export default function RegisterPage() {
                   <input
                     id="password"
                     name="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="••••••••"
-                    className={`w-full pl-10 pr-4 py-2.5 bg-surface-container-low border rounded-lg font-body-md text-body-md text-on-surface focus:bg-surface focus:ring-1 transition-all placeholder:text-outline-variant outline-none ${
+                    className={`w-full pl-10 pr-10 py-2.5 bg-surface-container-low border rounded-lg font-body-md text-body-md text-on-surface focus:bg-surface focus:ring-1 transition-all placeholder:text-outline-variant outline-none ${
                       errors.password ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-secondary focus:ring-secondary'
                     }`}
                   />
+                  <button
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-outline hover:text-on-surface focus:outline-none"
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    <span className="material-symbols-outlined text-[20px]">
+                      {showPassword ? 'visibility' : 'visibility_off'}
+                    </span>
+                  </button>
                 </div>
                 {errors.password && <p className="mt-1 text-xs text-error font-label-sm">{errors.password}</p>}
               </div>
@@ -252,14 +325,23 @@ export default function RegisterPage() {
                   <input
                     id="confirmPassword"
                     name="confirmPassword"
-                    type="password"
+                    type={showConfirmPassword ? 'text' : 'password'}
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     placeholder="••••••••"
-                    className={`w-full pl-10 pr-4 py-2.5 bg-surface-container-low border rounded-lg font-body-md text-body-md text-on-surface focus:bg-surface focus:ring-1 transition-all placeholder:text-outline-variant outline-none ${
+                    className={`w-full pl-10 pr-10 py-2.5 bg-surface-container-low border rounded-lg font-body-md text-body-md text-on-surface focus:bg-surface focus:ring-1 transition-all placeholder:text-outline-variant outline-none ${
                       errors.confirmPassword ? 'border-error focus:border-error focus:ring-error/20' : 'border-outline-variant focus:border-secondary focus:ring-secondary'
                     }`}
                   />
+                  <button
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-outline hover:text-on-surface focus:outline-none"
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    <span className="material-symbols-outlined text-[20px]">
+                      {showConfirmPassword ? 'visibility' : 'visibility_off'}
+                    </span>
+                  </button>
                 </div>
                 {errors.confirmPassword && <p className="mt-1 text-xs text-error font-label-sm">{errors.confirmPassword}</p>}
               </div>

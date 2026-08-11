@@ -9,7 +9,6 @@ const sidebarConfig = {
     { name: 'Sách đang mượn', icon: 'book', path: '/dashboard/student/borrowed-books' },
     { name: 'Lịch sử', icon: 'history', path: '/dashboard/student/history' },
     { name: 'Đặt chỗ', icon: 'event_seat', path: '/dashboard/student/reservations' },
-    { name: 'Tài nguyên số', icon: 'cloud_download', path: '/dashboard/student/digital-resources' },
     { name: 'Trợ lý hỏi đáp', icon: 'forum', path: '#chat', isChatTrigger: true },
     { name: 'Hồ sơ', icon: 'person', path: '/dashboard/student/profile' },
   ],
@@ -76,11 +75,10 @@ export default function Sidebar({ role = 'student', onOpenChat }) {
             <Link
               key={item.path}
               to={item.path}
-              className={`flex items-center gap-stack-md px-stack-md py-stack-sm rounded-lg mx-2 transition-all duration-150 ${
-                isActive
+              className={`flex items-center gap-stack-md px-stack-md py-stack-sm rounded-lg mx-2 transition-all duration-150 ${isActive
                   ? 'bg-primary-container text-on-primary-container dark:bg-primary-fixed-dim dark:text-on-primary-fixed scale-[0.98]'
                   : 'text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low hover:bg-surface-container dark:hover:bg-on-tertiary-fixed-variant'
-              }`}
+                }`}
             >
               <span className="material-symbols-outlined" style={{ fontVariationSettings: isActive ? "'FILL' 1" : "" }}>
                 {item.icon}
