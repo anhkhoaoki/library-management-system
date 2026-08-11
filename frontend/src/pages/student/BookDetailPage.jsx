@@ -163,6 +163,12 @@ export default function BookDetailPage() {
   const copiesAtOtherBranches = book.physicalCopies.filter(c => c.branchId !== user?.branchId && c.status === 'AVAILABLE');
   const isAvailableAtMyBranch = copiesAtMyBranch.length > 0;
 
+  // Tính số ngày dự kiến có sẵn
+  const earliestDueDate = book.earliestDueDate ? new Date(book.earliestDueDate) : null;
+  const daysUntilAvailable = earliestDueDate
+    ? Math.max(0, Math.ceil((earliestDueDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+    : null;
+
   return (
     <MainLayout role="student" userName={user?.fullName} userRole="Bạn đọc">
       <div className="flex flex-col gap-stack-lg animate-in fade-in duration-500">
@@ -192,13 +198,38 @@ export default function BookDetailPage() {
                   {isAvailableGlobally ? 'Có sẵn' : 'Hết sách'}
                 </span>
               </div>
-              <p className="text-sm text-on-surface-variant mb-6">
+              <p className="text-sm text-on-surface-variant mb-3">
                 {isAvailableAtMyBranch 
                   ? `Có sẵn tại chi nhánh của bạn (${copiesAtMyBranch.length} bản).` 
                   : isAvailableGlobally 
                     ? `Có sẵn tại chi nhánh khác. Bạn có thể yêu cầu luân chuyển.`
-                    : 'Tất cả các bản sao đã được mượn. Bạn có thể đặt chỗ để chờ.'}
+                    : 'Tất cả các bản sao đang được mượn.'}
               </p>
+
+              {/* Dự kiến có sẵn — chỉ hiển thị khi hết sách và có dữ liệu trả sách */}
+              {!isAvailableGlobally && daysUntilAvailable !== null && (
+                <div className={`flex items-start gap-2 rounded-xl px-3 py-2 mb-4 text-sm ${
+                  daysUntilAvailable <= 0
+                    ? 'bg-success/10 text-success'
+                    : daysUntilAvailable <= 7
+                    ? 'bg-success/10 text-success'
+                    : daysUntilAvailable <= 14
+                    ? 'bg-secondary/10 text-secondary'
+                    : 'bg-error/8 text-error'
+                }`}>
+                  <span className="material-symbols-outlined text-[18px] mt-0.5 shrink-0">schedule</span>
+                  <div>
+                    <span className="font-semibold">
+                      {daysUntilAvailable <= 0
+                        ? 'Dự kiến có sẵn hôm nay'
+                        : `Dự kiến có sẵn sau ${daysUntilAvailable} ngày`}
+                    </span>
+                    <span className="block text-xs opacity-80">
+                      (ngày trả dự kiến: {earliestDueDate.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })})
+                    </span>
+                  </div>
+                </div>
+              )}
               
               {userReservation ? (
                 // --- TRẠNG THÁI: ĐÃ ĐẶT CHỖ ---

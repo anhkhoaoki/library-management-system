@@ -109,8 +109,24 @@ export const getBookById = async (bookId: string) => {
   });
 
   if (!book) throw createError('Tài liệu không tồn tại hoặc đã bị xóa', 404);
-  return book;
+
+  // Nếu hết sách → tìm bản copy có dueDate gần nhất để hiện thị "dự kiến có sẵn sau X ngày"
+  let earliestDueDate: Date | null = null;
+  if (book.availableCopies === 0) {
+    const earliestBorrow = await prisma.borrowRecord.findFirst({
+      where: {
+        physicalCopy: { bookId },
+        status: { in: ['ACTIVE', 'OVERDUE'] },
+      },
+      orderBy: { dueDate: 'asc' },
+      select: { dueDate: true },
+    });
+    earliestDueDate = earliestBorrow?.dueDate ?? null;
+  }
+
+  return { ...book, earliestDueDate };
 };
+
 
 // ─── UC-CAT-01: Create Book ──────────────────────────────────
 export const createBook = async (data: {
