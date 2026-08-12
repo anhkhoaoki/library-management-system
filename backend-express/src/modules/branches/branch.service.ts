@@ -1,6 +1,7 @@
 import prisma from '../../config/database';
 import { createError } from '../../middlewares/error.middleware';
-import { TransferStatus, CopyStatus } from '@prisma/client';
+import { TransferStatus, CopyStatus, ReservationStatus } from '@prisma/client';
+import { notifyReservationReady } from '../notifications/notifications.service';
 
 export const createTransferRequest = async (data: {
   userId: string;
@@ -89,21 +90,29 @@ export const updateTransferStatus = async (
       where: { id: transfer.physicalCopyId },
       data: { 
         branchId: transfer.toBranchId,
-        status: CopyStatus.AVAILABLE // Make it available at the new branch
+        status: CopyStatus.RESERVED // Hold it for the user
       },
     });
 
-    // Notify user
-    await prisma.notification.create({
+    // Create a ready-for-pickup reservation for the user
+    await prisma.reservation.create({
       data: {
         userId: transfer.requestedById,
-        type: 'SYSTEM',
-        title: 'Sách luân chuyển đã về đến nơi',
-        content: `Cuốn sách "${transfer.physicalCopy.book.title}" bạn yêu cầu từ chi nhánh khác đã về đến chi nhánh của bạn.`,
-        relatedId: transfer.physicalCopy.bookId,
-        relatedType: 'Book',
-      },
+        bookId: transfer.physicalCopy.bookId,
+        queuePosition: 0,
+        status: ReservationStatus.READY_FOR_PICKUP,
+        notifiedAt: new Date(),
+        expiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days to pick up
+        physicalCopyId: transfer.physicalCopyId,
+      }
     });
+
+    // Notify user via Email and In-App notification
+    await notifyReservationReady(
+      transfer.requestedById,
+      transfer.physicalCopy.book.title,
+      transfer.physicalCopy.bookId
+    );
   }
 
   return updatedTransfer;

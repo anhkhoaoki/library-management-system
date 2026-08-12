@@ -110,8 +110,11 @@ export default function CirculationPage() {
     try {
       const response = await api.get(`/books/${res.bookId}`);
       const copies = response.data.data.physicalCopies || [];
-      // Only show copies that are AVAILABLE or RESERVED (which can be assigned to this user)
-      const validCopies = copies.filter(c => c.status === 'AVAILABLE' || c.status === 'RESERVED');
+      // Only show the specific copy reserved for this student (using physicalCopyId).
+      // Fallback to all RESERVED copies if physicalCopyId is not linked yet.
+      const validCopies = res.physicalCopyId
+        ? copies.filter(c => c.id === res.physicalCopyId)
+        : copies.filter(c => c.status === 'RESERVED');
       setAvailableCopies(validCopies);
     } catch (err) {
       setError('Lỗi khi tải danh sách bản sao vật lý khả dụng');

@@ -24,20 +24,36 @@ export default function CatalogPage() {
     coverImageUrl: '',
     copiesByBranch: {},
   });
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [physicalCopies, setPhysicalCopies] = useState([]);
+  const [newCopy, setNewCopy] = useState({
+    barcode: '',
+    branchId: '',
+    location: '',
+    condition: 'GOOD'
+  });
   const [isbnLoading, setIsbnLoading] = useState(false);
   const [importLoading, setImportLoading] = useState(false);
 
   useEffect(() => {
-    fetchBooks();
     fetchCategories();
     fetchBranches();
-  }, [page, searchQuery]);
+  }, []);
+
+  useEffect(() => {
+    fetchBooks();
+  }, [page, searchQuery, selectedCategory]);
 
   const fetchBooks = async () => {
     setLoading(true);
     try {
       const response = await api.get('/books/search', {
-        params: { q: searchQuery, page, limit: 12 }
+        params: { 
+          q: searchQuery, 
+          categoryId: selectedCategory || undefined,
+          page, 
+          limit: 12 
+        }
       });
       setBooks(response.data.data);
       setTotalPages(response.data.pagination.totalPages);
@@ -63,6 +79,58 @@ export default function CatalogPage() {
     } catch (error) {
       console.error('Error fetching branches:', error);
     }
+  };
+
+  const fetchBookCopies = async (bookId) => {
+    try {
+      const response = await api.get(`/books/${bookId}`);
+      setPhysicalCopies(response.data.data.physicalCopies || []);
+    } catch (err) {
+      console.error('Error fetching book copies:', err);
+    }
+  };
+
+  const handleAddCopy = async () => {
+    if (!editingBook || !newCopy.barcode || !newCopy.branchId) {
+      alert('Vui lòng điền mã vạch và chọn cơ sở');
+      return;
+    }
+    try {
+      await api.post(`/books/${editingBook.id}/copies`, newCopy);
+      alert('Thêm bản sao thành công');
+      setNewCopy({ barcode: '', branchId: '', location: '', condition: 'GOOD' });
+      fetchBookCopies(editingBook.id);
+      fetchBooks();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Lỗi khi thêm bản sao');
+    }
+  };
+
+  const handleUpdateCopy = async (copyId, updatedData) => {
+    try {
+      await api.put(`/books/copies/${copyId}`, updatedData);
+      alert('Cập nhật bản sao thành công');
+      fetchBookCopies(editingBook.id);
+      fetchBooks();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Lỗi khi cập nhật bản sao');
+    }
+  };
+
+  const handleDeleteCopy = async (copyId, barcode) => {
+    if (!window.confirm(`Bạn có chắc muốn xóa bản sao "${barcode}"?`)) return;
+    try {
+      await api.delete(`/books/copies/${copyId}`);
+      alert('Xóa bản sao thành công');
+      fetchBookCopies(editingBook.id);
+      fetchBooks();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Lỗi khi xóa bản sao');
+    }
+  };
+
+  const handleCopyFieldChange = (copyId, field, value) => {
+    setPhysicalCopies(prev => prev.map(c => c.id === copyId ? { ...c, [field]: value } : c));
   };
 
   const handleIsbnFill = async () => {
@@ -136,6 +204,7 @@ export default function CatalogPage() {
 
   const openAddModal = () => {
     setEditingBook(null);
+    setPhysicalCopies([]);
     setFormData({
       title: '',
       authorNames: '',
@@ -154,6 +223,7 @@ export default function CatalogPage() {
   const openEditModal = async (book) => {
     setIsModalOpen(true);
     setEditingBook(book);
+    setPhysicalCopies([]);
     setFormData({
       title: book.title,
       authorNames: book.authorNames?.join(', ') || '',
@@ -170,6 +240,7 @@ export default function CatalogPage() {
     try {
       const response = await api.get(`/books/${book.id}`);
       const fullBook = response.data.data;
+      setPhysicalCopies(fullBook.physicalCopies || []);
       
       const copiesByBranch = {};
       branches.forEach(br => {
@@ -234,7 +305,7 @@ export default function CatalogPage() {
         {/* Filters & Search Bar */}
         <div className="bg-white rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] p-stack-md border border-surface-container-highest">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-            <div className="md:col-span-12 relative group">
+            <div className="md:col-span-8 relative group">
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
               <input
                 className="w-full pl-10 pr-12 py-2.5 bg-surface-container-low border-transparent focus:border-secondary focus:bg-white focus:ring-1 focus:ring-secondary rounded-lg font-body-md text-body-md text-on-surface transition-all"
@@ -243,6 +314,19 @@ export default function CatalogPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+            </div>
+            <div className="md:col-span-4 relative">
+              <select
+                className="w-full pl-4 pr-10 py-2.5 bg-surface-container-low border border-transparent focus:border-secondary focus:bg-white focus:ring-1 focus:ring-secondary rounded-lg font-body-md text-body-md text-on-surface transition-all cursor-pointer appearance-none"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+              >
+                <option value="">Tất cả thể loại</option>
+                {categories.map(cat => (
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                ))}
+              </select>
+              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">keyboard_arrow_down</span>
             </div>
           </div>
         </div>
@@ -469,63 +553,245 @@ export default function CatalogPage() {
                   />
                 </div>
 
-                <div className="border-t border-outline-variant pt-4 space-y-3">
-                  <h4 className="font-title-medium text-title-medium text-on-surface font-bold">
-                    {editingBook ? 'Quản lý bản sao vật lý theo cơ sở' : 'Khởi tạo bản sao vật lý theo cơ sở'}
-                  </h4>
-                  <div className="space-y-3">
-                    {branches.map(br => (
-                      <div key={br.id} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-surface-container-low p-3 rounded-lg border border-outline-variant/30">
-                        <div className="font-semibold text-on-surface text-sm md:col-span-4">
-                          {br.name}
-                        </div>
-                        <div className="md:col-span-3 space-y-1">
-                          <label className="block text-[11px] font-medium text-on-surface-variant">Số lượng bản sao</label>
+                {editingBook ? (
+                  // Advanced Physical Copy Management for existing books
+                  <div className="border-t border-outline-variant pt-4 space-y-4">
+                    <h4 className="font-title-medium text-title-medium text-on-surface font-bold">
+                      Quản lý chi tiết từng bản sao vật lý
+                    </h4>
+                    
+                    {/* List of copies */}
+                    {physicalCopies.length === 0 ? (
+                      <p className="text-sm italic text-on-surface-variant bg-surface-container-low p-4 rounded-lg text-center">
+                        Đầu sách này chưa có bản sao vật lý nào. Hãy thêm bản sao mới bên dưới.
+                      </p>
+                    ) : (
+                      <div className="overflow-x-auto border border-outline-variant rounded-lg">
+                        <table className="w-full border-collapse text-left text-xs bg-white">
+                          <thead className="bg-surface-container-low text-on-surface-variant font-bold border-b border-outline-variant">
+                            <tr>
+                              <th className="p-3">Mã vạch (Barcode)</th>
+                              <th className="p-3">Cơ sở</th>
+                              <th className="p-3">Vị trí kệ</th>
+                              <th className="p-3">Tình trạng</th>
+                              <th className="p-3">Trạng thái</th>
+                              <th className="p-3 text-center">Thao tác</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-outline-variant">
+                            {physicalCopies.map(copy => (
+                              <tr key={copy.id} className="hover:bg-surface-container-lowest transition-colors">
+                                <td className="p-2">
+                                  <input
+                                    type="text"
+                                    className="px-2 py-1 bg-surface-container-low border border-outline-variant rounded text-xs w-full focus:outline-none focus:ring-1 focus:ring-primary font-mono"
+                                    value={copy.barcode}
+                                    onChange={(e) => handleCopyFieldChange(copy.id, 'barcode', e.target.value)}
+                                  />
+                                </td>
+                                <td className="p-2">
+                                  <select
+                                    className="px-2 py-1 bg-surface-container-low border border-outline-variant rounded text-xs w-full focus:outline-none focus:ring-1 focus:ring-primary"
+                                    value={copy.branchId}
+                                    onChange={(e) => handleCopyFieldChange(copy.id, 'branchId', e.target.value)}
+                                  >
+                                    {branches.map(br => (
+                                      <option key={br.id} value={br.id}>{br.name}</option>
+                                    ))}
+                                  </select>
+                                </td>
+                                <td className="p-2">
+                                  <input
+                                    type="text"
+                                    className="px-2 py-1 bg-surface-container-low border border-outline-variant rounded text-xs w-full focus:outline-none focus:ring-1 focus:ring-primary"
+                                    value={copy.location || ''}
+                                    onChange={(e) => handleCopyFieldChange(copy.id, 'location', e.target.value)}
+                                    placeholder="Kệ A1"
+                                  />
+                                </td>
+                                <td className="p-2">
+                                  <select
+                                    className="px-2 py-1 bg-surface-container-low border border-outline-variant rounded text-xs w-full focus:outline-none focus:ring-1 focus:ring-primary"
+                                    value={copy.condition || 'GOOD'}
+                                    onChange={(e) => handleCopyFieldChange(copy.id, 'condition', e.target.value)}
+                                  >
+                                    <option value="GOOD">Tốt (GOOD)</option>
+                                    <option value="FAIR">Bình thường (FAIR)</option>
+                                    <option value="POOR">Kém (POOR)</option>
+                                  </select>
+                                </td>
+                                <td className="p-2">
+                                  <select
+                                    className="px-2 py-1 bg-surface-container-low border border-outline-variant rounded text-xs w-full focus:outline-none focus:ring-1 focus:ring-primary font-bold text-primary"
+                                    value={copy.status}
+                                    onChange={(e) => handleCopyFieldChange(copy.id, 'status', e.target.value)}
+                                  >
+                                    <option value="AVAILABLE">Sẵn có</option>
+                                    <option value="BORROWED">Đang mượn</option>
+                                    <option value="RESERVED">Đặt chỗ</option>
+                                    <option value="TRANSFERRING">Luân chuyển</option>
+                                    <option value="DAMAGED">Hỏng (DAMAGED)</option>
+                                  </select>
+                                </td>
+                                <td className="p-2">
+                                  <div className="flex justify-center gap-1">
+                                    <button
+                                      type="button"
+                                      onClick={() => handleUpdateCopy(copy.id, {
+                                        barcode: copy.barcode,
+                                        branchId: copy.branchId,
+                                        location: copy.location,
+                                        condition: copy.condition,
+                                        status: copy.status
+                                      })}
+                                      className="p-1 text-primary hover:bg-primary/10 rounded"
+                                      title="Lưu thay đổi"
+                                    >
+                                      <span className="material-symbols-outlined text-[18px]">save</span>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleDeleteCopy(copy.id, copy.barcode)}
+                                      disabled={copy.status === 'BORROWED'}
+                                      className="p-1 text-error hover:bg-error/10 rounded disabled:opacity-30"
+                                      title="Xóa bản sao"
+                                    >
+                                      <span className="material-symbols-outlined text-[18px]">delete</span>
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+
+                    {/* Form to add new copy */}
+                    <div className="bg-surface-container-low p-4 rounded-xl border border-outline-variant/30 space-y-3">
+                      <h5 className="font-bold text-xs text-on-surface flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[16px] text-primary">add_circle</span>
+                        Thêm một bản sao vật lý mới
+                      </h5>
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
+                        <div className="space-y-1">
+                          <label className="block text-[10px] font-medium text-on-surface-variant">Mã vạch (Barcode)</label>
                           <input
-                            type="number"
-                            min="0"
-                            className="w-full px-3 py-1.5 bg-white border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary text-sm"
-                            value={formData.copiesByBranch?.[br.id]?.quantity || ''}
-                            onChange={(e) => {
-                              const val = parseInt(e.target.value) || 0;
-                              setFormData({
-                                ...formData,
-                                copiesByBranch: {
-                                  ...formData.copiesByBranch,
-                                  [br.id]: {
-                                    ...formData.copiesByBranch?.[br.id],
-                                    quantity: val
-                                  }
-                                }
-                              });
-                            }}
-                            placeholder="0"
+                            type="text"
+                            className="w-full px-3 py-1.5 bg-white border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary text-xs font-mono"
+                            value={newCopy.barcode}
+                            onChange={(e) => setNewCopy({ ...newCopy, barcode: e.target.value })}
+                            placeholder="Ví dụ: BK-..."
                           />
                         </div>
-                        <div className="md:col-span-5 space-y-1">
-                          <label className="block text-[11px] font-medium text-on-surface-variant">Vị trí kệ sách</label>
+                        <div className="space-y-1">
+                          <label className="block text-[10px] font-medium text-on-surface-variant">Cơ sở chi nhánh</label>
+                          <select
+                            className="w-full px-3 py-1.5 bg-white border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary text-xs"
+                            value={newCopy.branchId}
+                            onChange={(e) => setNewCopy({ ...newCopy, branchId: e.target.value })}
+                          >
+                            <option value="">Chọn cơ sở</option>
+                            {branches.map(br => (
+                              <option key={br.id} value={br.id}>{br.name}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="space-y-1">
+                          <label className="block text-[10px] font-medium text-on-surface-variant">Vị trí kệ sách</label>
                           <input
-                            className="w-full px-3 py-1.5 bg-white border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary text-sm"
-                            value={formData.copiesByBranch?.[br.id]?.location || ''}
-                            onChange={(e) => {
-                              setFormData({
-                                ...formData,
-                                copiesByBranch: {
-                                  ...formData.copiesByBranch,
-                                  [br.id]: {
-                                    ...formData.copiesByBranch?.[br.id],
-                                    location: e.target.value
-                                  }
-                                }
-                              });
-                            }}
-                            placeholder="Ví dụ: Kệ A1"
+                            type="text"
+                            className="w-full px-3 py-1.5 bg-white border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary text-xs"
+                            value={newCopy.location}
+                            onChange={(e) => setNewCopy({ ...newCopy, location: e.target.value })}
+                            placeholder="Kệ A1"
                           />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="block text-[10px] font-medium text-on-surface-variant">Tình trạng vật lý</label>
+                          <select
+                            className="w-full px-3 py-1.5 bg-white border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary text-xs"
+                            value={newCopy.condition}
+                            onChange={(e) => setNewCopy({ ...newCopy, condition: e.target.value })}
+                          >
+                            <option value="GOOD">Tốt (GOOD)</option>
+                            <option value="FAIR">Bình thường (FAIR)</option>
+                            <option value="POOR">Kém (POOR)</option>
+                          </select>
                         </div>
                       </div>
-                    ))}
+                      <div className="flex justify-end pt-1">
+                        <button
+                          type="button"
+                          onClick={handleAddCopy}
+                          className="px-4 py-1.5 bg-primary text-on-primary rounded-lg text-xs font-bold hover:bg-primary-fixed-variant transition-colors flex items-center gap-1 shadow-sm"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">add</span>
+                          Xác nhận thêm bản sao
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  // Simple quantity initialization for new books
+                  <div className="border-t border-outline-variant pt-4 space-y-3">
+                    <h4 className="font-title-medium text-title-medium text-on-surface font-bold">
+                      Khởi tạo bản sao vật lý theo cơ sở
+                    </h4>
+                    <div className="space-y-3">
+                      {branches.map(br => (
+                        <div key={br.id} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-surface-container-low p-3 rounded-lg border border-outline-variant/30">
+                          <div className="font-semibold text-on-surface text-sm md:col-span-4">
+                            {br.name}
+                          </div>
+                          <div className="md:col-span-3 space-y-1">
+                            <label className="block text-[11px] font-medium text-on-surface-variant">Số lượng bản sao</label>
+                            <input
+                              type="number"
+                              min="0"
+                              className="w-full px-3 py-1.5 bg-white border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary text-sm"
+                              value={formData.copiesByBranch?.[br.id]?.quantity || ''}
+                              onChange={(e) => {
+                                const val = parseInt(e.target.value) || 0;
+                                setFormData({
+                                  ...formData,
+                                  copiesByBranch: {
+                                    ...formData.copiesByBranch,
+                                    [br.id]: {
+                                      ...formData.copiesByBranch?.[br.id],
+                                      quantity: val
+                                    }
+                                  }
+                                });
+                              }}
+                              placeholder="0"
+                            />
+                          </div>
+                          <div className="md:col-span-5 space-y-1">
+                            <label className="block text-[11px] font-medium text-on-surface-variant">Vị trí kệ sách</label>
+                            <input
+                              className="w-full px-3 py-1.5 bg-white border border-outline-variant rounded-lg focus:outline-none focus:ring-1 focus:ring-primary text-sm"
+                              value={formData.copiesByBranch?.[br.id]?.location || ''}
+                              onChange={(e) => {
+                                setFormData({
+                                  ...formData,
+                                  copiesByBranch: {
+                                    ...formData.copiesByBranch,
+                                    [br.id]: {
+                                      ...formData.copiesByBranch?.[br.id],
+                                      location: e.target.value
+                                    }
+                                  }
+                                });
+                              }}
+                              placeholder="Ví dụ: Kệ A1"
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <div className="pt-4 flex justify-end gap-3">
                   <button
                     type="button"

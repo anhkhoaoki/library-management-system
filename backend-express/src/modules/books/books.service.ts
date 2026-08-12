@@ -813,3 +813,106 @@ export const importBooksFromExcel = async (buffer: Buffer, createdById: string) 
 
   return results;
 };
+
+// ─── Physical Copy Management ─────────────────────────────────
+const syncBookCopiesCount = async (bookId: string) => {
+  const allCopies = await prisma.physicalCopy.findMany({
+    where: { bookId },
+  });
+  const totalCopies = allCopies.length;
+  const availableCopies = allCopies.filter(c => c.status === 'AVAILABLE').length;
+
+  await prisma.book.update({
+    where: { id: bookId },
+    data: { totalCopies, availableCopies },
+  });
+};
+
+export const addPhysicalCopy = async (bookId: string, data: {
+  barcode: string;
+  branchId: string;
+  location?: string;
+  condition?: string;
+}) => {
+  const existingCopy = await prisma.physicalCopy.findUnique({
+    where: { barcode: data.barcode },
+  });
+  if (existingCopy) {
+    throw createError('Mã vạch này đã tồn tại trên hệ thống', 422);
+  }
+
+  const copy = await prisma.physicalCopy.create({
+    data: {
+      bookId,
+      branchId: data.branchId,
+      barcode: data.barcode,
+      location: data.location,
+      condition: data.condition || 'GOOD',
+      status: 'AVAILABLE',
+    },
+  });
+
+  await syncBookCopiesCount(bookId);
+  return copy;
+};
+
+export const updatePhysicalCopy = async (copyId: string, data: {
+  barcode?: string;
+  branchId?: string;
+  location?: string;
+  condition?: string;
+  status?: any;
+}) => {
+  const copy = await prisma.physicalCopy.findUnique({ where: { id: copyId } });
+  if (!copy) throw createError('Không tìm thấy bản sao', 404);
+
+  if (data.barcode && data.barcode !== copy.barcode) {
+    const existingCopy = await prisma.physicalCopy.findUnique({
+      where: { barcode: data.barcode },
+    });
+    if (existingCopy) {
+      throw createError('Mã vạch này đã tồn tại trên hệ thống', 422);
+    }
+  }
+
+  const updated = await prisma.physicalCopy.update({
+    where: { id: copyId },
+    data: {
+      barcode: data.barcode,
+      branchId: data.branchId,
+      location: data.location,
+      condition: data.condition,
+      status: data.status,
+    },
+  });
+
+  await syncBookCopiesCount(copy.bookId);
+  return updated;
+};
+
+export const deletePhysicalCopy = async (copyId: string) => {
+  const copy = await prisma.physicalCopy.findUnique({ where: { id: copyId } });
+  if (!copy) throw createError('Không tìm thấy bản sao', 404);
+
+  if (copy.status === 'BORROWED') {
+    throw createError('Không thể xóa bản sao đang được cho mượn', 422);
+  }
+
+  // Check foreign key references to prevent raw Prisma crash
+  const [borrowCount, transferCount, reservationCount] = await Promise.all([
+    prisma.borrowRecord.count({ where: { physicalCopyId: copyId } }),
+    prisma.branchTransfer.count({ where: { physicalCopyId: copyId } }),
+    prisma.reservation.count({ where: { physicalCopyId: copyId } }),
+  ]);
+
+  if (borrowCount > 0 || transferCount > 0 || reservationCount > 0) {
+    throw createError(
+      'Không thể xóa bản sao này vì nó có lịch sử giao dịch mượn trả, luân chuyển hoặc đặt chỗ. Vui lòng chuyển trạng thái thành Hỏng (DAMAGED) hoặc đổi mã vạch thay vì xóa.',
+      422
+    );
+  }
+
+  await prisma.physicalCopy.delete({ where: { id: copyId } });
+  await syncBookCopiesCount(copy.bookId);
+  return { success: true };
+};

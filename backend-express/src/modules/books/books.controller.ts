@@ -133,3 +133,24 @@ export const importBooks = async (req: Request, res: Response, next: NextFunctio
     res.status(200).json({ success: true, data: result });
   } catch (err) { next(err); }
 };
+
+export const addPhysicalCopy = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const copy = await booksService.addPhysicalCopy(req.params.bookId, req.body);
+    res.status(201).json({ success: true, data: copy });
+  } catch (err) { next(err); }
+};
+
+export const updatePhysicalCopy = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const copy = await booksService.updatePhysicalCopy(req.params.id, req.body);
+    res.status(200).json({ success: true, data: copy });
+  } catch (err) { next(err); }
+};
+
+export const deletePhysicalCopy = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await booksService.deletePhysicalCopy(req.params.id);
+    res.status(200).json({ success: true, data: result });
+  } catch (err) { next(err); }
+};

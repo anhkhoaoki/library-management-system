@@ -468,4 +468,9 @@ router.get('/isbn/:isbn', authenticate, authorize(Role.LIBRARIAN, Role.ADMIN), b
  */
 router.post('/import', authenticate, authorize(Role.LIBRARIAN, Role.ADMIN), upload.single('file'), booksController.importBooks);
 
+// Physical Copy Management (Librarian / Admin)
+router.post('/:bookId/copies', authenticate, authorize(Role.LIBRARIAN, Role.ADMIN), booksController.addPhysicalCopy);
+router.put('/copies/:id', authenticate, authorize(Role.LIBRARIAN, Role.ADMIN), booksController.updatePhysicalCopy);
+router.delete('/copies/:id', authenticate, authorize(Role.LIBRARIAN, Role.ADMIN), booksController.deletePhysicalCopy);
+
 export default router;

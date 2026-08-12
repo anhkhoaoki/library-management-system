@@ -28,13 +28,15 @@ app.use(cors({
 // ─── Rate Limiting ────────────────────────────────────────────
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 200,
+  max: process.env.NODE_ENV === 'development' ? 2000 : 200,
   message: { success: false, message: 'Quá nhiều yêu cầu. Vui lòng thử lại sau.' },
+  skip: () => process.env.NODE_ENV === 'development', // tắt hoàn toàn khi dev
 });
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: process.env.NODE_ENV === 'development' ? 500 : 200,
+  max: process.env.NODE_ENV === 'development' ? 1000 : 20,
   message: { success: false, message: 'Quá nhiều lần thử đăng nhập. Vui lòng thử lại sau 15 phút.' },
+  skip: () => process.env.NODE_ENV === 'development', // tắt hoàn toàn khi dev
 });
 
 app.use('/api', limiter);

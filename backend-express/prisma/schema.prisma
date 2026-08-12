@@ -238,6 +238,7 @@ model PhysicalCopy {
   branch        Branch         @relation(fields: [branchId], references: [id])
   borrowRecords BorrowRecord[]
   transfers     BranchTransfer[]
+  reservations  Reservation[]
 
   @@index([bookId])
   @@index([branchId])
@@ -342,6 +343,8 @@ model Reservation {
 
   user User @relation(fields: [userId], references: [id])
   book Book @relation(fields: [bookId], references: [id])
+  physicalCopyId String?
+  physicalCopy PhysicalCopy? @relation(fields: [physicalCopyId], references: [id])
 
   @@index([userId])
   @@index([bookId])

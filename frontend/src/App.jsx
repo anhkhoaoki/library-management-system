@@ -22,7 +22,7 @@ import CirculationPage from './pages/librarian/CirculationPage';
 import CatalogPage from './pages/librarian/CatalogPage';
 import CommunicationsPage from './pages/librarian/CommunicationsPage';
 import ReportsPage from './pages/librarian/ReportsPage';
-// import TransferManagementPage from './pages/librarian/TransferManagementPage';
+import TransferManagementPage from './pages/librarian/TransferManagementPage';
 import './App.css';
 
 function App() {
@@ -60,7 +60,7 @@ function App() {
           <Route path="/dashboard/librarian/catalog" element={<CatalogPage />} />
           <Route path="/dashboard/librarian/news" element={<CommunicationsPage />} />
           <Route path="/dashboard/librarian/reports" element={<ReportsPage />} />
-          {/* <Route path="/dashboard/librarian/transfers" element={<TransferManagementPage />} /> */}
+          <Route path="/dashboard/librarian/transfers" element={<TransferManagementPage />} />
           <Route path="/dashboard/librarian/settings" element={<ProfilePage />} />
 
           {/* Redirect root to student dashboard */}

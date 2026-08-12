@@ -105,19 +105,22 @@ export const borrowDocument = async (data: {
     );
   }
 
-  // Step 5: Check if reserved by someone else
-  const reservation = await prisma.reservation.findFirst({
-    where: {
-      bookId: physicalCopy.bookId,
-      status: { in: [ReservationStatus.READY_FOR_PICKUP, ReservationStatus.WAITING] },
-      userId: { not: data.userId },
-    },
-  });
-  if (reservation && physicalCopy.status === CopyStatus.RESERVED) {
-    throw createError(
-      'Tài liệu này đang được giữ chỗ cho người khác. Không thể cho mượn',
-      422
-    );
+  // Step 5: Check reservation logic for RESERVED copy
+  if (physicalCopy.status === CopyStatus.RESERVED) {
+    const userReservation = await prisma.reservation.findFirst({
+      where: {
+        userId: data.userId,
+        bookId: physicalCopy.bookId,
+        status: ReservationStatus.READY_FOR_PICKUP,
+      },
+    });
+
+    if (!userReservation) {
+      throw createError(
+        'Tài liệu này đang được giữ chỗ cho người khác. Không thể cho mượn',
+        422
+      );
+    }
   }
 
   // Step 6: Calculate due date
@@ -274,6 +277,7 @@ export const returnDocument = async (data: {
         status: ReservationStatus.READY_FOR_PICKUP,
         notifiedAt: new Date(),
         expiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days to pick up
+        physicalCopyId: physicalCopy.id,
       },
     });
 
@@ -541,6 +545,7 @@ export const reserveBook = async (userId: string, bookId: string) => {
       queuePosition: queueCount + 1,
       status: isAvailable ? ReservationStatus.READY_FOR_PICKUP : ReservationStatus.WAITING,
       expiresAt: isAvailable ? new Date(Date.now() + 3 * 24 * 60 * 60 * 1000) : null,
+      physicalCopyId: isAvailable && reservedCopy ? reservedCopy.id : null,
     },
   });
 
@@ -556,7 +561,9 @@ export const reserveBook = async (userId: string, bookId: string) => {
         data: { status: CopyStatus.RESERVED },
       });
     }
-    // Không gửi thông báo duyệt ở đây — chỉ gửi khi thủ thư xác nhận mượn tại quầy
+    
+    // Notify user via Email and In-App notification that the book is ready for pickup
+    await notifyReservationReady(userId, book.title, bookId);
   }
 
   return {

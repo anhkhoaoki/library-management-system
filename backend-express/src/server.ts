@@ -2,6 +2,7 @@ import 'dotenv/config';
 import app from './app';
 import { env } from './config/env';
 import prisma from './config/database';
+import { startReservationExpiryJob } from './jobs/reservationExpiry.job';
 
 const startServer = async () => {
   try {
@@ -16,6 +17,9 @@ const startServer = async () => {
       console.log(`🤖 AI Service: ${env.AI_SERVICE_URL}`);
       console.log(`📋 Swagger UI: ${swaggerUrl}`);
     });
+
+    // Start background jobs
+    startReservationExpiryJob();
 
     // Graceful shutdown
     const shutdown = async (signal: string) => {

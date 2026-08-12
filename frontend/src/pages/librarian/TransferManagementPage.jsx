@@ -1,16 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import MainLayout from '../../components/layout/MainLayout';
 import api from '../../utils/api';
+import { AuthContext } from '../../context/AuthContext';
 
 export default function TransferManagementPage() {
+  const { user } = useContext(AuthContext);
   const [transfers, setTransfers] = useState([]);
+  const [branches, setBranches] = useState({});
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
 
   const fetchTransfers = async () => {
     try {
-      const response = await api.get('/branches/transfers/pending');
-      setTransfers(response.data.data);
+      const [transfersRes, branchesRes] = await Promise.all([
+        api.get('/branches/transfers/pending'),
+        api.get('/admin/branches')
+      ]);
+      
+      const branchesMap = {};
+      branchesRes.data.data.forEach(b => {
+        branchesMap[b.id] = b.name;
+      });
+      setBranches(branchesMap);
+      setTransfers(transfersRes.data.data);
     } catch (err) {
       console.error('Lỗi tải yêu cầu luân chuyển:', err);
     } finally {
@@ -25,10 +37,16 @@ export default function TransferManagementPage() {
   const handleUpdateStatus = async (id, status) => {
     try {
       await api.patch(`/branches/transfers/${id}/status`, { status });
-      setMessage({ type: 'success', text: 'Cập nhật trạng thái thành công.' });
+      const msg = status === 'IN_TRANSIT' 
+        ? 'Xác nhận đi thành công! Sách đang trong trạng thái vận chuyển.' 
+        : 'Xác nhận đến thành công! Sách đã được lưu kho cơ sở mới và hệ thống đã tạo lịch hẹn lấy sách (3 ngày) cho sinh viên.';
+      alert(msg);
+      setMessage({ type: 'success', text: msg });
       fetchTransfers();
     } catch (err) {
-      setMessage({ type: 'error', text: err.response?.data?.message || 'Lỗi khi cập nhật.' });
+      const errMsg = err.response?.data?.message || 'Lỗi khi cập nhật.';
+      alert('Thao tác thất bại: ' + errMsg);
+      setMessage({ type: 'error', text: errMsg });
     }
   };
 
@@ -77,9 +95,9 @@ export default function TransferManagementPage() {
                     </td>
                     <td className="px-stack-md py-4">
                       <div className="flex items-center gap-2 text-sm">
-                        <span className="font-medium">{t.fromBranchId}</span>
+                        <span className="font-medium">{branches[t.fromBranchId] || 'Không xác định'}</span>
                         <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-                        <span className="font-medium text-primary">{t.toBranchId}</span>
+                        <span className="font-medium text-primary">{branches[t.toBranchId] || 'Không xác định'}</span>
                       </div>
                     </td>
                     <td className="px-stack-md py-4">
@@ -92,6 +110,7 @@ export default function TransferManagementPage() {
                       </span>
                     </td>
                     <td className="px-stack-md py-4">
+                      {console.log('Rendering transfer:', t.id, t.status)}
                       <div className="flex gap-2">
                         {t.status === 'REQUESTED' && (
                           <button
@@ -104,7 +123,7 @@ export default function TransferManagementPage() {
                         {t.status === 'IN_TRANSIT' && (
                           <button
                             onClick={() => handleUpdateStatus(t.id, 'ARRIVED')}
-                            className="bg-success text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-success/90 transition-all"
+                            className="bg-secondary text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-secondary/90 transition-all"
                           >
                             Xác nhận đến
                           </button>
