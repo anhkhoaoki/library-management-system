@@ -12,39 +12,40 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// ─── Fake/test email domain blocklist ────────────────────────
+// Emails to these domains are skipped (logged only) to avoid
+// Gmail bounce notifications from test accounts.
+const BLOCKED_DOMAINS = [
+  'student.edu.vn',
+  'test.com',
+  'example.com',
+  'test.vn',
+  'fake.com',
+  'mailtest.com',
+  'localhost',
+];
+
+const isBlockedEmail = (email: string): boolean => {
+  const domain = email.split('@')[1]?.toLowerCase() ?? '';
+  return BLOCKED_DOMAINS.some(d => domain === d || domain.endsWith('.' + d));
+};
+
 // ─── Generic send helper ──────────────────────────────────────
-// When EMAIL_REAL_SEND=false (default in dev), emails are only logged.
-// This prevents Gmail from sending bounce notifications back to the sender.
 export const sendMail = async (options: {
   to: string;
   subject: string;
   html: string;
 }) => {
-  if (!env.EMAIL_REAL_SEND) {
-    // Development mode: just log, never actually send
-    console.log(`[MAIL - DEV ONLY, NOT SENT] To: ${options.to} | Subject: ${options.subject}`);
+  if (isBlockedEmail(options.to)) {
+    console.log(`[MAIL - SKIPPED, blocked domain] To: ${options.to} | Subject: ${options.subject}`);
     return;
   }
-
-  try {
-    await transporter.sendMail({
-      from: env.EMAIL_FROM,
-      to: options.to,
-      subject: options.subject,
-      html: options.html,
-      // DSN: ask the SMTP server NOT to send delivery failure/success reports.
-      // This suppresses bounce notifications on SMTP level (for servers that support it).
-      dsn: {
-        id: 'noreply',
-        return: 'headers',
-        notify: ['NEVER'],
-        recipient: env.SMTP_USER,
-      },
-    } as any);
-  } catch (err: any) {
-    // Log the error but do NOT re-throw - a mail failure should never crash a user request.
-    console.error(`[MAIL] Failed to send to ${options.to}: ${err?.message}`);
-  }
+  await transporter.sendMail({
+    from: env.EMAIL_FROM,
+    to: options.to,
+    subject: options.subject,
+    html: options.html,
+  });
 };
 
 // ─── Template: OTP đăng ký ───────────────────────────────────
@@ -64,7 +65,7 @@ export const sendOtpEmail = async (to: string, otp: string, expiresMinutes = 10)
     </div>
   `;
 
-  console.log(`[MAIL] OTP for ${to}: ${otp}`);
+  console.log(`[DEV] OTP for ${to}: ${otp}`);
   await sendMail({
     to,
     subject: `[Thư viện] Mã xác thực OTP: ${otp}`,
