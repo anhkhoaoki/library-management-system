@@ -13,17 +13,38 @@ const transporter = nodemailer.createTransport({
 });
 
 // ─── Generic send helper ──────────────────────────────────────
+// When EMAIL_REAL_SEND=false (default in dev), emails are only logged.
+// This prevents Gmail from sending bounce notifications back to the sender.
 export const sendMail = async (options: {
   to: string;
   subject: string;
   html: string;
 }) => {
-  await transporter.sendMail({
-    from: env.EMAIL_FROM,
-    to: options.to,
-    subject: options.subject,
-    html: options.html,
-  });
+  if (!env.EMAIL_REAL_SEND) {
+    // Development mode: just log, never actually send
+    console.log(`[MAIL - DEV ONLY, NOT SENT] To: ${options.to} | Subject: ${options.subject}`);
+    return;
+  }
+
+  try {
+    await transporter.sendMail({
+      from: env.EMAIL_FROM,
+      to: options.to,
+      subject: options.subject,
+      html: options.html,
+      // DSN: ask the SMTP server NOT to send delivery failure/success reports.
+      // This suppresses bounce notifications on SMTP level (for servers that support it).
+      dsn: {
+        id: 'noreply',
+        return: 'headers',
+        notify: ['NEVER'],
+        recipient: env.SMTP_USER,
+      },
+    } as any);
+  } catch (err: any) {
+    // Log the error but do NOT re-throw - a mail failure should never crash a user request.
+    console.error(`[MAIL] Failed to send to ${options.to}: ${err?.message}`);
+  }
 };
 
 // ─── Template: OTP đăng ký ───────────────────────────────────
@@ -43,7 +64,7 @@ export const sendOtpEmail = async (to: string, otp: string, expiresMinutes = 10)
     </div>
   `;
 
-  console.log(`[DEV] OTP for ${to}: ${otp}`);
+  console.log(`[MAIL] OTP for ${to}: ${otp}`);
   await sendMail({
     to,
     subject: `[Thư viện] Mã xác thực OTP: ${otp}`,

@@ -22,4 +22,8 @@ export const env = {
   EMAIL_FROM: process.env.EMAIL_FROM!,
 
   BCRYPT_ROUNDS: parseInt(process.env.BCRYPT_ROUNDS || '10', 10),
+
+  // Set to 'true' in production to actually send emails via SMTP.
+  // In development (false), emails are only logged to console.
+  EMAIL_REAL_SEND: process.env.EMAIL_REAL_SEND === 'true',
 } as const;
