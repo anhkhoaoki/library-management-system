@@ -9,8 +9,9 @@
 - Người dùng phải đăng nhập vào hệ thống BkLib bằng tài khoản được cấp.
 
 ### 1.2 Số lượng sách được mượn cùng lúc
-- Sinh viên đại học: tối đa 3 cuốn sách cùng một lúc.
-- Sinh viên sau đại học và giảng viên: tối đa 5 cuốn sách cùng một lúc.
+- Sinh viên (bạn đọc): tối đa **5 cuốn sách** cùng một lúc.
+- Giảng viên, cán bộ: tối đa **5 cuốn sách** cùng một lúc.
+- Giới hạn này được cấu hình bởi quản trị viên thư viện và có thể thay đổi theo từng thời kỳ.
 
 ### 1.3 Thời hạn mượn sách
 - Thời hạn mượn tiêu chuẩn: 14 ngày (2 tuần) kể từ ngày mượn.
@@ -47,7 +48,8 @@
 
 ### 3.1 Điều kiện đặt giữ chỗ
 - Chỉ có thể đặt giữ chỗ khi tất cả các bản sao của cuốn sách đã được mượn hết (không còn sách để mượn trực tiếp).
-- Mỗi sinh viên chỉ được đặt giữ chỗ tối đa 3 đầu sách cùng lúc.
+- **Không thể đặt giữ chỗ nếu bạn đang mượn đủ số lượng tối đa (5 tài liệu)**. Bạn cần trả bớt sách trước.
+- Không thể đặt giữ chỗ nếu có tiền phạt chưa thanh toán hoặc có sách quá hạn chưa trả.
 
 ### 3.2 Thông báo và thời hạn nhận sách
 - Khi sách được trả và đến lượt của bạn, hệ thống sẽ gửi thông báo qua email và thông báo trong hệ thống BkLib.
@@ -117,4 +119,7 @@ Trả lời: Cơ sở Dĩ An: (028) 3724-4270. Cơ sở Lý Thường Kiệt: (0
 Trả lời: Có. Bạn có thể trả sách ở bất kỳ cơ sở thư viện nào trong hệ thống BkLib, không cần phải trả đúng cơ sở đã mượn.
 
 **Hỏi: Mỗi lần mượn sách được mấy quyển?**
-Trả lời: Sinh viên đại học được mượn tối đa 3 cuốn cùng lúc. Sinh viên sau đại học và giảng viên được mượn tối đa 5 cuốn cùng lúc.
+Trả lời: Tất cả bạn đọc (sinh viên và giảng viên) đều được mượn tối đa **5 cuốn** cùng lúc. Khi đã mượn đủ 5 cuốn, bạn cần trả bớt sách mới có thể mượn thêm hoặc đặt giữ chỗ cuốn khác.
+
+**Hỏi: Tôi có thể đặt giữ chỗ sách khi đang mượn đủ 5 cuốn không?**
+Trả lời: Không. Hệ thống sẽ không cho phép đặt giữ chỗ nếu bạn đang mượn đủ số lượng tối đa (5 cuốn). Bạn cần trả bớt ít nhất 1 cuốn trước khi có thể đặt thêm.

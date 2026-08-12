@@ -438,7 +438,10 @@ export const renewBorrowRecord = async (borrowRecordId: string, userId: string) 
 
 // ─── UC-CIR-05: Reserve Book / Hold ──────────────────────────
 export const reserveBook = async (userId: string, bookId: string) => {
-  const user = await prisma.user.findUnique({ where: { id: userId } });
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    include: { role: true },
+  });
   if (!user) throw createError('Người dùng không tồn tại', 404);
   if (user.status !== 'ACTIVE') throw createError('Tài khoản bị khóa', 403);
 
@@ -464,6 +467,20 @@ export const reserveBook = async (userId: string, bookId: string) => {
   if (overdueCount > 0) {
     throw createError(
       'Bạn có tài liệu quá hạn chưa trả. Vui lòng trả sách trước khi đặt giữ chỗ mới',
+      403
+    );
+  }
+
+  // Check borrow limit — cannot reserve if already at max active borrows
+  const maxBorrowKey =
+    (user as any).role?.name === 'READER' ? CONFIG_KEYS.MAX_BORROW_READER : CONFIG_KEYS.MAX_BORROW_FACULTY;
+  const maxBorrow = parseInt(await getConfig(maxBorrowKey, '5'), 10);
+  const currentBorrowCount = await prisma.borrowRecord.count({
+    where: { userId, status: BorrowStatus.ACTIVE },
+  });
+  if (currentBorrowCount >= maxBorrow) {
+    throw createError(
+      `Bạn đã mượn tối đa ${maxBorrow} tài liệu. Vui lòng trả bớt sách trước khi đặt giữ chỗ mới`,
       403
     );
   }
