@@ -2,15 +2,15 @@
 Catalog AI Service
 Implements:
   - UC-CAT-03: Auto-Cataloging by ISBN
-  - UC-CAT-04: AI Book Summarization
+  # UC-CAT-04: AI Book Summarization — ĐÃ TẮT
 """
 
 import httpx
 from typing import Optional
-from langchain_core.prompts import PromptTemplate
-from langchain_core.output_parsers import StrOutputParser
-from app.core.gemini_client import get_llm
-from app.schemas.catalog import IsbnLookupResponse, SummarizeResponse
+# from langchain_core.prompts import PromptTemplate  # Không dùng (UC-CAT-04 đã tắt)
+# from langchain_core.output_parsers import StrOutputParser  # Không dùng
+# from app.core.gemini_client import get_llm  # Không dùng
+from app.schemas.catalog import IsbnLookupResponse  # SummarizeResponse đã tắt
 from app.core.config import settings
 
 
@@ -93,62 +93,62 @@ def _extract_year(date_str: Optional[str]) -> Optional[int]:
     return None
 
 
-# ─── UC-CAT-04: AI Summarization with LangChain + Gemini ────────
-def generate_book_summary(
-    title: str,
-    author_names: list[str],
-    category: Optional[str] = None,
-    existing_description: Optional[str] = None,
-) -> SummarizeResponse:
-    """
-    Uses LangChain + Gemini API to generate a 150-300 word Vietnamese
-    book summary for the catalog form.
-    """
-    if len(author_names) == 0:
-        raise ValueError("Cần ít nhất một tên tác giả để tạo tóm tắt")
-
-    authors_str = ", ".join(author_names)
-    category_str = f"Thể loại: {category}. " if category else ""
-    desc_str = (
-        f"\nDưới đây là mô tả sơ lược đã có (có thể sử dụng làm tham khảo):\n{existing_description}"
-        if existing_description else ""
-    )
-
-    prompt_template = PromptTemplate(
-        input_variables=["title", "authors", "category_info", "description_hint"],
-        template="""Bạn là một thủ thư chuyên nghiệp. Hãy viết một đoạn tóm tắt nội dung sách \
-bằng tiếng Việt, khoảng 150 đến 300 từ, hấp dẫn và súc tích cho cuốn sách sau:
-
-Tên sách: "{title}"
-Tác giả: {authors}
-{category_info}
-{description_hint}
-
-Yêu cầu:
-- Viết bằng tiếng Việt, văn phong chuyên nghiệp
-- Nêu bật chủ đề chính, đối tượng độc giả phù hợp
-- Không thêm thông tin không có thật
-- Độ dài: 150-300 từ
-- KHÔNG thêm câu giới thiệu hay lời kết thúc, chỉ cần đoạn tóm tắt thuần tuý
-
-Tóm tắt:""",
-    )
-
-    llm = get_llm(temperature=0.6)
-    chain = prompt_template | llm | StrOutputParser()
-
-    result = chain.invoke({
-        "title": title,
-        "authors": authors_str,
-        "category_info": category_str,
-        "description_hint": desc_str,
-    })
-
-    summary_text = result.strip()
-    word_count = len(summary_text.split())
-
-    return SummarizeResponse(
-        summary=summary_text,
-        isAiGenerated=True,
-        wordCount=word_count,
-    )
+# ─── UC-CAT-04: AI Summarization — ĐÃ TẮT (tính năng không còn sử dụng) ───
+# def generate_book_summary(
+#     title: str,
+#     author_names: list[str],
+#     category: Optional[str] = None,
+#     existing_description: Optional[str] = None,
+# ) -> SummarizeResponse:
+#     """
+#     Uses LangChain + Gemini API to generate a 150-300 word Vietnamese
+#     book summary for the catalog form.
+#     """
+#     if len(author_names) == 0:
+#         raise ValueError("Cần ít nhất một tên tác giả để tạo tóm tắt")
+#
+#     authors_str = ", ".join(author_names)
+#     category_str = f"Thể loại: {category}. " if category else ""
+#     desc_str = (
+#         f"\nDưới đây là mô tả sơ lược đã có (có thể sử dụng làm tham khảo):\n{existing_description}"
+#         if existing_description else ""
+#     )
+#
+#     prompt_template = PromptTemplate(
+#         input_variables=["title", "authors", "category_info", "description_hint"],
+#         template="""Bạn là một thủ thư chuyên nghiệp. Hãy viết một đoạn tóm tắt nội dung sách \
+# bằng tiếng Việt, khoảng 150 đến 300 từ, hấp dẫn và súc tích cho cuốn sách sau:
+#
+# Tên sách: "{title}"
+# Tác giả: {authors}
+# {category_info}
+# {description_hint}
+#
+# Yêu cầu:
+# - Viết bằng tiếng Việt, văn phong chuyên nghiệp
+# - Nêu bật chủ đề chính, đối tượng độc giả phù hợp
+# - Không thêm thông tin không có thật
+# - Độ dài: 150-300 từ
+# - KHÔNG thêm câu giới thiệu hay lời kết thúc, chỉ cần đoạn tóm tắt thuần tuý
+#
+# Tóm tắt:""",
+#     )
+#
+#     llm = get_llm(temperature=0.6)
+#     chain = prompt_template | llm | StrOutputParser()
+#
+#     result = chain.invoke({
+#         "title": title,
+#         "authors": authors_str,
+#         "category_info": category_str,
+#         "description_hint": desc_str,
+#     })
+#
+#     summary_text = result.strip()
+#     word_count = len(summary_text.split())
+#
+#     return SummarizeResponse(
+#         summary=summary_text,
+#         isAiGenerated=True,
+#         wordCount=word_count,
+#     )

@@ -14,53 +14,39 @@ class ChatMessage(BaseModel):
     content: str
 
 
-class ActiveBorrow(BaseModel):
-    title: str
-    dueDate: str
-
-
-class UserContext(BaseModel):
-    activeBorrows: List[ActiveBorrow] = []
-
-
 class ChatRequest(BaseModel):
-    userId: str
     message: str
     chatHistory: List[ChatMessage] = []
-    userContext: Optional[UserContext] = None
+    # userId và userContext đã bỏ — chatbot chỉ trả lời nội quy, không cần dữ liệu cá nhân
+    userId: Optional[str] = None  # Giữ lại để tương thích ngược với frontend hiện tại
 
 
 class ChatResponse(BaseModel):
     reply: str
-    userId: str
 
 
 # ─── SSE Streaming endpoint (chính) ──────────────────────────────
 @router.post("/stream")
 async def chat_stream(request: ChatRequest):
     """
-    UC-AI-02 (Phương án B): Streaming chatbot endpoint dùng SSE.
-    Frontend nhận từng token và hiển thị typing effect thật.
+    UC-AI-02: Streaming chatbot endpoint dùng SSE.
+    Chatbot "Thư Bé" trả lời câu hỏi về nội quy/FAQ thư viện qua RAG.
 
     Response format: text/event-stream
-    Mỗi event: "data: <token>\n\n"
-    Event cuối: "data: [DONE]\n\n"
+    Mỗi event: "data: <token>\\n\\n"
+    Event cuối: "data: [DONE]\\n\\n"
     """
     if not request.message.strip():
         raise HTTPException(status_code=400, detail="Tin nhắn không được rỗng")
 
     history = [{"role": m.role, "content": m.content} for m in request.chatHistory]
-    context = request.userContext.model_dump() if request.userContext else None
 
     async def event_generator():
         try:
             async for token in generate_chat_stream(
                 user_message=request.message,
-                user_id=request.userId,
                 chat_history=history,
-                user_context=context,
             ):
-                # Format SSE: mỗi dòng là "data: <nội_dung>\n\n"
                 yield f"data: {json.dumps({'token': token}, ensure_ascii=False)}\n\n"
 
             # Signal kết thúc stream
@@ -87,25 +73,21 @@ async def chat_stream(request: ChatRequest):
 def chat_message(request: ChatRequest):
     """
     Fallback endpoint non-streaming.
-    Giữ lại để tương thích ngược với code Node.js hiện tại.
     """
     if not request.message.strip():
         raise HTTPException(status_code=400, detail="Tin nhắn không được rỗng")
 
     try:
         history = [{"role": m.role, "content": m.content} for m in request.chatHistory]
-        context = request.userContext.model_dump() if request.userContext else None
 
         reply = generate_chat_response(
             user_message=request.message,
             chat_history=history,
-            user_context=context,
         )
-        return ChatResponse(reply=reply, userId=request.userId)
+        return ChatResponse(reply=reply)
 
     except Exception as e:
         print(f"[Chat Error] {e}")
         return ChatResponse(
-            reply="Xin lỗi, tôi đang gặp sự cố kỹ thuật. Vui lòng liên hệ thủ thư để được hỗ trợ.",
-            userId=request.userId,
+            reply="Xin lỗi, tôi đang gặp sự cố kỹ thuật. Vui lòng liên hệ thủ thư để được hỗ trợ."
         )

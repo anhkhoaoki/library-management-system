@@ -91,13 +91,13 @@ router.get(
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-// UC-CAT-04: Summarization (Librarian only)
-router.post(
-  '/catalog/summarize',
-  authenticate,
-  authorize(Role.LIBRARIAN, Role.ADMIN),
-  aiController.generateBookSummary
-);
+// UC-CAT-04: Summarization — ĐÃ TẮT (tính năng không còn sử dụng)
+// router.post(
+//   '/catalog/summarize',
+//   authenticate,
+//   authorize(Role.LIBRARIAN, Role.ADMIN),
+//   aiController.generateBookSummary
+// );
 
 /**
  * @swagger
@@ -217,19 +217,18 @@ router.post('/chat/stream', authenticate, aiController.chatWithBotStream);
 // UC-AI-03: Recommendations (requires auth)
 router.get('/recommendations', authenticate, aiController.getRecommendations);
 
-// ─── Internal endpoints cho Function Calling tools (Python AI Service) ───────
-// Xác thực bằng X-Internal-Key header thay vì JWT
-const internalKeyMiddleware = (req: import('express').Request, res: import('express').Response, next: import('express').NextFunction): void => {
-  const key = req.headers['x-internal-key'];
-  if (key !== (process.env.INTERNAL_API_KEY || 'internal-api-key')) {
-    res.status(403).json({ success: false, message: 'Forbidden' });
-    return;
-  }
-  next();
-};
+// ─── Internal endpoints cho Function Calling — ĐÃ TẮT (chatbot RAG-only, không cần) ───
+// const internalKeyMiddleware = (req: import('express').Request, res: import('express').Response, next: import('express').NextFunction): void => {
+//   const key = req.headers['x-internal-key'];
+//   if (key !== (process.env.INTERNAL_API_KEY || 'internal-api-key')) {
+//     res.status(403).json({ success: false, message: 'Forbidden' });
+//     return;
+//   }
+//   next();
+// };
 
-router.get('/internal/user/:userId/borrows', internalKeyMiddleware, aiController.getUserBorrows);
-router.get('/internal/user/:userId/fines', internalKeyMiddleware, aiController.getUserFines);
-router.get('/internal/user/:userId/reservations', internalKeyMiddleware, aiController.getUserReservations);
+// router.get('/internal/user/:userId/borrows', internalKeyMiddleware, aiController.getUserBorrows);
+// router.get('/internal/user/:userId/fines', internalKeyMiddleware, aiController.getUserFines);
+// router.get('/internal/user/:userId/reservations', internalKeyMiddleware, aiController.getUserReservations);
 
 export default router;

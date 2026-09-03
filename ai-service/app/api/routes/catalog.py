@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from app.services.catalog_service import fetch_book_by_isbn, generate_book_summary
-from app.schemas.catalog import IsbnLookupResponse, SummarizeRequest, SummarizeResponse
+from app.services.catalog_service import fetch_book_by_isbn  # generate_book_summary đã tắt (UC-CAT-04 removed)
+from app.schemas.catalog import IsbnLookupResponse  # SummarizeRequest, SummarizeResponse đã tắt
 
 router = APIRouter()
 
@@ -29,31 +29,31 @@ async def get_book_by_isbn(isbn: str):
         )
 
 
-# UC-CAT-04: AI Book Summarization
-@router.post("/summarize", response_model=SummarizeResponse)
-def summarize_book(request: SummarizeRequest):
-    """
-    Generates a 150-300 word Vietnamese summary using LangChain + Gemini.
-    Called by Node.js backend when librarian clicks "Tạo tóm tắt AI".
-    """
-    if not request.title or not request.authorNames:
-        raise HTTPException(
-            status_code=422,
-            detail="Cần ít nhất tên sách và tên tác giả để tạo tóm tắt"
-        )
-
-    try:
-        result = generate_book_summary(
-            title=request.title,
-            author_names=request.authorNames,
-            category=request.category,
-            existing_description=request.existingDescription,
-        )
-        return result
-    except ValueError as e:
-        raise HTTPException(status_code=422, detail=str(e))
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Lỗi tạo tóm tắt AI: {str(e)}"
-        )
+# UC-CAT-04: AI Book Summarization — ĐÃ TẮT (tính năng không còn dùng)
+# @router.post("/summarize", response_model=SummarizeResponse)
+# def summarize_book(request: SummarizeRequest):
+#     """
+#     Generates a 150-300 word Vietnamese summary using LangChain + Gemini.
+#     Called by Node.js backend when librarian clicks "Tạo tóm tắt AI".
+#     """
+#     if not request.title or not request.authorNames:
+#         raise HTTPException(
+#             status_code=422,
+#             detail="Cần ít nhất tên sách và tên tác giả để tạo tóm tắt"
+#         )
+#
+#     try:
+#         result = generate_book_summary(
+#             title=request.title,
+#             author_names=request.authorNames,
+#             category=request.category,
+#             existing_description=request.existingDescription,
+#         )
+#         return result
+#     except ValueError as e:
+#         raise HTTPException(status_code=422, detail=str(e))
+#     except Exception as e:
+#         raise HTTPException(
+#             status_code=500,
+#             detail=f"Lỗi tóm tắt AI: {str(e)}"
+#         )

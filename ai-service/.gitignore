@@ -22,3 +22,9 @@ Thumbs.db
 *.njsproj
 *.sln
 *.swp
+
+# Auto-generated evaluation reports (không commit kết quả chạy test)
+eval_reports/
+
+# ChromaDB local vector store (generated at runtime)
+chroma_db/

@@ -24,28 +24,27 @@ export const getBookInfoByIsbn = async (isbn: string) => {
   }
 };
 
-// ─── UC-CAT-04: AI Book Summarization ────────────────────────
-// Node.js calls the Python FastAPI /catalog/summarize endpoint
-export const generateBookSummary = async (data: {
-  title: string;
-  authorNames: string[];
-  category?: string;
-  existingDescription?: string;
-}) => {
-  try {
-    const response = await aiServiceClient.post('/catalog/summarize', data);
-    return response.data;
-  } catch (error: unknown) {
-    const axiosError = error as { response?: { status: number } };
-    if (axiosError.response?.status === 422) {
-      throw createError(
-        'Thông tin đầu vào không đủ để AI tạo tóm tắt. Vui lòng bổ sung tên tác giả',
-        422
-      );
-    }
-    throw createError('Dịch vụ AI đang không khả dụng. Vui lòng thử lại sau', 503);
-  }
-};
+// ─── UC-CAT-04: AI Book Summarization — ĐÃ TẮT (tính năng không còn sử dụng) ───
+// export const generateBookSummary = async (data: {
+//   title: string;
+//   authorNames: string[];
+//   category?: string;
+//   existingDescription?: string;
+// }) => {
+//   try {
+//     const response = await aiServiceClient.post('/catalog/summarize', data);
+//     return response.data;
+//   } catch (error: unknown) {
+//     const axiosError = error as { response?: { status: number } };
+//     if (axiosError.response?.status === 422) {
+//       throw createError(
+//         'Thông tin đầu vào không đủ để AI tạo tóm tắt. Vui lòng bổ sung tên tác giả',
+//         422
+//       );
+//     }
+//     throw createError('Dịch vụ AI đang không khả dụng. Vui lòng thử lại sau', 503);
+//   }
+// };
 
 // ─── UC-AI-01: Natural Language Search ───────────────────────
 export const naturalLanguageSearch = async (query: string, userId?: string) => {
@@ -93,7 +92,7 @@ export const naturalLanguageSearch = async (query: string, userId?: string) => {
     };
   }
 };
-// ─── UC-AI-02: Chatbot ───────────────────────────────────────
+// ─── UC-AI-02: Chatbot (RAG only — chỉ giải đáp nội quy thư viện) ──────────
 export const chatWithBot = async (userId: string, message: string) => {
   // Fetch recent chat history for context
   const history = await prisma.chatHistory.findMany({
@@ -102,29 +101,11 @@ export const chatWithBot = async (userId: string, message: string) => {
     take: 10,
   });
 
-  // Fetch user-specific context data for personalized queries
-  const userContext = await prisma.borrowRecord.findMany({
-    where: { userId, status: 'ACTIVE' },
-    select: {
-      dueDate: true,
-      physicalCopy: {
-        select: { book: { select: { title: true } } },
-      },
-    },
-    take: 5,
-  });
-
   try {
     const response = await aiServiceClient.post('/chat/message', {
-      userId,
       message,
       chatHistory: history.reverse(),
-      userContext: {
-        activeBorrows: userContext.map((r) => ({
-          title: r.physicalCopy.book.title,
-          dueDate: r.dueDate,
-        })),
-      },
+      // userContext đã bỏ — chatbot chỉ RAG nội quy, không cần dữ liệu cá nhân
     });
 
     // Save conversation
@@ -152,29 +133,11 @@ export const chatWithBotStream = async (userId: string, message: string, res: Re
     take: 10,
   });
 
-  // Fetch user-specific context data for personalized queries
-  const userContext = await prisma.borrowRecord.findMany({
-    where: { userId, status: 'ACTIVE' },
-    select: {
-      dueDate: true,
-      physicalCopy: {
-        select: { book: { select: { title: true } } },
-      },
-    },
-    take: 5,
-  });
-
   try {
     const response = await aiServiceClient.post('/chat/stream', {
-      userId,
       message,
       chatHistory: history.reverse(),
-      userContext: {
-        activeBorrows: userContext.map((r) => ({
-          title: r.physicalCopy.book.title,
-          dueDate: r.dueDate,
-        })),
-      },
+      // userContext đã bỏ — chatbot chỉ RAG nội quy
     }, {
       responseType: 'stream',
       timeout: 0,             // Tắt timeout cho streaming — tránh bị cắt stream giữa chừng
@@ -412,80 +375,7 @@ export const getRecommendations = async (userId: string) => {
   }
 };
 
-// ─── Internal functions cho Function Calling tools ────────────────
-
-export const getInternalUserBorrows = async (userId: string) => {
-  const borrows = await prisma.borrowRecord.findMany({
-    where: { userId, status: 'ACTIVE' },
-    select: {
-      dueDate: true,
-      status: true,
-      physicalCopy: {
-        select: { book: { select: { title: true, isbn: true } } },
-      },
-    },
-    orderBy: { dueDate: 'asc' },
-  });
-
-  return borrows.map((b) => ({
-    title: b.physicalCopy.book.title,
-    isbn: b.physicalCopy.book.isbn,
-    dueDate: b.dueDate.toISOString().split('T')[0],
-    status: b.status,
-  }));
-};
-
-export const getInternalUserFines = async (userId: string) => {
-  const fines = await prisma.fine.findMany({
-    where: { userId, status: 'PENDING' },
-    select: {
-      totalAmount: true,
-      daysOverdue: true,
-      borrowRecord: {
-        select: {
-          physicalCopy: {
-            select: {
-              book: {
-                select: {
-                  title: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  });
-
-  const totalFines = fines.reduce((sum, f) => sum + Number(f.totalAmount), 0);
-  return {
-    totalFines,
-    pendingCount: fines.length,
-    details: fines.map((f) => ({
-      amount: Number(f.totalAmount),
-      reason: `Quá hạn ${f.daysOverdue} ngày cuốn "${f.borrowRecord.physicalCopy.book.title}"`,
-    })),
-  };
-};
-
-export const getInternalUserReservations = async (userId: string) => {
-  const reservations = await prisma.reservation.findMany({
-    where: {
-      userId,
-      status: { in: ['WAITING', 'READY_FOR_PICKUP'] },
-    },
-    select: {
-      id: true,
-      createdAt: true,
-      book: { select: { title: true, coverImageUrl: true } },
-    },
-    orderBy: { createdAt: 'asc' },
-  });
-
-  return reservations.map((r, idx) => ({
-    book: { title: r.book.title },
-    queuePosition: idx + 1,
-    reservedAt: r.createdAt.toISOString().split('T')[0],
-  }));
-};
-
+// ─── Internal Function Calling helpers — ĐÃ TẮT (chatbot không dùng Function Calling nữa) ───
+// export const getInternalUserBorrows = async (userId: string) => { ... };
+// export const getInternalUserFines = async (userId: string) => { ... };
+// export const getInternalUserReservations = async (userId: string) => { ... };
