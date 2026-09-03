@@ -6,16 +6,16 @@ const INITIAL_MESSAGES = [
   {
     id: 1,
     role: 'assistant',
-    text: 'Xin chào! Tôi là **Thư Bé** - trợ lý AI của thư viện BkLib 📚\n\nTôi có thể giúp bạn:\n- Tra cứu quy định mượn/trả sách\n- Kiểm tra sách bạn đang mượn\n- Hỏi về tiền phạt và đặt giữ chỗ\n\nBạn cần hỗ trợ gì?',
+    text: 'Xin chào! Tôi là **Thư Bé** - trợ lý AI của thư viện BkLib 📚\n\nTôi có thể giúp bạn:\n- Tra cứu quy định mượn/trả sách\n- Hỏi về phí phạt trễ hạn\n- Tìm hiểu thủ tục đặt giữ chỗ sách\n- Giải đáp nội quy thư viện\n\nBạn cần hỗ trợ gì?',
     time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
   },
 ];
 
 const QUICK_SUGGESTIONS = [
-  'Tôi đang mượn bao nhiêu sách?',
+  'Quy định mượn sách như thế nào?',
   'Phí phạt trễ hạn là bao nhiêu?',
   'Thủ tục đặt giữ chỗ sách như thế nào?',
-  'Tôi có tiền phạt không?',
+  'Được mượn tối đa bao nhiêu cuốn?',
 ];
 
 const API_BASE = 'http://localhost:3000/api/v1';
