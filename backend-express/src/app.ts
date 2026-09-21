@@ -30,13 +30,13 @@ const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: process.env.NODE_ENV === 'development' ? 2000 : 200,
   message: { success: false, message: 'Quá nhiều yêu cầu. Vui lòng thử lại sau.' },
-  skip: () => process.env.NODE_ENV === 'development', // tắt hoàn toàn khi dev
+  skip: () => process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test', // tắt khi dev hoặc test
 });
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: process.env.NODE_ENV === 'development' ? 1000 : 20,
   message: { success: false, message: 'Quá nhiều lần thử đăng nhập. Vui lòng thử lại sau 15 phút.' },
-  skip: () => process.env.NODE_ENV === 'development', // tắt hoàn toàn khi dev
+  skip: () => process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test', // tắt khi dev hoặc test
 });
 
 app.use('/api', limiter);
