@@ -155,12 +155,25 @@ def call_judge(system_prompt: str, user_content: str) -> Dict[str, Any]:
             err_str = str(e)
             # Kiểm tra lỗi 429 và lấy retryDelay từ message
             if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+                if "Quota" in err_str or "quota" in err_str:
+                    if hasattr(_google_client, "switch_to_fallback") and _google_client.switch_to_fallback():
+                        print(f"    [Quota Exceeded] Đã chuyển sang Fallback API Key. Retry ({attempt}/{MAX_RETRY})...")
+                        continue
+                    else:
+                        print(f"    [Quota Exceeded] Hết Quota và không có (hoặc đã dùng) Fallback Key. Dừng case này.")
+                        return {"error": "quota_exceeded"}
+
                 # Tìm retryDelay (VD: "retry in 37.1s")
                 m = re.search(r"retry in ([0-9.]+)s", err_str, re.IGNORECASE)
                 wait_sec = float(m.group(1)) + 5 if m else 60
                 print(f"    [Rate Limit 429] Chờ {wait_sec:.0f}s rồi retry ({attempt}/{MAX_RETRY})...")
                 time.sleep(wait_sec)
                 continue   # thử lại
+            # Lỗi 503 UNAVAILABLE (quá tải tạm thời) → chờ 30s rồi retry
+            if "503" in err_str or "UNAVAILABLE" in err_str:
+                print(f"    [503 Overload] Chờ 30s rồi retry ({attempt}/{MAX_RETRY})...")
+                time.sleep(30)
+                continue
             # Lỗi khác → trả về ngay
             print(f"    [Judge Error] {e}")
             return {"error": err_str}

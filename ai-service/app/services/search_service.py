@@ -95,6 +95,15 @@ def _get_embedding_model():
         return None
 
 
+# ─── Query Translation (Vietnamese → English) ────────────────────
+# NOTE: Tính năng này đã bỏ vì book embeddings được tạo từ tiếng Việt.
+# Việc dịch query sang tiếng Anh sẽ làm lệch so sánh vector (query Anh vs sách Việt).
+# Hướng khắc phục đúng: đổi model embedding sang multilingual (paraphrase-multilingual-MiniLM-L12-v2)
+# để cả query lẫn sách đều được map vào cùng không gian vector.
+
+
+
+
 # ─── Intent Extractor (Gemini với fallback local) ─────────────────
 
 def extract_search_intent_local(query: str) -> str:
@@ -312,4 +321,12 @@ async def semantic_search(
         scored.append(book_cleaned)
 
     scored.sort(key=lambda x: x["score"], reverse=True)
-    return scored[:limit]
+
+    # ── Bước 4: Lọc ngưỡng điểm tối thiểu ──────────────────────────
+    # Ngưỡng 0.10 để tránh lọc hết kết quả với corpus nhỏ.
+    # Với corpus lớn hơn có thể nâng lên 0.25–0.35.
+    MIN_THRESHOLD = 0.10
+    filtered = [b for b in scored if b["score"] >= MIN_THRESHOLD]
+
+    return filtered[:limit]
+

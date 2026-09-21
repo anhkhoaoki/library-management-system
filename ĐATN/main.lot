@@ -1,0 +1,47 @@
+\thispagestyle {empty}
+\contentsline {table}{\numberline {1}{\ignorespaces Use-case Specification: Account Registration}}{14}{table.1}%
+\contentsline {table}{\numberline {2}{\ignorespaces Use-case Specification: Password Reset}}{15}{table.2}%
+\contentsline {table}{\numberline {3}{\ignorespaces Use-case Specification: System Login}}{15}{table.3}%
+\contentsline {table}{\numberline {4}{\ignorespaces Use-case Specification: Update User Profile}}{16}{table.4}%
+\contentsline {table}{\numberline {5}{\ignorespaces Use-case Specification: View Loan/Return History}}{16}{table.5}%
+\contentsline {table}{\numberline {6}{\ignorespaces Use-case Specification: User Account Management}}{17}{table.6}%
+\contentsline {table}{\numberline {7}{\ignorespaces Use-case Specification: Add / Edit / Delete Catalog Record}}{18}{table.7}%
+\contentsline {table}{\numberline {8}{\ignorespaces Use-case Specification: Batch Catalog Data Ingestion}}{19}{table.8}%
+\contentsline {table}{\numberline {9}{\ignorespaces Use-case Specification: Automated Cataloging via ISBN}}{19}{table.9}%
+\contentsline {table}{\numberline {10}{\ignorespaces Use-case Specification: Automated Document Summarization}}{20}{table.10}%
+\contentsline {table}{\numberline {11}{\ignorespaces Use-case Specification: Physical Material Checkout}}{21}{table.11}%
+\contentsline {table}{\numberline {12}{\ignorespaces Use-case Specification: Material Return}}{22}{table.12}%
+\contentsline {table}{\numberline {13}{\ignorespaces Use-case Specification: Calculate and Assess Overdue Fines}}{22}{table.13}%
+\contentsline {table}{\numberline {14}{\ignorespaces Use-case Specification: Online Loan Renewal}}{23}{table.14}%
+\contentsline {table}{\numberline {15}{\ignorespaces Use-case Specification: Place Item Hold}}{23}{table.15}%
+\contentsline {table}{\numberline {16}{\ignorespaces Use-case Specification: Inter-Branch Loan Request}}{24}{table.16}%
+\contentsline {table}{\numberline {17}{\ignorespaces Use-case Specification: Document Catalog Search}}{25}{table.17}%
+\contentsline {table}{\numberline {18}{\ignorespaces Use-case Specification: Rate and Review Materials}}{25}{table.18}%
+\contentsline {table}{\numberline {19}{\ignorespaces Use-case Specification: Natural Language Search}}{26}{table.19}%
+\contentsline {table}{\numberline {20}{\ignorespaces Use-case Specification: Chatbot Virtual Assistant Interaction}}{27}{table.20}%
+\contentsline {table}{\numberline {21}{\ignorespaces Use-case Specification: View Personalized Recommendations}}{28}{table.21}%
+\contentsline {table}{\numberline {22}{\ignorespaces Use-case Specification: Configure Notification Preferences}}{29}{table.22}%
+\contentsline {table}{\numberline {23}{\ignorespaces Use-case Specification: View System Notifications}}{30}{table.23}%
+\contentsline {table}{\numberline {24}{\ignorespaces Use-case Specification: Broadcast Mass Notifications}}{30}{table.24}%
+\contentsline {table}{\numberline {25}{\ignorespaces Use-case Specification: View Operational Dashboard}}{31}{table.25}%
+\contentsline {table}{\numberline {26}{\ignorespaces Use-case Specification: Export Periodic Statistical Reports}}{32}{table.26}%
+\contentsline {table}{\numberline {27}{\ignorespaces Use-case Specification: Configure System Parameters}}{32}{table.27}%
+\contentsline {table}{\numberline {28}{\ignorespaces Use-case Specification: Manage Branch Libraries}}{32}{table.28}%
+\contentsline {table}{\numberline {29}{\ignorespaces Use-case Specification: View Audit Logs}}{33}{table.29}%
+\contentsline {table}{\numberline {30}{\ignorespaces System Entities and Database Definitions}}{36}{table.caption.29}%
+\contentsline {table}{\numberline {31}{\ignorespaces Scope and Results of Unit Testing}}{81}{table.caption.88}%
+\contentsline {table}{\numberline {32}{\ignorespaces Scope and Results of Integration Testing}}{82}{table.caption.90}%
+\contentsline {table}{\numberline {33}{\ignorespaces System Testing Workflows}}{83}{table.caption.92}%
+\contentsline {table}{\numberline {34}{\ignorespaces Source Code Quality Test Results}}{84}{table.caption.94}%
+\contentsline {table}{\numberline {35}{\ignorespaces Backend Test Summary}}{85}{table.caption.96}%
+\contentsline {table}{\numberline {36}{\ignorespaces Deterministic vs. Non-deterministic Testing}}{86}{table.caption.98}%
+\contentsline {table}{\numberline {37}{\ignorespaces AI Evaluation Metrics Definitions}}{86}{table.caption.101}%
+\contentsline {table}{\numberline {38}{\ignorespaces Chatbot Evaluation — Group 1: Policy and FAQ Queries}}{88}{table.caption.105}%
+\contentsline {table}{\numberline {39}{\ignorespaces Sample Ground Truth vs.~Chatbot Answer — FAQ Case \#2}}{88}{table.caption.106}%
+\contentsline {table}{\numberline {40}{\ignorespaces Chatbot Evaluation — Group 2: Personal Account Queries (Function Calling)}}{89}{table.caption.108}%
+\contentsline {table}{\numberline {41}{\ignorespaces Sample Function Calling Interaction — Case \#12}}{89}{table.caption.109}%
+\contentsline {table}{\numberline {42}{\ignorespaces Chatbot Evaluation — Overall Metrics Summary}}{89}{table.caption.111}%
+\contentsline {table}{\numberline {43}{\ignorespaces Semantic Search Evaluation Test Cases}}{90}{table.caption.114}%
+\contentsline {table}{\numberline {44}{\ignorespaces Semantic Search Failure Example — Data Sparsity}}{90}{table.caption.116}%
+\contentsline {table}{\numberline {45}{\ignorespaces Architectural Fix Options for Language Mismatch}}{91}{table.caption.117}%
+\contentsline {table}{\numberline {46}{\ignorespaces Summary of Completed Project Deliverables}}{92}{table.46}%

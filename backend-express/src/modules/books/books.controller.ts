@@ -1,5 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import * as booksService from './books.service';
+import axios from 'axios';
+
+// ─── Helper: Trigger AI embedding cache refresh (fire-and-forget) ─
+// Gọi sau khi thêm/sửa/xóa sách để AI Semantic Search luôn index sách mới nhất.
+const triggerEmbeddingRefresh = () => {
+  axios
+    .post('http://localhost:8000/search/refresh-cache', {}, { timeout: 5000 })
+    .catch(() => { /* silent fail — không để lỗi cache chặn response chính */ });
+};
 
 // UC-EXP-01
 export const searchBooks = async (req: Request, res: Response, next: NextFunction) => {
@@ -32,6 +41,7 @@ export const createBook = async (req: Request, res: Response, next: NextFunction
       createdById: req.user!.userId,
     });
     res.status(201).json({ success: true, data: book });
+    triggerEmbeddingRefresh(); // cập nhật embedding index sau khi thêm sách mới
   } catch (err) { next(err); }
 };
 
@@ -39,6 +49,7 @@ export const updateBook = async (req: Request, res: Response, next: NextFunction
   try {
     const book = await booksService.updateBook(req.params.id, req.body);
     res.status(200).json({ success: true, data: book });
+    triggerEmbeddingRefresh(); // cập nhật embedding index sau khi sửa sách
   } catch (err) { next(err); }
 };
 
@@ -131,6 +142,7 @@ export const importBooks = async (req: Request, res: Response, next: NextFunctio
     }
     const result = await booksService.importBooksFromExcel(req.file.buffer, req.user!.userId);
     res.status(200).json({ success: true, data: result });
+    triggerEmbeddingRefresh(); // cập nhật embedding index sau khi import hàng loạt
   } catch (err) { next(err); }
 };
 

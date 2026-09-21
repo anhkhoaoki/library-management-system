@@ -1,0 +1,178 @@
+\thispagestyle {empty}
+\contentsline {section}{\numberline {1}General Topic Introduction}{1}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Project Introduction}{1}{subsection.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.1}Motivation for Topic Selection}{1}{subsubsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.2}Project Objectives}{1}{subsection.1.2}%
+\contentsline {subsubsection}{\numberline {1.2.1}Overview of Proposed System}{2}{subsubsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.3}Project Benefits}{2}{subsection.1.3}%
+\contentsline {subsubsection}{\numberline {1.3.1}Building a Modern Online Library Management System}{2}{subsubsection.1.3.1}%
+\contentsline {subsubsection}{\numberline {1.3.2}Effective Support for Library Management}{2}{subsubsection.1.3.2}%
+\contentsline {subsubsection}{\numberline {1.3.3}Optimizing Reader Resource Exploitation}{2}{subsubsection.1.3.3}%
+\contentsline {subsubsection}{\numberline {1.3.4}Enhancing Interaction Between Users and the Library System}{2}{subsubsection.1.3.4}%
+\contentsline {subsection}{\numberline {1.4}Project Scope and Limitations}{2}{subsection.1.4}%
+\contentsline {subsubsection}{\numberline {1.4.1}User Groups}{2}{subsubsection.1.4.1}%
+\contentsline {subsubsection}{\numberline {1.4.2}Scope of Artificial Intelligence Application}{3}{subsubsection.1.4.2}%
+\contentsline {subsubsection}{\numberline {1.4.3}Project Limitations}{3}{subsubsection.1.4.3}%
+\contentsline {subsection}{\numberline {1.5}General Topic Significance}{3}{subsection.1.5}%
+\contentsline {subsubsection}{\numberline {1.5.1}Practical Significance}{3}{subsubsection.1.5.1}%
+\contentsline {subsubsection}{\numberline {1.5.2}Scientific Significance}{3}{subsubsection.1.5.2}%
+\contentsline {section}{\numberline {2}Overview Analysis of Relevant Market Systems}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Library Resource Management and Search System -- Ho Chi Minh City University of Technology (HCMUT)}{4}{subsection.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.1}Strengths}{5}{subsubsection.2.1.1}%
+\contentsline {subsubsection}{\numberline {2.1.2}Weaknesses}{5}{subsubsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.2}Online Library System -- University of London (The Online Library -- UoL)}{5}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Strengths}{5}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Weaknesses}{6}{subsubsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.3}University of Delaware Library System (UD Library)}{6}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Strengths}{6}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}Weaknesses}{6}{subsubsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.4}Open Source Library Management System -- Koha ILS}{6}{subsection.2.4}%
+\contentsline {subsubsection}{\numberline {2.4.1}Strengths}{7}{subsubsection.2.4.1}%
+\contentsline {subsubsection}{\numberline {2.4.2}Weaknesses}{7}{subsubsection.2.4.2}%
+\contentsline {section}{\numberline {3}Technology Stack}{8}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Front-end: React.js and Vite}{8}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Back-end: Node.js and Express}{8}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Dedicated AI Microservice: Python and FastAPI}{8}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}ORM: Prisma}{8}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Relational Database: PostgreSQL}{9}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Vector Store and Embeddings: pgvector}{9}{subsection.3.6}%
+\contentsline {subsection}{\numberline {3.7}AI / LLM Capabilities: Embeddings, RAG, Summarization, and Chatbot}{9}{subsection.3.7}%
+\contentsline {subsection}{\numberline {3.8}Hybrid Search Strategy}{9}{subsection.3.8}%
+\contentsline {subsection}{\numberline {3.9}Security and Authentication: JWT, RBAC, and OTP}{9}{subsection.3.9}%
+\contentsline {subsection}{\numberline {3.10}External Integrations: Open Library, Google Books, and Nodemailer}{10}{subsection.3.10}%
+\contentsline {section}{\numberline {4}System Requirements}{11}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Functional Requirements}{11}{subsection.4.1}%
+\contentsline {subsubsection}{\numberline {4.1.1}User Account Management}{11}{subsubsection.4.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.2}Resource Catalog Management}{11}{subsubsection.4.1.2}%
+\contentsline {subsubsection}{\numberline {4.1.3}Circulation Management}{11}{subsubsection.4.1.3}%
+\contentsline {subsubsection}{\numberline {4.1.4}AI-Powered Document Recommendation Engine}{11}{subsubsection.4.1.4}%
+\contentsline {subsubsection}{\numberline {4.1.5}AI Natural Language Search and Intelligent Interaction}{12}{subsubsection.4.1.5}%
+\contentsline {subsubsection}{\numberline {4.1.6}AI-Assisted Cataloging and Summarization}{12}{subsubsection.4.1.6}%
+\contentsline {subsubsection}{\numberline {4.1.7}Notifications and Communication}{12}{subsubsection.4.1.7}%
+\contentsline {subsubsection}{\numberline {4.1.8}Reporting and Analytics}{12}{subsubsection.4.1.8}%
+\contentsline {subsubsection}{\numberline {4.1.9}System Administration and Configuration}{12}{subsubsection.4.1.9}%
+\contentsline {subsection}{\numberline {4.2}Non-Functional Requirements}{12}{subsection.4.2}%
+\contentsline {section}{\numberline {5}Detailed Use-Case Specifications}{14}{section.5}%
+\contentsline {subsection}{\numberline {5.1}User Account and Access Management}{14}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}Overview}{14}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.2}Detailed Specifications}{14}{subsubsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.2}Catalog and Metadata Management}{17}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}Overview}{17}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.2}Detailed Specifications}{17}{subsubsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.3}Document Circulation Management}{20}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}Overview}{20}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Detailed Specifications}{20}{subsubsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.4}Resource Access and Exploitation}{24}{subsection.5.4}%
+\contentsline {subsubsection}{\numberline {5.4.1}Overview}{24}{subsubsection.5.4.1}%
+\contentsline {subsubsection}{\numberline {5.4.2}Detailed Specifications}{24}{subsubsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.5}Intelligent Interaction}{25}{subsection.5.5}%
+\contentsline {subsubsection}{\numberline {5.5.1}Overview}{25}{subsubsection.5.5.1}%
+\contentsline {subsubsection}{\numberline {5.5.2}Detailed Specifications}{25}{subsubsection.5.5.2}%
+\contentsline {subsection}{\numberline {5.6}Notifications and Communication}{28}{subsection.5.6}%
+\contentsline {subsubsection}{\numberline {5.6.1}Overview}{28}{subsubsection.5.6.1}%
+\contentsline {subsubsection}{\numberline {5.6.2}Detailed Specifications}{28}{subsubsection.5.6.2}%
+\contentsline {subsection}{\numberline {5.7}Reporting and System Administration}{31}{subsection.5.7}%
+\contentsline {subsubsection}{\numberline {5.7.1}Overview}{31}{subsubsection.5.7.1}%
+\contentsline {subsubsection}{\numberline {5.7.2}Detailed Specifications}{31}{subsubsection.5.7.2}%
+\contentsline {section}{\numberline {6}System Analysis and Design}{34}{section.6}%
+\contentsline {subsection}{\numberline {6.1}System Architecture}{34}{subsection.6.1}%
+\contentsline {subsubsection}{\numberline {6.1.1}Presentation Tier}{34}{subsubsection.6.1.1}%
+\contentsline {subsubsection}{\numberline {6.1.2}Application Tier}{34}{subsubsection.6.1.2}%
+\contentsline {subsubsection}{\numberline {6.1.3}Data Tier}{35}{subsubsection.6.1.3}%
+\contentsline {subsection}{\numberline {6.2}Database Design}{36}{subsection.6.2}%
+\contentsline {subsubsection}{\numberline {6.2.1}Entity Descriptions}{36}{subsubsection.6.2.1}%
+\contentsline {subsubsection}{\numberline {6.2.2}Enhanced Entity-Relationship Diagram (EERD)}{37}{subsubsection.6.2.2}%
+\contentsline {paragraph}{\numberline {6.2.2.1}Reader Role}{37}{paragraph.6.2.2.1}%
+\contentsline {paragraph}{\numberline {6.2.2.2}Librarian Role}{37}{paragraph.6.2.2.2}%
+\contentsline {paragraph}{\numberline {6.2.2.3}Administrator Role}{38}{paragraph.6.2.2.3}%
+\contentsline {subsubsection}{\numberline {6.2.3}Database Schema}{38}{subsubsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.3}Class Diagram}{39}{subsection.6.3}%
+\contentsline {subsubsection}{\numberline {6.3.1}Account and Access Management}{39}{subsubsection.6.3.1}%
+\contentsline {subsubsection}{\numberline {6.3.2}Book Catalog Management}{40}{subsubsection.6.3.2}%
+\contentsline {subsubsection}{\numberline {6.3.3}Document Circulation Management}{41}{subsubsection.6.3.3}%
+\contentsline {subsubsection}{\numberline {6.3.4}Resource Search and Exploitation}{41}{subsubsection.6.3.4}%
+\contentsline {subsubsection}{\numberline {6.3.5}AI Virtual Assistant and Recommendations}{42}{subsubsection.6.3.5}%
+\contentsline {subsubsection}{\numberline {6.3.6}Notifications and Communication}{42}{subsubsection.6.3.6}%
+\contentsline {subsubsection}{\numberline {6.3.7}System Administration}{42}{subsubsection.6.3.7}%
+\contentsline {subsection}{\numberline {6.4}Activity Diagrams}{44}{subsection.6.4}%
+\contentsline {subsubsection}{\numberline {6.4.1}Account Registration}{44}{subsubsection.6.4.1}%
+\contentsline {subsubsection}{\numberline {6.4.2}System Login}{46}{subsubsection.6.4.2}%
+\contentsline {subsubsection}{\numberline {6.4.3}Password Reset}{47}{subsubsection.6.4.3}%
+\contentsline {subsubsection}{\numberline {6.4.4}View Loan/Return History}{48}{subsubsection.6.4.4}%
+\contentsline {subsubsection}{\numberline {6.4.5}User Account Management}{49}{subsubsection.6.4.5}%
+\contentsline {subsubsection}{\numberline {6.4.6}Add / Edit / Delete Catalog Record}{50}{subsubsection.6.4.6}%
+\contentsline {subsubsection}{\numberline {6.4.7}Batch Catalog Data Ingestion}{51}{subsubsection.6.4.7}%
+\contentsline {subsubsection}{\numberline {6.4.8}Automated Cataloging via ISBN}{52}{subsubsection.6.4.8}%
+\contentsline {subsubsection}{\numberline {6.4.9}Physical Material Checkout}{53}{subsubsection.6.4.9}%
+\contentsline {subsubsection}{\numberline {6.4.10}Material Return}{54}{subsubsection.6.4.10}%
+\contentsline {subsubsection}{\numberline {6.4.11}Calculate and Assess Overdue Fines}{55}{subsubsection.6.4.11}%
+\contentsline {subsubsection}{\numberline {6.4.12}Online Loan Renewal}{56}{subsubsection.6.4.12}%
+\contentsline {subsubsection}{\numberline {6.4.13}Place Item Hold}{57}{subsubsection.6.4.13}%
+\contentsline {subsubsection}{\numberline {6.4.14}Document Catalog Search}{58}{subsubsection.6.4.14}%
+\contentsline {subsection}{\numberline {6.5}Sequence Diagrams}{59}{subsection.6.5}%
+\contentsline {subsubsection}{\numberline {6.5.1}Account Registration}{59}{subsubsection.6.5.1}%
+\contentsline {subsubsection}{\numberline {6.5.2}Account Login}{60}{subsubsection.6.5.2}%
+\contentsline {subsubsection}{\numberline {6.5.3}Account Password Reset}{61}{subsubsection.6.5.3}%
+\contentsline {subsubsection}{\numberline {6.5.4}Document Search}{61}{subsubsection.6.5.4}%
+\contentsline {subsubsection}{\numberline {6.5.5}Add / Edit / Delete Document}{62}{subsubsection.6.5.5}%
+\contentsline {subsubsubsection}{\numberline {6.5.5.a}Add Document}{62}{subsubsubsection.6.5.5.1}%
+\contentsline {subsubsubsection}{\numberline {6.5.5.b}Edit Document}{62}{subsubsubsection.6.5.5.2}%
+\contentsline {subsubsubsection}{\numberline {6.5.5.c}Delete Document}{63}{subsubsubsection.6.5.5.3}%
+\contentsline {subsubsection}{\numberline {6.5.6}Batch Document Import}{63}{subsubsection.6.5.6}%
+\contentsline {subsubsection}{\numberline {6.5.7}Reserve Document}{64}{subsubsection.6.5.7}%
+\contentsline {subsubsection}{\numberline {6.5.8}Fine Calculation Update}{64}{subsubsection.6.5.8}%
+\contentsline {subsubsection}{\numberline {6.5.9}Process Document Loan}{65}{subsubsection.6.5.9}%
+\contentsline {subsubsection}{\numberline {6.5.10}Extend Document Loan}{66}{subsubsection.6.5.10}%
+\contentsline {subsubsection}{\numberline {6.5.11}Return Document}{67}{subsubsection.6.5.11}%
+\contentsline {section}{\numberline {7}Implementation}{68}{section.7}%
+\contentsline {subsection}{\numberline {7.1}User Interface Design for Authentication Module}{68}{subsection.7.1}%
+\contentsline {paragraph}{\numberline {7.1.0.1}Login Page}{68}{paragraph.7.1.0.1}%
+\contentsline {paragraph}{\numberline {7.1.0.2}Registration Page}{68}{paragraph.7.1.0.2}%
+\contentsline {paragraph}{\numberline {7.1.0.3}Password Reset Workflow (3-Step Modal)}{69}{paragraph.7.1.0.3}%
+\contentsline {subsection}{\numberline {7.2}User Interface Design for Reader Module}{69}{subsection.7.2}%
+\contentsline {paragraph}{\numberline {7.2.0.1}Homepage}{69}{paragraph.7.2.0.1}%
+\contentsline {paragraph}{\numberline {7.2.0.2}Catalog Search Page}{70}{paragraph.7.2.0.2}%
+\contentsline {paragraph}{\numberline {7.2.0.3}Active Loans Management Page}{70}{paragraph.7.2.0.3}%
+\contentsline {paragraph}{\numberline {7.2.0.4}Loan History Page}{71}{paragraph.7.2.0.4}%
+\contentsline {paragraph}{\numberline {7.2.0.5}Active Holds Page}{71}{paragraph.7.2.0.5}%
+\contentsline {paragraph}{\numberline {7.2.0.6}Virtual Assistant Chat Window}{71}{paragraph.7.2.0.6}%
+\contentsline {paragraph}{\numberline {7.2.0.7}Personal Profile \& Settings Page}{72}{paragraph.7.2.0.7}%
+\contentsline {subsection}{\numberline {7.3}User Interface Design for Librarian Module}{73}{subsection.7.3}%
+\contentsline {paragraph}{\numberline {7.3.0.1}Homepage}{73}{paragraph.7.3.0.1}%
+\contentsline {paragraph}{\numberline {7.3.0.2}Circulation Management Page}{73}{paragraph.7.3.0.2}%
+\contentsline {paragraph}{\numberline {7.3.0.3}Catalog Management Page}{74}{paragraph.7.3.0.3}%
+\contentsline {paragraph}{\numberline {7.3.0.4}Communication Management Page}{74}{paragraph.7.3.0.4}%
+\contentsline {paragraph}{\numberline {7.3.0.5}Reports \& Analytics Page}{74}{paragraph.7.3.0.5}%
+\contentsline {paragraph}{\numberline {7.3.0.6}Personal Profile \& Settings Page}{75}{paragraph.7.3.0.6}%
+\contentsline {subsection}{\numberline {7.4}User Interface Design for Administrator Module}{76}{subsection.7.4}%
+\contentsline {paragraph}{\numberline {7.4.0.1}System Overview Dashboard}{76}{paragraph.7.4.0.1}%
+\contentsline {paragraph}{\numberline {7.4.0.2}User Account Management Page}{76}{paragraph.7.4.0.2}%
+\contentsline {paragraph}{\numberline {7.4.0.3}System Configuration Page}{76}{paragraph.7.4.0.3}%
+\contentsline {paragraph}{\numberline {7.4.0.4}Branch Management Page}{77}{paragraph.7.4.0.4}%
+\contentsline {paragraph}{\numberline {7.4.0.5}Audit Logs Page}{78}{paragraph.7.4.0.5}%
+\contentsline {paragraph}{\numberline {7.4.0.6}Backup \& Disaster Recovery Page}{78}{paragraph.7.4.0.6}%
+\contentsline {subsection}{\numberline {7.5}Core Technical Implementation Highlights}{78}{subsection.7.5}%
+\contentsline {subsubsection}{\numberline {7.5.1}Role-Based Access Control (RBAC) \& JWT Authentication}{79}{subsubsection.7.5.1}%
+\contentsline {subsubsection}{\numberline {7.5.2}Dynamic Overdue Penalty \& Holiday Exclusion Calculation}{79}{subsubsection.7.5.2}%
+\contentsline {subsubsection}{\numberline {7.5.3}RAG Vector Context Retrieval for AI Assistant}{79}{subsubsection.7.5.3}%
+\contentsline {subsubsection}{\numberline {7.5.4}System Audit Trail \& Change Tracking}{80}{subsubsection.7.5.4}%
+\contentsline {section}{\numberline {8}System Testing}{81}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Test Objectives and Environment}{81}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Unit Testing}{81}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Integration Testing}{82}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}System Testing}{83}{subsection.8.4}%
+\contentsline {subsection}{\numberline {8.5}Code Quality Testing}{84}{subsection.8.5}%
+\contentsline {subsection}{\numberline {8.6}Test Summary}{85}{subsection.8.6}%
+\contentsline {section}{\numberline {9}AI Features Evaluation}{86}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Why Traditional Testing is Insufficient for AI}{86}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}AI-as-a-Judge Methodology}{86}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Chatbot RAG Evaluation}{87}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Semantic Search Evaluation}{89}{subsection.9.4}%
+\contentsline {paragraph}{\numberline {9.4.0.1}Cause 1 — Data Sparsity.}{90}{paragraph.9.4.0.1}%
+\contentsline {paragraph}{\numberline {9.4.0.2}Cause 2 — Embedding Model Language Mismatch.}{90}{paragraph.9.4.0.2}%
+\contentsline {subsection}{\numberline {9.5}Limitations and Future Work}{91}{subsection.9.5}%
+\contentsline {section}{\numberline {10}Summary and Conclusion}{92}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Project Accomplishments and Implementation Summary}{92}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}Summary of Completed Project Lifecycle}{92}{subsection.10.2}%
+\contentsline {section}{\numberline {11}References}{92}{section.11}%
+\contentsline {section}{\numberline {12}Appendix}{94}{section.12}%

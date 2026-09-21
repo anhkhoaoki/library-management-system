@@ -1,0 +1,101 @@
+\section{System Requirements}
+\subsection{Functional Requirements}
+\subsubsection{User Account Management}
+- The system must allow new users (readers) to register accounts by providing full name, email address, student or staff ID, and password. \\
+- The system must authenticate users via username or email and password. Optional Multi-Factor Authentication (MFA) must be supported for administrator accounts. \\
+- The system must support at least three user roles: Reader, Librarian, and Administrator, each endowed with distinct authorization privileges.\\
+- Users must be able to view and update their personal profile information, including contact details and notification preferences.\\
+- The system must enable users to reset passwords via verification links dispatched to their registered email addresses.\\
+- Administrators must be empowered to activate, deactivate, or temporarily suspend any user account.\\
+- The system must log borrowing history for each reader, accessible to the respective reader and authorized librarians.\\
+
+\subsubsection{Resource Catalog Management}
+% Ghi chú: phần e-books, audiobooks, multimedia resources chưa được triển khai trong phiên bản này.
+- The system must maintain a catalog of all library assets, including physical books and periodicals.\\
+- Each catalog record must store: title, author(s), ISBN/ISSN, publisher, publication year, edition, genre/subject, language, physical location (shelf/classification code), total copy count, and available copy count.\\
+- Librarians must be able to add, edit, and delete catalog records via the administration interface.\\
+- The system must support batch catalog data ingestion via CSV or MARC21 file formats.\\
+- The system must provide full-text search capability across title, author, ISBN, subject, and keyword fields.\\
+- Search results must support filtering by category, language, availability status, publication year range, and media format.\\
+- The system must display real-time copy availability for each item, including available, checked out, and reserved counts.\\
+
+\subsubsection{Circulation Management}
+- The system must allow readers to check out physical materials by barcode scanning or manual entry at circulation desks, or by placing online pickup requests.\\
+- The system must enforce role-based loan limits (e.g., maximum 5 items for students, maximum 15 items for faculty).\\
+- The system must assign due dates to borrowed items based on configurable loan duration rules per media type.\\
+- The system must allow readers to renew checked-out items online up to a configurable maximum count, provided no hold requests exist for those items.\\
+- The system must allow readers to place holds on items currently checked out by other users.\\
+- The system must automatically notify the next user in a hold queue once a reserved item becomes available.\\
+- The system must process item returns and immediately update copy availability in the catalog.\\
+- The system must automatically calculate overdue fines based on daily configurable rates per material type.\\
+- The system must enable readers to view active loans, due dates, holds, and outstanding fines from their user dashboard.\\
+- The system must support inter-branch borrowing, enabling readers to request materials from other branch libraries in the network.\\
+
+% \subsubsection{Digital Resource Access}
+% - The system must provide secure access to e-books and digital journals.\\\
+% - The system must enforce digital loan periods and automatically revoke access to digital files upon expiration.\\\
+% - The system must support concurrent user access limits for digital assets (e.g., maximum N concurrent readers per licensed e-book).\\\
+
+\subsubsection{AI-Powered Document Recommendation Engine}
+- The system must generate personalized book and resource recommendations for readers based on borrowing history, search logs, and rated items.\\
+- The recommendation engine must combine collaborative filtering (analyzing preferences of similar users) and content-based filtering (analyzing item metadata attributes).\\
+
+\subsubsection{AI Natural Language Search and Intelligent Interaction}
+- The system must provide a natural language search interface allowing readers to query the catalog using conversational phrasing.\\
+- The natural language search module must analyze user intent, extract attributes (genre, target audience, topic, length), and map them to catalog metadata.\\
+- The system must display relevance-ranked natural language search results alongside standard keyword search outputs.\\
+- The system must integrate a Virtual Assistant Chatbot for direct user interaction, resolving FAQ inquiries regarding library policies, operating hours, and loan procedures.\\
+
+\subsubsection{AI-Assisted Cataloging and Summarization}
+- Automatically auto-fill book metadata (Title, Author, Description) when librarians input an ISBN.\\
+- AI automatically generates concise summary abstracts for newly cataloged books for reader previews.\\
+
+\subsubsection{Notifications and Communication}
+- The system must dispatch automated email/SMS notifications for: 3-day pre-due-date reminders, overdue alerts, hold availability notices, and account status updates.\\
+- Readers must be able to configure notification channels and frequencies within profile settings.\\
+- The system must provide an in-app notification center displaying unread system alerts.\\
+- Librarians must be able to broadcast mass announcements (e.g., library closure notices) to all users or target groups.\\
+
+\subsubsection{Reporting and Analytics}
+- The system must generate analytical reports regarding: top-borrowed items, overdue items, fine collection summaries, new user registrations, and catalog growth metrics.\\
+- The system must feature a real-time dashboard for librarians displaying key operational metrics: active loans, overdue counts, copy availability, and daily transaction volumes.\\
+- Reports must support export to PDF and Excel formats.\\
+
+\subsubsection{System Administration and Configuration}
+- Administrators must be able to configure global parameters including loan durations, fine rates, role borrowing limits, and hold expiration thresholds.\\
+- The system must support multi-branch library management.\\
+- The system must record full audit logs for administrative actions (configuration changes, account edits, batch ingestion).\\
+
+\subsection{Non-Functional Requirements}
+
+To ensure stable, secure operations and a smooth user experience, the system complies with the following non-functional standards:
+
+\begin{itemize}
+    \item \textbf{Page Load Time:} Main homepage, document search, and book detail pages must complete loading within under 3 seconds (optimized to 1.5 seconds) on both desktop and mobile platforms.
+    
+    \item \textbf{API Response Time:} 
+    \begin{itemize}
+        \item Basic operational APIs (borrowing cart checks, loan history) must respond within 0.5 seconds.
+        \item Intelligent processing APIs (AI Virtual Assistant, text summarization, semantic search) must return results within 3 seconds.
+    \end{itemize}
+    
+    \item \textbf{Load Capacity:} The system must stably handle 1,000 to 2,000 concurrent reader sessions without server degradation.
+    
+    \item \textbf{UI/UX Consistency:} Typography, brand color palettes, navigation layouts, and action buttons (Renew, Hold, Process) must remain consistent across all views.
+    
+    \item \textbf{Data Security \& Privacy:} 
+    \begin{itemize}
+        \item User account passwords must be hashed using strong algorithms (bcrypt) prior to database storage; plain-text logging is strictly prohibited.
+        \item Client-server data transmissions must be encrypted over TLS/HTTPS protocols.
+    \end{itemize}
+    
+    \item \textbf{Application Security:} Source code must enforce strict parameterization to prevent web vulnerabilities including SQL Injection and Cross-Site Scripting (XSS).
+    
+    \item \textbf{Uptime:} Server infrastructure must maintain a minimum uptime of 99.5\% per year, excluding scheduled maintenance windows.
+    
+    \item \textbf{Disaster Recovery:} Database backups are executed daily. In hardware failure events, recovery to the latest backup state must occur within 4 hours.
+    
+    \item \textbf{Integrability:} Modular architecture using standard REST APIs facilitates seamless integration with external services (university portals, Google Books API).
+\end{itemize}
+
+

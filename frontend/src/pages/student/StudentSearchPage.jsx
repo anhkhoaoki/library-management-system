@@ -1,14 +1,91 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from '../../components/layout/MainLayout';
 import { AuthContext } from '../../context/AuthContext';
 import api from '../../utils/api';
 
+// ─── Skeleton Card Component ──────────────────────────────────────
+function SkeletonCard() {
+  return (
+    <div className="bg-white rounded-xl shadow-sm p-4 flex flex-col h-full border border-surface-variant animate-pulse">
+      {/* Cover skeleton */}
+      <div className="h-56 mb-4 rounded-lg bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 bg-[length:200%_100%] animate-[shimmer_1.5s_infinite]" />
+      {/* Title skeleton */}
+      <div className="h-4 bg-gray-200 rounded-full mb-2 w-4/5" />
+      <div className="h-4 bg-gray-200 rounded-full mb-4 w-3/5" />
+      {/* Author skeleton */}
+      <div className="h-3 bg-gray-100 rounded-full mb-2 w-2/5" />
+      {/* Explanation skeleton */}
+      <div className="h-3 bg-gray-100 rounded-full mb-1 w-full" />
+      <div className="h-3 bg-gray-100 rounded-full mb-4 w-4/5" />
+      {/* Footer skeleton */}
+      <div className="mt-auto pt-4 border-t border-surface-variant flex justify-between">
+        <div className="h-3 bg-gray-200 rounded-full w-20" />
+        <div className="h-3 bg-gray-200 rounded-full w-6" />
+      </div>
+    </div>
+  );
+}
+
+// ─── AI Loading Overlay ───────────────────────────────────────────
+function AiSearchingOverlay() {
+  const steps = [
+    { icon: 'psychology', label: 'Phân tích ngữ nghĩa câu hỏi...' },
+    { icon: 'hub', label: 'Tạo vector embedding...' },
+    { icon: 'find_in_page', label: 'Tìm kiếm trong kho sách...' },
+    { icon: 'auto_awesome', label: 'Xếp hạng kết quả phù hợp...' },
+  ];
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStep(prev => (prev + 1) % steps.length);
+    }, 900);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="flex flex-col items-center justify-center py-20 gap-6">
+      {/* Spinner ring */}
+      <div className="relative w-20 h-20">
+        <div className="absolute inset-0 rounded-full border-4 border-primary/10" />
+        <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-primary animate-spin" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="material-symbols-outlined text-primary text-2xl">
+            {steps[step].icon}
+          </span>
+        </div>
+      </div>
+
+      {/* Step label */}
+      <div className="flex flex-col items-center gap-2">
+        <p className="text-primary font-bold text-base animate-pulse">
+          Đang tìm kiếm thông minh bằng AI
+        </p>
+        <p className="text-on-surface-variant text-sm transition-all duration-300">
+          {steps[step].label}
+        </p>
+      </div>
+
+      {/* Step dots */}
+      <div className="flex gap-2">
+        {steps.map((_, i) => (
+          <div
+            key={i}
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              i === step ? 'bg-primary scale-125' : 'bg-primary/20'
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function StudentSearchPage() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // 📦 Đọc trạng thái cũ từ sessionStorage
   const savedIsAiSearch = sessionStorage.getItem('search_isAiSearch') === 'true';
   const savedSearchQuery = sessionStorage.getItem('search_searchQuery') || '';
   const savedCategoryId = sessionStorage.getItem('search_categoryId') || '';
@@ -16,6 +93,8 @@ export default function StudentSearchPage() {
 
   const [isAiSearch, setIsAiSearch] = useState(savedIsAiSearch);
   const [searchQuery, setSearchQuery] = useState(savedSearchQuery);
+  // inputValue: what user types (not yet committed for AI mode)
+  const [inputValue, setInputValue] = useState(savedSearchQuery);
   const [categoryId, setCategoryId] = useState(savedCategoryId);
 
   const [books, setBooks] = useState([]);
@@ -23,22 +102,21 @@ export default function StudentSearchPage() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Metadata từ AI Search
   const [aiMeta, setAiMeta] = useState({
-    searchMode: null,         // "semantic" | "hybrid" | "keyword_fallback"
-    confidenceLevel: null,    // "high" | "medium" | "low"
-    suggestedQueries: [],     // Gợi ý câu hỏi khi low confidence
+    searchMode: null,
+    confidenceLevel: null,
+    suggestedQueries: [],
     isFallback: false,
   });
 
   const [pagination, setPagination] = useState({
     total: 0,
     page: savedPage,
-    limit: savedIsAiSearch ? 12 : 12,
+    limit: 12,
     totalPages: 0,
   });
 
-  // 💾 Lưu vết sessionStorage
+  // Save to sessionStorage
   useEffect(() => {
     sessionStorage.setItem('search_isAiSearch', isAiSearch);
     sessionStorage.setItem('search_searchQuery', searchQuery);
@@ -50,101 +128,107 @@ export default function StudentSearchPage() {
     setIsAiSearch(prev => {
       const next = !prev;
       setSearchQuery('');
+      setInputValue('');
       setCategoryId('');
       setAiMeta({ searchMode: null, confidenceLevel: null, suggestedQueries: [], isFallback: false });
       setPagination({ total: 0, page: 1, limit: 12, totalPages: 0 });
+      setBooks([]);
+      setAllAiBooks([]);
       return next;
     });
   };
 
-  // Tải danh mục sách
+  // Load categories
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await api.get('/books/categories');
-        setCategories(response.data.data || []);
-      } catch (err) {
-        console.error('Lỗi tải danh mục:', err);
-      }
-    };
-    fetchCategories();
+    api.get('/books/categories')
+      .then(r => setCategories(r.data.data || []))
+      .catch(() => {});
   }, []);
 
-  // ─── THÀNH PHẦN 1: Gọi API lấy dữ liệu ─────────────────────────
-  useEffect(() => {
-    const fetchBooks = async () => {
-      setLoading(true);
-      try {
-        if (isAiSearch) {
-          // CHẾ ĐỘ AI SEARCH
-          const response = await api.post('/ai/search', { query: searchQuery });
-          const aiData = response.data?.data;
+  // ─── Core fetch logic ─────────────────────────────────────────────
+  const fetchBooks = useCallback(async (query, catId, page) => {
+    setLoading(true);
+    try {
+      if (isAiSearch) {
+        const response = await api.post('/ai/search', { query });
+        const aiData = response.data?.data;
+        const rawBooks = Array.isArray(aiData?.data)
+          ? aiData.data
+          : Array.isArray(aiData)
+          ? aiData
+          : [];
 
-          // Bóc tách mảng sách từ response
-          const rawBooks = Array.isArray(aiData?.data)
-            ? aiData.data
-            : Array.isArray(aiData)
-            ? aiData
-            : [];
+        setAiMeta({
+          searchMode: aiData?.searchMode || null,
+          confidenceLevel: aiData?.confidenceLevel || null,
+          suggestedQueries: aiData?.suggestedQueries || [],
+          isFallback: aiData?.isFallback || false,
+        });
 
-          // Lưu metadata AI
-          setAiMeta({
-            searchMode: aiData?.searchMode || null,
-            confidenceLevel: aiData?.confidenceLevel || null,
-            suggestedQueries: aiData?.suggestedQueries || [],
-            isFallback: aiData?.isFallback || false,
-          });
-
-          setAllAiBooks(rawBooks);
-
-          const total = rawBooks.length;
-          const limit = 12;
-          const totalPages = Math.ceil(total / limit);
-          setPagination(prev => ({
-            ...prev,
-            total,
-            limit,
-            totalPages,
-            page: prev.page <= totalPages ? prev.page : 1,
-          }));
-        } else {
-          // CHẾ ĐỘ TRUYỀN THỐNG
-          const response = await api.get('/books', {
-            params: {
-              q: searchQuery,
-              categoryId: categoryId || undefined,
-              page: pagination.page,
-              limit: 12,
-            },
-          });
-          const normalBooks = response.data?.data || [];
-          setBooks(Array.isArray(normalBooks) ? normalBooks : []);
-          setPagination(prev => ({ ...prev, ...response.data?.pagination }));
-          setAiMeta({ searchMode: null, confidenceLevel: null, suggestedQueries: [], isFallback: false });
-        }
-      } catch (err) {
-        console.error('Lỗi tải sách:', err);
-        setBooks([]);
-        setAllAiBooks([]);
-      } finally {
-        setLoading(false);
+        setAllAiBooks(rawBooks);
+        const total = rawBooks.length;
+        const limit = 12;
+        const totalPages = Math.ceil(total / limit);
+        setPagination(prev => ({
+          ...prev, total, limit, totalPages, page: 1,
+        }));
+      } else {
+        const response = await api.get('/books', {
+          params: { q: query, categoryId: catId || undefined, page, limit: 12 },
+        });
+        const normalBooks = response.data?.data || [];
+        setBooks(Array.isArray(normalBooks) ? normalBooks : []);
+        setPagination(prev => ({ ...prev, ...response.data?.pagination }));
+        setAiMeta({ searchMode: null, confidenceLevel: null, suggestedQueries: [], isFallback: false });
       }
-    };
+    } catch (err) {
+      console.error('Lỗi tải sách:', err);
+      setBooks([]);
+      setAllAiBooks([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [isAiSearch]);
 
-    const delayTime = isAiSearch ? 700 : 500;
-    const timer = setTimeout(() => { fetchBooks(); }, delayTime);
+  // ─── AI Search: only on commit (Enter / button) ───────────────────
+  const handleAiSearchCommit = () => {
+    const q = inputValue.trim();
+    setSearchQuery(q);
+    setPagination(p => ({ ...p, page: 1 }));
+    fetchBooks(q, categoryId, 1);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      if (isAiSearch) {
+        handleAiSearchCommit();
+      }
+    }
+  };
+
+  // ─── Normal search: debounce 500ms ───────────────────────────────
+  useEffect(() => {
+    if (isAiSearch) return;
+    const timer = setTimeout(() => {
+      fetchBooks(inputValue, categoryId, 1);
+    }, 500);
     return () => clearTimeout(timer);
-  }, [searchQuery, categoryId, isAiSearch, !isAiSearch ? pagination.page : null]);
+  }, [inputValue, categoryId, isAiSearch]);
 
-  // ─── THÀNH PHẦN 2: Cắt mảng cho phân trang AI ───────────────────
+  // ─── Normal search: page change ──────────────────────────────────
+  useEffect(() => {
+    if (isAiSearch) return;
+    fetchBooks(searchQuery, categoryId, pagination.page);
+  }, [pagination.page]);
+
+  // ─── AI paging: slice from allAiBooks ────────────────────────────
   useEffect(() => {
     if (!isAiSearch) return;
-    const startIdx = (pagination.page - 1) * pagination.limit;
-    const endIdx = startIdx + pagination.limit;
-    setBooks(allAiBooks.slice(startIdx, endIdx));
+    const start = (pagination.page - 1) * pagination.limit;
+    setBooks(allAiBooks.slice(start, start + pagination.limit));
   }, [pagination.page, pagination.limit, allAiBooks, isAiSearch]);
 
-  // ─── Helper: Hiển thị badge chế độ tìm kiếm ────────────────────
+  // ─── Helpers ─────────────────────────────────────────────────────
   const renderSearchModeBadge = () => {
     if (!isAiSearch || !aiMeta.searchMode) return null;
     const modeMap = {
@@ -165,7 +249,6 @@ export default function StudentSearchPage() {
     );
   };
 
-  // ─── Helper: Score badge color ──────────────────────────────────
   const getScoreColor = (score) => {
     const pct = Math.round(score * 100);
     if (pct >= 70) return 'bg-success text-white';
@@ -176,11 +259,24 @@ export default function StudentSearchPage() {
 
   return (
     <MainLayout role="student" userName={user?.fullName} userRole="Bạn đọc">
+      <style>{`
+        @keyframes shimmer {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+        .shimmer {
+          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+          background-size: 200% 100%;
+          animation: shimmer 1.5s infinite;
+        }
+      `}</style>
+
       <div className="flex flex-col gap-stack-lg">
 
         {/* ── Hero Search ── */}
         <section className="bg-white rounded-xl shadow-sm p-stack-lg relative overflow-hidden">
-          <div className="absolute inset-0 opacity-5 pointer-events-none"
+          <div
+            className="absolute inset-0 opacity-5 pointer-events-none"
             style={{ backgroundImage: 'radial-gradient(#0d9488 1px, transparent 1px)', backgroundSize: '20px 20px' }}
           />
           <div className="max-w-3xl mx-auto relative z-10 text-center">
@@ -189,28 +285,56 @@ export default function StudentSearchPage() {
               Tìm kiếm tài liệu bạn cần một cách nhanh chóng
             </p>
 
-            <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <span className="material-symbols-outlined text-outline">
-                  {isAiSearch ? 'psychology' : 'search'}
-                </span>
+            {/* Search Input Row */}
+            <div className="relative group flex items-center gap-2">
+              <div className="relative flex-1">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <span className="material-symbols-outlined text-outline">
+                    {isAiSearch ? 'psychology' : 'search'}
+                  </span>
+                </div>
+                <input
+                  id="search-input"
+                  className={`w-full bg-surface-container-low text-on-surface font-body-md rounded-full py-4 pl-12 pr-4 focus:bg-white focus:ring-2 focus:ring-[#0d9488] focus:outline-none transition-all border shadow-sm ${isAiSearch ? 'border-primary/40' : 'border-none'}`}
+                  placeholder={
+                    isAiSearch
+                      ? 'Nhập nhu cầu của bạn rồi nhấn Enter hoặc nút Tìm...'
+                      : 'Nhập tên sách, tác giả, hoặc ISBN...'
+                  }
+                  type="text"
+                  value={inputValue}
+                  onChange={e => {
+                    setInputValue(e.target.value);
+                    if (!isAiSearch) setPagination(p => ({ ...p, page: 1 }));
+                  }}
+                  onKeyDown={handleKeyDown}
+                />
               </div>
-              <input
-                id="search-input"
-                className={`w-full bg-surface-container-low text-on-surface font-body-md rounded-full py-4 pl-12 pr-10 focus:bg-white focus:ring-2 focus:ring-[#0d9488] focus:outline-none transition-all border shadow-sm ${isAiSearch ? 'border-primary/40' : 'border-none'}`}
-                placeholder={
-                  isAiSearch
-                    ? 'Nhập nhu cầu của bạn (Ví dụ: Tôi muốn tìm tài liệu tự học lập trình web cơ bản)...'
-                    : 'Nhập tên sách, tác giả, hoặc ISBN...'
-                }
-                type="text"
-                value={searchQuery}
-                onChange={e => {
-                  setSearchQuery(e.target.value);
-                  setPagination(p => ({ ...p, page: 1 }));
-                }}
-              />
+
+              {/* AI Search Button — chỉ hiện khi bật AI mode */}
+              {isAiSearch && (
+                <button
+                  onClick={handleAiSearchCommit}
+                  disabled={loading || !inputValue.trim()}
+                  className="shrink-0 flex items-center gap-2 px-5 py-4 rounded-full bg-primary text-white font-bold text-sm shadow-md hover:bg-primary/90 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? (
+                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <span className="material-symbols-outlined text-[18px]">send</span>
+                  )}
+                  Tìm
+                </button>
+              )}
             </div>
+
+            {/* AI mode hint */}
+            {isAiSearch && (
+              <p className="text-xs text-on-surface-variant/60 mt-2">
+                <span className="material-symbols-outlined text-[12px] align-middle mr-1">info</span>
+                Nhấn <kbd className="px-1.5 py-0.5 bg-surface-container rounded text-[11px] font-mono">Enter</kbd> hoặc nút <strong>Tìm</strong> để thực hiện tìm kiếm AI
+              </p>
+            )}
 
             {/* Filters & AI Switcher */}
             <div className="mt-stack-md flex flex-wrap justify-center items-center gap-6">
@@ -243,16 +367,28 @@ export default function StudentSearchPage() {
         {/* ── Results Section ── */}
         <div className="flex flex-col gap-gutter">
 
-          {/* Header kết quả + metadata AI */}
-          <div className="flex flex-wrap justify-between items-center gap-2">
-            <h3 className="font-title-lg text-title-lg text-on-surface">
-              {loading ? 'Đang tìm kiếm...' : `Kết quả tìm kiếm (${pagination.total})`}
-            </h3>
-            {renderSearchModeBadge()}
-          </div>
+          {/* Header */}
+          {!loading && (
+            <div className="flex flex-wrap justify-between items-center gap-2">
+              <h3 className="font-title-lg text-title-lg text-on-surface">
+                {`Kết quả tìm kiếm (${pagination.total})`}
+              </h3>
+              {renderSearchModeBadge()}
+            </div>
+          )}
 
-          {/* ── Gợi ý câu hỏi khi low confidence ── */}
-          {isAiSearch && aiMeta.suggestedQueries.length > 0 && !loading && (
+          {/* ── AI Searching Overlay ── */}
+          {loading && isAiSearch && <AiSearchingOverlay />}
+
+          {/* ── Normal Search Skeleton Grid ── */}
+          {loading && !isAiSearch && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+              {[...Array(8)].map((_, i) => <SkeletonCard key={i} />)}
+            </div>
+          )}
+
+          {/* ── Suggested Queries (low confidence) ── */}
+          {!loading && isAiSearch && aiMeta.suggestedQueries.length > 0 && (
             <div className="bg-warning/5 border border-warning/20 rounded-xl p-4 flex flex-col gap-3">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-warning text-[20px]">tips_and_updates</span>
@@ -264,7 +400,12 @@ export default function StudentSearchPage() {
                 {aiMeta.suggestedQueries.map((q, i) => (
                   <button
                     key={i}
-                    onClick={() => { setSearchQuery(q); setPagination(p => ({ ...p, page: 1 })); }}
+                    onClick={() => {
+                      setInputValue(q);
+                      setSearchQuery(q);
+                      setPagination(p => ({ ...p, page: 1 }));
+                      fetchBooks(q, categoryId, 1);
+                    }}
                     className="px-3 py-1.5 bg-white border border-warning/30 text-on-surface rounded-full text-sm hover:border-primary hover:text-primary transition-all font-medium"
                   >
                     <span className="material-symbols-outlined text-[13px] mr-1 align-middle">search</span>
@@ -275,8 +416,8 @@ export default function StudentSearchPage() {
             </div>
           )}
 
-          {/* ── No result state ── */}
-          {books.length === 0 && !loading && (
+          {/* ── Empty State ── */}
+          {!loading && books.length === 0 && (searchQuery || !isAiSearch) && (
             <div className="text-center py-20 bg-white rounded-xl border border-dashed flex flex-col items-center gap-4">
               <span className="material-symbols-outlined text-5xl text-on-surface-variant/30">
                 {isAiSearch ? 'psychology_alt' : 'search_off'}
@@ -298,8 +439,32 @@ export default function StudentSearchPage() {
             </div>
           )}
 
+          {/* ── AI first-visit prompt (before any search) ── */}
+          {!loading && isAiSearch && !searchQuery && books.length === 0 && (
+            <div className="text-center py-16 bg-gradient-to-br from-primary/5 to-transparent rounded-xl border border-primary/10 flex flex-col items-center gap-4">
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                <span className="material-symbols-outlined text-primary text-3xl">psychology</span>
+              </div>
+              <p className="text-on-surface font-bold text-base">Tìm kiếm thông minh bằng AI</p>
+              <p className="text-on-surface-variant text-sm max-w-md">
+                Nhập nhu cầu của bạn bằng ngôn ngữ tự nhiên, AI sẽ tìm những cuốn sách phù hợp nhất.
+              </p>
+              <div className="flex flex-wrap justify-center gap-2 mt-2">
+                {['Sách về kỹ năng giao tiếp', 'Lập trình Python cơ bản', 'Nhập môn trí tuệ nhân tạo'].map(ex => (
+                  <button
+                    key={ex}
+                    onClick={() => { setInputValue(ex); }}
+                    className="px-3 py-1.5 bg-white border border-primary/20 text-primary rounded-full text-sm hover:bg-primary/5 transition-all"
+                  >
+                    {ex}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* ── Book Grid ── */}
-          {books.length > 0 && (
+          {!loading && books.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
               {books.map(book => {
                 const scorePct = book.score != null ? Math.round(book.score * 100) : null;
@@ -311,23 +476,18 @@ export default function StudentSearchPage() {
                     onClick={() => navigate(`/dashboard/student/book/${book.id}`)}
                     title={book.explanation || book.title}
                   >
-                    {/* Cover image */}
                     <div className="relative h-56 mb-stack-sm rounded-lg overflow-hidden bg-surface-container-low flex items-center justify-center">
                       <img
                         alt={book.title}
                         className="object-cover w-full h-full group-hover:scale-105 transition-transform"
                         src={book.coverImageUrl || 'https://via.placeholder.com/300x450?text=No+Cover'}
                       />
-
-                      {/* Availability badge */}
                       <div className={`absolute top-2 right-2 px-2 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-sm ${book.availableCopies > 0 ? 'bg-[#006a61] text-white' : 'bg-error text-white'}`}>
                         <span className="material-symbols-outlined text-[14px]">
                           {book.availableCopies > 0 ? 'check_circle' : 'error'}
                         </span>
                         {book.availableCopies > 0 ? 'Có sẵn' : 'Hết sách'}
                       </div>
-
-                      {/* AI Score badge — chỉ hiện khi tìm kiếm AI */}
                       {isAiSearch && scorePct != null && (
                         <div className={`absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-bold shadow ${getScoreColor(book.score)}`}>
                           {scorePct}% phù hợp
@@ -340,15 +500,12 @@ export default function StudentSearchPage() {
                       <p className="font-label-md text-label-md text-on-surface-variant mb-2">
                         {book.authorNames && book.authorNames.length > 0 ? book.authorNames.join(', ') : 'Chưa rõ tác giả'}
                       </p>
-
-                      {/* AI Explanation (chỉ hiện top 3 khi AI search) */}
                       {isAiSearch && book.explanation && (
                         <p className="text-xs text-primary/80 italic mt-1 mb-2 line-clamp-2 flex items-start gap-1">
                           <span className="material-symbols-outlined text-[13px] mt-0.5 shrink-0">auto_awesome</span>
                           {book.explanation}
                         </p>
                       )}
-
                       <div className="mt-auto pt-4 border-t border-surface-variant flex items-center justify-between">
                         <span className="text-primary font-bold text-label-md">Xem chi tiết</span>
                         <span className="material-symbols-outlined text-primary">arrow_forward</span>
@@ -360,8 +517,8 @@ export default function StudentSearchPage() {
             </div>
           )}
 
-          {/* ── Phân trang ── */}
-          {pagination.totalPages > 1 && (
+          {/* ── Pagination ── */}
+          {!loading && pagination.totalPages > 1 && (
             <div className="flex justify-center gap-2 mt-stack-lg">
               {[...Array(pagination.totalPages)].map((_, i) => (
                 <button

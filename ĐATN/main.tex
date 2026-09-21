@@ -1,0 +1,280 @@
+\documentclass[a4paper]{article}
+\usepackage[T5,OT1]{fontenc}
+%\usepackage{vntex}
+%\usepackage[english,vietnam]{babel}
+%\usepackage[utf8]{inputenc}
+\usepackage{mathptmx}[ptm]
+%\usepackage[utf8]{inputenc}
+%\usepackage[francais]{babel}
+\usepackage{a4wide,amssymb,epsfig,latexsym,array,hhline,fancyhdr}
+\usepackage[normalem]{ulem}
+%\usepackage{soul}
+
+\usepackage[makeroom]{cancel}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{multicol,longtable,amscd}
+\usepackage{diagbox}%Make diagonal lines in tables
+\usepackage{booktabs}
+\usepackage{alltt}
+\usepackage[framemethod=tikz]{mdframed}% For highlighting paragraph backgrounds
+\usepackage{caption,subcaption}
+
+
+\usepackage{lastpage}
+\usepackage[lined,boxed,commentsnumbered]{algorithm2e}
+\usepackage{enumerate}
+\usepackage{color}
+\usepackage{graphicx}
+% Standard graphics package
+\usepackage{float}
+\usepackage{array}
+\usepackage{tabularx, caption}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{rotating}
+\usepackage{graphics}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{epsfig}
+\usepackage{tikz}
+
+\usetikzlibrary{arrows,snakes,backgrounds,calc}
+\usepackage[unicode]{hyperref}
+\hypersetup{urlcolor=blue,linkcolor=black,citecolor=black,colorlinks=true} 
+\usepackage{listings}
+
+%\usepackage{pstcol} 								% PSTricks with the standard color package
+
+\usepackage[normalem]{ulem}
+
+
+\newtheorem{theorem}{{\bf Theorem}}
+\newtheorem{property}{{\bf Property}}
+\newtheorem{proposition}{{\bf Proposition}}
+\newtheorem{corollary}[proposition]{{\bf Corollary}}
+\newtheorem{lemma}[proposition]{{\bf Lemma}}
+\theoremstyle{definition}
+\newtheorem{exer}{Problem}
+\addtocontents{toc}{\protect\thispagestyle{empty}}
+% Remove page number in contents page. 
+\addtocontents{lof}{\protect\thispagestyle{empty}}
+% Remove page number in list of figure page. 
+\addtocontents{lot}{\protect\thispagestyle{empty}}
+% Remove page number in list of table page. 
+\def\thesislayout{	% A4: 210 × 297
+	\geometry{
+		a4paper,
+		total={160mm,240mm},  % fix over page
+		left=30mm,
+		top=22mm,
+            right=20mm,
+            bottom=20mm,
+	}
+}
+\def\thesisheadlayout{	% A4: 210 × 297
+	\geometry{
+		a4paper,
+		total={160mm,240mm},  % fix over page
+		left=30mm,
+		top=10mm,
+	}
+}
+\thesislayout
+\lstset{
+language=R,
+basicstyle=\footnotesize\sffamily,
+commentstyle=\ttfamily\color{black},
+numbers=left,
+numberstyle=\ttfamily\color{black}\footnotesize,
+stepnumber=1,
+numbersep=5pt,
+backgroundcolor=\color{white},
+showspaces=false,
+showstringspaces=false,
+showtabs=false,
+frame=single,
+tabsize=2,
+captionpos=b,
+breaklines=true,
+breakatwhitespace=false,
+title=\lstname,
+escapeinside={},
+keywordstyle={},
+morekeywords={}
+}
+%\usepackage{fancyhdr}
+\setlength{\headheight}{40pt}
+\pagestyle{fancy}
+\fancyhead{} % clear all header fields
+\renewcommand{\footruleskip}{1mm}
+
+\fancyhead[L]{
+ \begin{tabular}{rl}
+    \begin{picture}(25,15)(0,0)
+    \put(0,-8){\includegraphics[width=10mm, height=10mm]{Images/hcmut.png}}
+    %\put(0,-8){\epsfig{width=10mm,figure=hcmut.eps}}
+   \end{picture}&
+	%\includegraphics[width=8mm, height=8mm]{hcmut.png} & %
+	\begin{tabular}{l}
+		\textbf{  Ho Chi Minh City University of Technology - VNU-HCM }\\
+		\textbf{  Faculty of Computer Science and Engineering}
+	\end{tabular} 	
+ \end{tabular}
+}
+\fancyhead[R]{
+	\begin{tabular}{l}
+		\tiny \bf \\
+		\tiny \bf 
+	\end{tabular}  }
+\fancyfoot{} % clear all footer fields
+\fancyfoot[L]{\scriptsize  Graduation Project Report}
+\fancyfoot[R]{\scriptsize  Page {\thepage}/\pageref{LastPage}}
+
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0.3pt}
+
+%%%
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{3}
+\makeatletter
+\newcounter {subsubsubsection}[subsubsection]
+\renewcommand\thesubsubsubsection{\thesubsubsection .\@alph\c@subsubsubsection}
+\newcommand\subsubsubsection{\@startsection{subsubsubsection}{4}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {1.5ex \@plus .2ex}%
+                                     {\normalfont\normalsize\bfseries}}
+\newcommand*\l@subsubsubsection{\@dottedtocline{3}{10.0em}{4.1em}}
+\newcommand*{\subsubsubsectionmark}[1]{}
+\makeatother
+
+\everymath{\color{black}}%make in-line maths symbols blue to read/check easily
+
+\sloppy
+\captionsetup[figure]{labelfont={small,bf},textfont={small,it},belowskip=-1pt,aboveskip=-9pt}
+%space remove between caption, figure, and text
+\captionsetup[table]{labelfont={small,bf},textfont={small,it},belowskip=-1pt,aboveskip=7pt}
+\setlength{\floatsep}{5pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{5pt plus 2pt minus 2pt}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
+
+\thesislayout
+
+\begin{document}
+
+\begin{titlepage}
+	\begin{tikzpicture}[remember picture, overlay]
+		\draw[line width = 4pt] ($(current page.north west) + (0.4in,-0.5in)$) rectangle ($(current page.south east) + (-0.4in,0.5in)$);
+		\draw[line width=1.5pt]
+		($ (current page.north west) + (0.45in,-0.55in) $)
+		rectangle
+		($ (current page.south east) + (-0.45in,0.55in) $);
+	\end{tikzpicture}
+
+	\begin{center}
+		\LARGE \textbf{VIETNAM NATIONAL UNIVERSITY HO CHI MINH CITY} \\
+		\vspace{0.2cm}
+		\LARGE \textbf{HO CHI MINH CITY UNIVERSITY OF TECHNOLOGY} \\
+		\vspace{0.2cm}
+		\LARGE \textbf{FACULTY OF COMPUTER SCIENCE AND ENGINEERING}
+	\end{center}
+
+	\vspace{0.3cm}
+
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=4cm]{Images/hcmut.png}
+		\end{center}
+	\end{figure}
+
+	\begin{center}
+		\begin{tabular}{c}
+			\multicolumn{1}{c}{\textbf{{\LARGE REPORT}}} \\
+			\\{\textbf{{\LARGE GRADUATION PROJECT}}}
+
+
+			\\
+			\\
+
+			\textbf{\LARGE DEVELOPMENT OF AN ONLINE }    \\
+			\textbf{\LARGE LIBRARY MANAGEMENT SYSTEM}
+			\\
+			\\ \vspace{0.5cm} {\Large MAJOR: COMPUTER SCIENCE}
+		\end{tabular}
+	\end{center}
+	\vspace{0.5cm}
+	\begin{table}[h]
+		\begin{tabular}{rll}
+			\hspace{4 cm} & \textbf{\Large COUNCIL: Council 2CC Graduation Project} {\Large }
+			\\
+			\\
+			\hspace{4 cm} & \textbf{\Large Advisor 1: Dr. Truong Tuan Anh} {\Large }                                                                                                            %tien si                                                                                                 \\
+			\\
+			\hspace{4 cm} & \textbf{\Large Advisor 2: MSc. Vu Ngoc Tu} {\Large }                                                                                                                %thac si
+			\\
+			\\
+			\hspace{4 cm} & \textbf{\Large Committee Secretary: MSc. Mai Duc Trung} {\Large}
+			\\
+			\\
+			% TKHĐ là THƯ KÝ HỘI ĐỒNG
+			\hspace{4 cm} & \textbf{$\;$ $\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$$\;$ \Large ---o0o---}
+			\\
+			\\
+			\hspace{4 cm} & \textbf{\Large Student 1:} {\Large Nguyen Anh Khoa (2211614)}
+			\\
+			\\
+			\hspace{4 cm} & \textbf{\Large Student 2:}  {\Large Nguyen Tran Bao Khoa (2211610)}
+			\\
+			\\
+			\hspace{4 cm} & \textbf{\Large Student 3:}  {\Large Mai Nam Phuong (2252656)}
+			\\
+			\\
+		\end{tabular}
+	\end{table}
+	\vspace{0.5cm}
+	\begin{center}
+		{\Large HO CHI MINH CITY, OCTOBER 2026 }
+	\end{center}
+\end{titlepage}
+%\thispagestyle{empty}
+\newpage
+%%%%%%%%%%%%%%%%%INTRO%%%%%%%%%%%%%%%%%%%
+\input{Intro/LoiCamOn}
+\input{Intro/LoiCamDoan}
+\input{Intro/TomTat}
+\newpage
+\tableofcontents
+\newpage
+\listoffigures
+\newpage
+\listoftables
+\newpage
+\setcounter{page}{1}
+
+%%%%%%%%%%%%%%%%%CONTENTS%%%%%%%%%%%%%%%%%%%
+\input{Contents/GioiThieu}
+\newpage
+\input{Contents/Hethonglienquan}
+\newpage
+\input{Contents/Cosolythuyet}
+\newpage
+\input{Contents/YeuCauHeThong}
+\newpage
+\input{Contents/DacTaChiTietCacUseCase}
+\newpage
+\input{Contents/PhanTichThietKeHeThong}
+\newpage
+\input{Contents/HienThuc}
+\newpage
+\input{Contents/KiemThuHeThong}
+\newpage
+\input{Contents/DanhGiaAI}
+\newpage
+\input{Contents/TongKet}
+%%%%%%%%%%%%%%%%%OUTRO%%%%%%%%%%%%%%%%%%%
+\input{Outro/TaiLieuThamKhao}
+\newpage
+\input{Outro/PhuLuc}
+\end{document}
+
+

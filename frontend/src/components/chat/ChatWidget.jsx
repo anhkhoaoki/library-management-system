@@ -24,10 +24,25 @@ export default function ChatWidget() {
   const { user } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-  const [messages, setMessages] = useState(INITIAL_MESSAGES);
+
+  // Load messages từ sessionStorage nếu có, fallback về tin chào mặc định
+  const [messages, setMessages] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem('bklib_chat_messages');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    return INITIAL_MESSAGES;
+  });
+
   const [inputText, setInputText] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
-  const [showSuggestions, setShowSuggestions] = useState(true);
+  // Ẩn suggestions nếu đã có lịch sử từ sessionStorage
+  const [showSuggestions, setShowSuggestions] = useState(
+    () => !sessionStorage.getItem('bklib_chat_messages')
+  );
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const abortControllerRef = useRef(null);
@@ -38,6 +53,15 @@ export default function ChatWidget() {
       inputRef.current?.focus();
     }
   }, [isOpen, isMinimized, messages]);
+
+  // ─── Persist messages vào sessionStorage ─────────────────────────
+  // Chỉ lưu các tin nhắn đã hoàn chỉnh (không lưu tin đang stream)
+  useEffect(() => {
+    const completedMessages = messages.filter(m => !m.isStreaming);
+    try {
+      sessionStorage.setItem('bklib_chat_messages', JSON.stringify(completedMessages));
+    } catch {}
+  }, [messages]);
 
   // Lắng nghe sự kiện mở chat từ sidebar
   useEffect(() => {
@@ -55,11 +79,19 @@ export default function ChatWidget() {
 
   const handleOpen = () => { setIsOpen(true); setIsMinimized(false); };
   const handleClose = () => {
-    // Hủy stream đang chạy nếu có
     abortControllerRef.current?.abort();
     setIsOpen(false);
   };
   const handleToggleMinimize = () => setIsMinimized(!isMinimized);
+
+  // Xóa lịch sử chat và reset về trạng thái ban đầu
+  const handleClearHistory = () => {
+    abortControllerRef.current?.abort();
+    setMessages(INITIAL_MESSAGES);
+    setShowSuggestions(true);
+    setInputText('');
+    try { sessionStorage.removeItem('bklib_chat_messages'); } catch {}
+  };
 
   // ─── Gọi API thật với SSE streaming ─────────────────────────────
   const callChatAPI = async (userMessage) => {
@@ -306,6 +338,17 @@ export default function ChatWidget() {
                   {isMinimized ? 'open_in_full' : 'remove'}
                 </span>
               </button>
+              {/* Nút xóa lịch sử */}
+              {messages.length > 1 && (
+                <button
+                  onClick={handleClearHistory}
+                  className="w-7 h-7 rounded-full hover:bg-white/20 flex items-center justify-center transition-colors"
+                  aria-label="Xóa lịch sử chat"
+                  title="Xóa lịch sử và bắt đầu lại"
+                >
+                  <span className="material-symbols-outlined text-base">delete_sweep</span>
+                </button>
+              )}
               <button
                 onClick={handleClose}
                 className="w-7 h-7 rounded-full hover:bg-white/20 flex items-center justify-center transition-colors"
@@ -321,11 +364,15 @@ export default function ChatWidget() {
             <>
               {/* Messages */}
               <div className="flex-1 overflow-y-auto bg-[#f7fafc] px-3 py-3 flex flex-col gap-3 scrollbar-hide">
-                {messages.map((msg) => (
-                  <div
-                    key={msg.id}
-                    className={`flex items-end gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
-                  >
+                {messages.map((msg) => {
+                  // Ẩn bubble trống (chỉ có cursor) khi đang chờ token đầu tiên, vì đã có hiệu ứng dấu ba chấm (...)
+                  if (msg.role === 'assistant' && msg.isStreaming && msg.text === '') return null;
+                  
+                  return (
+                    <div
+                      key={msg.id}
+                      className={`flex items-end gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
+                    >
                     {/* Avatar */}
                     {msg.role === 'assistant' ? (
                       <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center shrink-0 shadow-sm mb-0.5">
@@ -366,7 +413,8 @@ export default function ChatWidget() {
                       <span className="text-[10px] text-outline mt-0.5 px-1">{msg.time}</span>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
 
                 {/* Typing dots khi đang chờ token đầu tiên */}
                 {isStreaming && messages[messages.length - 1]?.text === '' && (

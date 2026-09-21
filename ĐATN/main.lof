@@ -1,0 +1,77 @@
+\thispagestyle {empty}
+\contentsline {figure}{\numberline {1}{\ignorespaces Main interface of the lib.hcmut.edu.vn library portal and print material catalog}}{4}{figure.caption.9}%
+\contentsline {figure}{\numberline {2}{\ignorespaces Institutional Repository Search Interface and Account Login Module on the OPAC portal}}{4}{figure.caption.10}%
+\contentsline {figure}{\numberline {3}{\ignorespaces Unified discovery search interface and live support tool at The Online Library - UoL}}{5}{figure.caption.11}%
+\contentsline {figure}{\numberline {4}{\ignorespaces DELCAT unified discovery service interface and supporting AI tool at UD Library}}{6}{figure.caption.12}%
+\contentsline {figure}{\numberline {5}{\ignorespaces Koha Staff Client administrative interface module}}{7}{figure.caption.13}%
+\contentsline {figure}{\numberline {6}{\ignorespaces User Account and Access Management Use-Case Diagram}}{14}{figure.caption.21}%
+\contentsline {figure}{\numberline {7}{\ignorespaces Catalog \& AI Metadata Management Use-Case Diagram}}{17}{figure.caption.22}%
+\contentsline {figure}{\numberline {8}{\ignorespaces Document Circulation Management Use-Case Diagram}}{20}{figure.caption.23}%
+\contentsline {figure}{\numberline {9}{\ignorespaces Resource Access \& Exploitation Use-Case Diagram}}{24}{figure.caption.24}%
+\contentsline {figure}{\numberline {10}{\ignorespaces Intelligent Interaction \& AI Use-Case Diagram}}{25}{figure.caption.25}%
+\contentsline {figure}{\numberline {11}{\ignorespaces Notifications \& Communication Use-Case Diagram}}{28}{figure.caption.26}%
+\contentsline {figure}{\numberline {12}{\ignorespaces Reporting \& Administration Use-Case Diagram}}{31}{figure.caption.27}%
+\contentsline {figure}{\numberline {13}{\ignorespaces Overall System Architecture Diagram of the Online Library Management System}}{34}{figure.caption.28}%
+\contentsline {figure}{\numberline {14}{\ignorespaces EERD Diagram of the Online Library Management System}}{37}{figure.caption.30}%
+\contentsline {figure}{\numberline {15}{\ignorespaces Relational Database Schema for the Online Library Management System}}{38}{figure.caption.31}%
+\contentsline {figure}{\numberline {16}{\ignorespaces Class Diagram for Account and Access Management}}{39}{figure.caption.32}%
+\contentsline {figure}{\numberline {17}{\ignorespaces Class Diagram for Book Catalog Management}}{40}{figure.caption.33}%
+\contentsline {figure}{\numberline {18}{\ignorespaces Class Diagram for Document Circulation Management}}{41}{figure.caption.34}%
+\contentsline {figure}{\numberline {19}{\ignorespaces Class Diagram for Resource Search and Exploitation}}{41}{figure.caption.35}%
+\contentsline {figure}{\numberline {20}{\ignorespaces Class Diagram for AI Virtual Assistant and Recommendations}}{42}{figure.caption.36}%
+\contentsline {figure}{\numberline {21}{\ignorespaces Class Diagram for Notifications and Communication}}{42}{figure.caption.37}%
+\contentsline {figure}{\numberline {22}{\ignorespaces Class Diagram for System Administration}}{42}{figure.caption.38}%
+\contentsline {figure}{\numberline {23}{\ignorespaces Activity Diagram for Account Registration}}{44}{figure.caption.39}%
+\contentsline {figure}{\numberline {24}{\ignorespaces Activity Diagram for System Login}}{46}{figure.caption.40}%
+\contentsline {figure}{\numberline {25}{\ignorespaces Activity Diagram for Password Reset}}{47}{figure.caption.41}%
+\contentsline {figure}{\numberline {26}{\ignorespaces Activity Diagram for View Loan/Return History}}{48}{figure.caption.42}%
+\contentsline {figure}{\numberline {27}{\ignorespaces Activity Diagram for User Account Management}}{49}{figure.caption.43}%
+\contentsline {figure}{\numberline {28}{\ignorespaces Activity Diagram for Add / Edit / Delete Catalog Record}}{50}{figure.caption.44}%
+\contentsline {figure}{\numberline {29}{\ignorespaces Activity Diagram for Batch Catalog Data Ingestion}}{51}{figure.caption.45}%
+\contentsline {figure}{\numberline {30}{\ignorespaces Activity Diagram for Automated Cataloging via ISBN}}{52}{figure.caption.46}%
+\contentsline {figure}{\numberline {31}{\ignorespaces Activity Diagram for Physical Material Checkout}}{53}{figure.caption.47}%
+\contentsline {figure}{\numberline {32}{\ignorespaces Activity Diagram for Material Return}}{54}{figure.caption.48}%
+\contentsline {figure}{\numberline {33}{\ignorespaces Activity Diagram for Calculate and Assess Overdue Fines}}{55}{figure.caption.49}%
+\contentsline {figure}{\numberline {34}{\ignorespaces Activity Diagram for Online Loan Renewal}}{56}{figure.caption.50}%
+\contentsline {figure}{\numberline {35}{\ignorespaces Activity Diagram for Place Item Hold}}{57}{figure.caption.51}%
+\contentsline {figure}{\numberline {36}{\ignorespaces Activity Diagram for Document Catalog Search}}{58}{figure.caption.52}%
+\contentsline {figure}{\numberline {37}{\ignorespaces Sequence Diagram for Account Registration}}{59}{figure.caption.53}%
+\contentsline {figure}{\numberline {38}{\ignorespaces Sequence Diagram for Account Login}}{60}{figure.caption.54}%
+\contentsline {figure}{\numberline {39}{\ignorespaces Sequence Diagram for Account Password Reset}}{61}{figure.caption.55}%
+\contentsline {figure}{\numberline {40}{\ignorespaces Sequence Diagram for Document Search}}{61}{figure.caption.56}%
+\contentsline {figure}{\numberline {41}{\ignorespaces Sequence Diagram for Add Document}}{62}{figure.caption.57}%
+\contentsline {figure}{\numberline {42}{\ignorespaces Sequence Diagram for Edit Document}}{62}{figure.caption.58}%
+\contentsline {figure}{\numberline {43}{\ignorespaces Sequence Diagram for Delete Document}}{63}{figure.caption.59}%
+\contentsline {figure}{\numberline {44}{\ignorespaces Sequence Diagram for Batch Document Import}}{63}{figure.caption.60}%
+\contentsline {figure}{\numberline {45}{\ignorespaces Sequence Diagram for Reserve Document}}{64}{figure.caption.61}%
+\contentsline {figure}{\numberline {46}{\ignorespaces Sequence Diagram for Fine Calculation Update}}{64}{figure.caption.62}%
+\contentsline {figure}{\numberline {47}{\ignorespaces Sequence Diagram for Process Document Loan}}{65}{figure.caption.63}%
+\contentsline {figure}{\numberline {48}{\ignorespaces Sequence Diagram for Extend Document Loan}}{66}{figure.caption.64}%
+\contentsline {figure}{\numberline {49}{\ignorespaces Sequence Diagram for Return Document}}{67}{figure.caption.65}%
+\contentsline {figure}{\numberline {50}{\ignorespaces BkLib Login Interface}}{68}{figure.caption.66}%
+\contentsline {figure}{\numberline {51}{\ignorespaces BkLib Account Registration Interface}}{68}{figure.caption.67}%
+\contentsline {figure}{\numberline {52}{\ignorespaces Three-step Modal Workflow for Password Recovery}}{69}{figure.caption.68}%
+\contentsline {figure}{\numberline {53}{\ignorespaces Reader Module Homepage Interface}}{69}{figure.caption.69}%
+\contentsline {figure}{\numberline {54}{\ignorespaces Catalog Search Interface}}{70}{figure.caption.70}%
+\contentsline {figure}{\numberline {55}{\ignorespaces Active Loans Management Interface}}{70}{figure.caption.71}%
+\contentsline {figure}{\numberline {56}{\ignorespaces Loan History Interface}}{71}{figure.caption.72}%
+\contentsline {figure}{\numberline {57}{\ignorespaces Active Holds Interface}}{71}{figure.caption.73}%
+\contentsline {figure}{\numberline {58}{\ignorespaces Virtual Assistant Chat Window Interface}}{72}{figure.caption.74}%
+\contentsline {figure}{\numberline {59}{\ignorespaces Personal Profile and Settings Interface}}{72}{figure.caption.75}%
+\contentsline {figure}{\numberline {60}{\ignorespaces Librarian Module Homepage Interface}}{73}{figure.caption.76}%
+\contentsline {figure}{\numberline {61}{\ignorespaces Circulation Management Interface}}{73}{figure.caption.77}%
+\contentsline {figure}{\numberline {62}{\ignorespaces Catalog Management Interface}}{74}{figure.caption.78}%
+\contentsline {figure}{\numberline {63}{\ignorespaces Communication Management Interface}}{74}{figure.caption.79}%
+\contentsline {figure}{\numberline {64}{\ignorespaces Librarian Reports and Analytics Interface}}{75}{figure.caption.80}%
+\contentsline {figure}{\numberline {65}{\ignorespaces Librarian Personal Profile and Settings Interface}}{75}{figure.caption.81}%
+\contentsline {figure}{\numberline {66}{\ignorespaces Administrator System Overview Dashboard}}{76}{figure.caption.82}%
+\contentsline {figure}{\numberline {67}{\ignorespaces User Account Management Interface}}{76}{figure.caption.83}%
+\contentsline {figure}{\numberline {68}{\ignorespaces System Configuration Interface}}{77}{figure.caption.84}%
+\contentsline {figure}{\numberline {69}{\ignorespaces Branch Management Interface}}{77}{figure.caption.85}%
+\contentsline {figure}{\numberline {70}{\ignorespaces System Audit Logs Interface}}{78}{figure.caption.86}%
+\contentsline {figure}{\numberline {71}{\ignorespaces Backup and Disaster Recovery Interface}}{78}{figure.caption.87}%
+\contentsline {figure}{\numberline {72}{\ignorespaces Unit test results}}{82}{figure.caption.89}%
+\contentsline {figure}{\numberline {73}{\ignorespaces Integration test results}}{83}{figure.caption.91}%
+\contentsline {figure}{\numberline {74}{\ignorespaces System test results}}{84}{figure.caption.93}%
+\contentsline {figure}{\numberline {75}{\ignorespaces Quality test results}}{85}{figure.caption.95}%
+\contentsline {figure}{\numberline {76}{\ignorespaces Summary of test results}}{85}{figure.caption.97}%

@@ -13,7 +13,26 @@ from app.core.config import settings
 from app.services.rag_service import retrieve_context
 
 # ─── Khởi tạo Gemini client ──────────────────────────────────────
-_google_client = genai.Client(api_key=settings.GEMINI_API_KEY)
+class GoogleClientWrapper:
+    def __init__(self):
+        self._primary = genai.Client(api_key=settings.GEMINI_API_KEY)
+        self._fallback = None
+        if getattr(settings, "GEMINI_FALLBACK_API_KEY", ""):
+            self._fallback = genai.Client(api_key=settings.GEMINI_FALLBACK_API_KEY)
+        self._use_fallback = False
+
+    @property
+    def models(self):
+        return self._fallback.models if (self._use_fallback and self._fallback) else self._primary.models
+    
+    def switch_to_fallback(self):
+        if self._fallback and not self._use_fallback:
+            self._use_fallback = True
+            print("[GoogleClientWrapper] ⚠️ Primary API Key exhausted. Switched to FALLBACK API KEY.")
+            return True
+        return False
+
+_google_client = GoogleClientWrapper()
 MODEL = settings.GEMINI_MODEL if not settings.GEMINI_MODEL.startswith("models/") else settings.GEMINI_MODEL.replace("models/", "")
 
 
@@ -76,13 +95,31 @@ Lưu ý: Không tìm thấy thông tin liên quan trong nội quy thư viện. H
 Trả lời:"""
 
     # Stream từng token
-    for chunk in _google_client.models.generate_content_stream(
-        model=MODEL,
-        contents=prompt,
-        config={"temperature": 0.4, "max_output_tokens": 512},
-    ):
-        if chunk.text:
-            yield chunk.text
+    try:
+        response_stream = _google_client.models.generate_content_stream(
+            model=MODEL,
+            contents=prompt,
+            config={"temperature": 0.4, "max_output_tokens": 512},
+        )
+        for chunk in response_stream:
+            if chunk.text:
+                yield chunk.text
+    except Exception as e:
+        err_str = str(e)
+        if ("429" in err_str or "RESOURCE_EXHAUSTED" in err_str) and ("Quota" in err_str or "quota" in err_str):
+            if hasattr(_google_client, "switch_to_fallback") and _google_client.switch_to_fallback():
+                # Thử lại với fallback key
+                fallback_stream = _google_client.models.generate_content_stream(
+                    model=MODEL,
+                    contents=prompt,
+                    config={"temperature": 0.4, "max_output_tokens": 512},
+                )
+                for chunk in fallback_stream:
+                    if chunk.text:
+                        yield chunk.text
+                return
+        # Bắn lỗi ra ngoài nếu không xử lý được
+        raise e
 
 
 # ─── Fallback: non-streaming ──────────────────────────────────────

@@ -54,7 +54,7 @@ async def chat_stream(request: ChatRequest):
 
         except Exception as e:
             print(f"[SSE Error] {e}")
-            error_msg = "Xin lỗi, tôi đang gặp sự cố. Vui lòng thử lại."
+            error_msg = "Xin lỗi, tôi đang gặp sự cố kết nối tới máy chủ AI. Vui lòng thử lại sau."
             yield f"data: {json.dumps({'token': error_msg})}\n\n"
             yield f"data: {json.dumps({'token': '[DONE]'})}\n\n"
 

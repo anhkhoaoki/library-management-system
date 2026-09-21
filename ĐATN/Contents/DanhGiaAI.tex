@@ -1,0 +1,338 @@
+\section{AI Features Evaluation}
+
+\subsection{Why Traditional Testing is Insufficient for AI}
+
+The testing methodology described in the previous chapter follows a \textbf{deterministic} paradigm: for any given input, the system must produce a precisely defined output, and an assertion either passes or fails. This model works well for stateless functions and REST API endpoints where behavior is predictable and bounded.
+
+However, the AI-powered features in BkLib — namely the RAG-based Chatbot and the Semantic Search engine — produce \textbf{non-deterministic} outputs in the form of natural language. Consider the following contrast:
+
+\begin{table}[H]
+\centering
+\caption{Deterministic vs. Non-deterministic Testing}
+\begin{tabularx}{\textwidth}{|p{3.5cm}|X|X|}
+\hline
+\textbf{Aspect} & \textbf{Traditional Testing} & \textbf{AI Feature Evaluation} \\
+\hline
+Output type & Fixed value (status code, JSON field) & Natural language sentence or ranked list \\
+\hline
+Correctness check & \texttt{expect(x).toBe(y)} & Semantic similarity, faithfulness, relevance \\
+\hline
+Variability & None — identical input produces identical output & High — phrasing changes per run \\
+\hline
+Tool & Jest, Supertest & LLM-as-Judge, embedding cosine similarity \\
+\hline
+\end{tabularx}
+\end{table}
+
+\noindent For example, when a patron asks \textit{``How many books can I borrow at once?''}, a valid chatbot response may be \textit{``You can borrow up to 5 books per loan''} or \textit{``The library allows a maximum of 5 items per reader''} — both are semantically correct yet lexically different. A hard-coded \texttt{toBe()} assertion cannot capture this equivalence, making a dedicated AI evaluation framework necessary.
+
+\subsection{AI-as-a-Judge Methodology}
+
+\subsubsection*{Architecture of the Evaluation Pipeline}
+
+To systematically assess AI output quality, an automated \textbf{AI-as-a-Judge} pipeline was implemented. The architecture involves three roles:
+
+\begin{itemize}
+    \item \textbf{The System Under Test (SUT):} The BkLib AI service exposing the \texttt{/chat} and \texttt{/search/semantic} endpoints.
+    \item \textbf{The Test Suite:} A curated dataset of question--answer pairs and search queries with expected intent labels.
+    \item \textbf{The Judge LLM:} An independent Gemini model configured with \texttt{temperature = 0.0} to ensure deterministic, reproducible scoring.
+\end{itemize}
+
+The pipeline executes as follows for each test case:
+\begin{enumerate}
+    \item A query is submitted to the SUT.
+    \item The SUT returns a response (chatbot answer or ranked book list).
+    \item The Judge LLM receives the query, the SUT response, and the ground-truth context.
+    \item The Judge scores the response on three metrics and returns a structured JSON verdict.
+    \item The verdict is recorded; a case is marked \textit{Passed} if the aggregate score meets the threshold.
+\end{enumerate}
+
+\subsubsection*{Evaluation Metrics}
+
+Each chatbot response is scored on a \textbf{1--5} scale across three independent dimensions:
+
+\begin{table}[H]
+\centering
+\caption{AI Evaluation Metrics Definitions}
+\begin{tabularx}{\textwidth}{|p{4cm}|X|c|}
+\hline
+\textbf{Metric} & \textbf{Definition} & \textbf{Pass Threshold} \\
+\hline
+Faithfulness & The response is grounded solely in retrieved context; no hallucinated facts are introduced. & $\geq 4.0$ \\
+\hline
+Answer Relevancy & The response directly addresses the patron's question without off-topic content. & $\geq 4.0$ \\
+\hline
+Semantic Correctness & The factual content of the response matches the ground truth (e.g., borrowing limits, fine rates). & $\geq 4.0$ \\
+\hline
+\end{tabularx}
+\end{table}
+
+For Semantic Search, the metric is the \textbf{Semantic Match Score} — the average Judge rating of retrieved book relevance relative to the query intent.
+
+\subsubsection*{Judge LLM Configuration}
+
+The Judge LLM is prompted with a structured template that provides (1) the original patron query, (2) the AI-generated answer or retrieval list, and (3) the reference ground truth extracted from library policy documents. The Judge is explicitly instructed \textit{not} to penalize minor stylistic variation and \textit{to} penalize any factual deviation from the reference. Setting \texttt{temperature = 0.0} ensures that repeated evaluation of the same case produces a consistent score, making the results reproducible and auditable.
+
+\begin{lstlisting}[language=R, caption={Judge LLM Prompt Template (simplified)}]
+You are an impartial evaluator for a library AI assistant.
+Query: "{query}"
+AI Response: "{response}"
+Ground Truth: "{ground_truth}"
+
+Score each metric from 1 (very poor) to 5 (excellent):
+- faithfulness: Is the response grounded only in the provided context?
+- answer_relevancy: Does the response directly address the query?
+- semantic_correctness: Are the facts accurate relative to ground truth?
+
+Return ONLY valid JSON with integer scores and a brief reason.
+\end{lstlisting}
+
+\subsection{Chatbot RAG Evaluation}
+
+\subsubsection*{Test Suite Design}
+
+The evaluation dataset consists of \textbf{16 test cases} organized into two groups based on the expected processing path:
+
+\begin{itemize}
+    \item \textbf{Group 1 — FAQ / RAG queries (10 cases):} Questions about library policy, opening hours, and procedures. These are expected to be classified as \texttt{FAQ} intent and answered using RAG context retrieved from the static knowledge base.
+    \item \textbf{Group 2 — Personal / Function Calling queries (6 cases):} Questions about the reader's own account data (active loans, fines, reservations). These are expected to be classified as \texttt{PERSONAL} intent and trigger the appropriate backend tool call.
+\end{itemize}
+
+For each test case, the system records: (1) actual intent label assigned by the classifier, (2) tool called (for Group 2), and (3) Judge LLM scores on three RAG Triad metrics (for Group 1).
+
+\subsubsection*{Group 1 — FAQ / RAG Test Cases}
+
+\begin{table}[H]
+\centering
+\caption{Chatbot Evaluation — Group 1: Policy and FAQ Queries}
+\begin{tabularx}{\textwidth}{|c|X|p{2.6cm}|c|c|c|c|}
+\hline
+\textbf{ID} & \textbf{Query (Vietnamese)} & \textbf{Category} & \textbf{Intent} & \textbf{F} & \textbf{R} & \textbf{C} \\
+\hline
+1 & ``Quy dinh muon sach cua thu vien nhu the nao?'' (Library borrowing policy) & Borrow rules & FAQ & 5 & 5 & 5 \\
+\hline
+2 & ``Sinh vien dai hoc duoc muon toi da bao nhieu cuon sach?'' (Max books for students) & Borrow limit & FAQ & 5 & 5 & 5 \\
+\hline
+3 & ``Phi phat tre han duoc tinh nhu the nao?'' (How is the overdue fine calculated?) & Fine policy & FAQ & 5 & 5 & 5 \\
+\hline
+4 & ``Thu vien co so Di An mo cua luc may gio?'' (Opening hours -- Di An branch) & Opening hours & FAQ & 5 & 5 & 5 \\
+\hline
+5 & ``Lam the nao de huy dat giu cho sach truc tuyen?'' (How to cancel a hold online) & Reservation & FAQ & 5 & 5 & 5 \\
+\hline
+6 & ``Mat sach thi phai den bu the nao?'' (Compensation for lost books) & Lost/Damage & FAQ & 5 & 5 & 5 \\
+\hline
+7 & ``Thu vien co so Ly Thuong Kiet co mo cua thu bay khong?'' (LTK branch Saturday hours) & Opening hours & FAQ & 5 & 5 & 5 \\
+\hline
+8 & ``Toi co the nho nguoi khac muon sach ho khong?'' (Can someone borrow on my behalf?) & Card policy & FAQ & 5 & 5 & 5 \\
+\hline
+9 & ``Toi duoc gia han muon sach toi da may lan?'' (Max renewals allowed) & Renewal & FAQ & 5 & 5 & 5 \\
+\hline
+10 & ``Lam sao de biet cuon sach toi can dang o co so nao?'' (Which branch holds the book?) & Branch lookup & FAQ & 5 & 5 & 5 \\
+\hline
+\multicolumn{4}{|r|}{\textbf{Average (scale 1--5)}} & \textbf{5.0} & \textbf{5.0} & \textbf{5.0} \\
+\hline
+\end{tabularx}
+\end{table}
+\noindent{\footnotesize \textit{F = Faithfulness, R = Answer Relevancy, C = Semantic Correctness (scale 1--5)}}
+
+
+\noindent All 10 FAQ cases were correctly classified as \texttt{FAQ} intent (intent accuracy: \textbf{100\%}), and the RAG retrieval pipeline successfully returned relevant context in all cases (RAG retrieval rate: \textbf{100\%}). The Judge LLM awarded a perfect score of \textbf{5/5} across all three metrics for every case, reflecting that the Gemini model strictly followed the retrieved context without hallucinating and produced concise, on-topic answers.
+
+\begin{table}[H]
+\centering
+\caption{Sample Ground Truth vs.~Chatbot Answer — FAQ Case \#2}
+\begin{tabularx}{\textwidth}{|p{3.5cm}|X|}
+\hline
+\textbf{Field} & \textbf{Content} \\
+\hline
+Query & ``Sinh vien dai hoc duoc muon toi da bao nhieu cuon sach?'' \\
+\hline
+Ground Truth & Sinh vien dai hoc duoc muon toi da 3 cuon sach cung mot luc. \\
+\hline
+Chatbot Response & Ban co the muon toi da 3 cuon sach cung luc. Thoi han muon la 14 ngay va moi cuon duoc gia han toi da 2 lan. \\
+\hline
+Judge Verdict & \{\texttt{"faithfulness": 5, "relevancy": 5, "correctness": 5, "reason": "Correct 3-book limit stated, no info added beyond context"}\} \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsubsection*{Group 2 — Personal / Function Calling Test Cases}
+
+For queries involving the user's personal account data, the system must (1) detect \texttt{PERSONAL} intent and (2) select the correct backend tool to call from three available tools: \texttt{get\_active\_borrows}, \texttt{get\_user\_fines}, and \texttt{get\_user\_reservations}.
+
+\begin{table}[H]
+\centering
+\caption{Chatbot Evaluation — Group 2: Personal Account Queries (Function Calling)}
+\begin{tabularx}{\textwidth}{|c|X|p{2.6cm}|p{2.8cm}|c|}
+\hline
+\textbf{ID} & \textbf{Query (Vietnamese)} & \textbf{Expected Tool} & \textbf{Actual Tool Called} & \textbf{Result} \\
+\hline
+11 & ``Toi dang muon nhung cuon sach nao vay?'' (What books am I currently borrowing?) & \texttt{get\_active\_borrows} & \texttt{get\_active\_borrows} & Pass \\
+\hline
+12 & ``Tai khoan cua toi co bi phat tien tre han khong?'' (Do I have any overdue fines?) & \texttt{get\_user\_fines} & \texttt{get\_user\_fines} & Pass \\
+\hline
+13 & ``Kiem tra giup minh danh sach sach dang dat giu cho?'' (Show my hold reservations) & \texttt{get\_user\_reservations} & \texttt{get\_user\_reservations} & Pass \\
+\hline
+14 & ``Cho minh xem cac cuon sach minh muon sap het han?'' (Which books are due soon?) & \texttt{get\_active\_borrows} & \texttt{get\_active\_borrows} & Pass \\
+\hline
+15 & ``Xem gium toi tong tien phat hien tai?'' (What is my total current fine amount?) & \texttt{get\_user\_fines} & \texttt{get\_user\_fines} & Pass \\
+\hline
+16 & ``Lich su dat giu cho cua toi co cuon nao khong?'' (Any books in my reservation history?) & \texttt{get\_user\_reservations} & \texttt{get\_user\_reservations} & Pass \\
+\hline
+\multicolumn{4}{|r|}{\textbf{Tool Selection Accuracy}} & \textbf{6/6 (100\%)} \\
+\hline
+\end{tabularx}
+\end{table}
+
+All 6 personal-query cases were correctly classified as \texttt{PERSONAL} intent, and the LLM selected the correct backend tool in all instances. This demonstrates the robustness of the two-stage pipeline: a rule-based intent classifier (\texttt{is\_personal\_query}) performs reliable pre-filtering before the LLM decides on tool selection.
+
+\begin{table}[H]
+\centering
+\caption{Sample Function Calling Interaction — Case \#12}
+\begin{tabularx}{\textwidth}{|p{3.5cm}|X|}
+\hline
+\textbf{Field} & \textbf{Content} \\
+\hline
+Query & ``Tai khoan cua toi co bi phat tien tre han khong?'' (Do I have overdue fines?) \\
+\hline
+Detected Intent & PERSONAL \\
+\hline
+Tool Called & \texttt{get\_user\_fines} \\
+\hline
+Mock Tool Result & Nguoi dung dang no tong cong 15.000d tien phat tu 1 khoan phat tre han cuon ``Clean Architecture''. \\
+\hline
+Chatbot Response & Tai khoan cua ban hien co 1 khoan phat tre han voi tong so tien la 15.000d tu cuon ``Clean Architecture''. Ban co the thanh toan tai quay thu vien. \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsubsection*{Aggregate Results}
+
+\begin{table}[H]
+\centering
+\caption{Chatbot Evaluation — Overall Metrics Summary}
+\begin{tabularx}{\textwidth}{|X|c|c|c|}
+\hline
+\textbf{Metric} & \textbf{Score Achieved} & \textbf{Target} & \textbf{Status} \\
+\hline
+Intent Classification Accuracy & 16/16 (100\%) & $\geq$90\% & Pass \\
+\hline
+Tool Selection Accuracy (Personal) & 6/6 (100\%) & $\geq$90\% & Pass \\
+\hline
+RAG Retrieval Rate (FAQ) & 10/10 (100\%) & $\geq$80\% & Pass \\
+\hline
+Faithfulness (avg, scale 1--5) & 5.0 / 5.0 & $\geq$4.0 & Pass \\
+\hline
+Answer Relevancy (avg) & 5.0 / 5.0 & $\geq$4.0 & Pass \\
+\hline
+Semantic Correctness (avg) & 5.0 / 5.0 & $\geq$4.0 & Pass \\
+\hline
+\end{tabularx}
+\end{table}
+
+
+\subsection{Semantic Search Evaluation}
+
+\subsubsection*{Test Suite and Methodology}
+
+Semantic Search was evaluated on \textbf{10 representative queries} spanning: exact English queries, paraphrased descriptions, Vietnamese-language queries (cross-language scenario), and off-topic adversarial queries. For each query, the Judge LLM rated whether the returned books were semantically relevant to the query intent.
+
+\subsubsection*{Test Cases and Results}
+
+\begin{table}[H]
+\centering
+\caption{Semantic Search Evaluation Test Cases}
+\begin{tabularx}{\textwidth}{|p{1.2cm}|X|p{2.5cm}|p{1.4cm}|}
+\hline
+\textbf{ID} & \textbf{Query} & \textbf{Expected Behavior} & \textbf{Result} \\
+\hline
+SE-01 & ``introduction to machine learning'' & Relevant AI/ML books & Pass \\
+\hline
+SE-02 & ``data structures and algorithms'' & Relevant CS textbooks & Pass \\
+\hline
+SE-03 & ``books about software engineering best practices'' & Software engineering titles & Pass \\
+\hline
+SE-04 & ``basic artificial intelligence textbooks'' & Intro AI books & Fail \\
+\hline
+SE-05 & ``sach lap trinh Python'' (Vietnamese: Python programming books) & Python programming books & Fail \\
+\hline
+SE-06 & ``sach hoc co so du lieu'' (Vietnamese: database textbooks) & Database textbooks & Fail \\
+\hline
+SE-07 & ``cong nghe phan mem huong doi tuong'' (Vietnamese: OOP/software engineering) & OOP/SE books & Fail \\
+\hline
+SE-08 & ``beef noodle soup recipe'' (off-topic) & No relevant results & Pass \\
+\hline
+SE-09 & ``how to cook Vietnamese food'' (off-topic) & No relevant results & Pass \\
+\hline
+SE-10 & ``advanced database systems distributed computing'' & DB/distributed systems & Pass \\
+\hline
+\multicolumn{3}{|r|}{\textbf{Pass Rate}} & \textbf{6/10 (60\%)} \\
+\hline
+\end{tabularx}
+\end{table}
+
+
+\subsubsection*{Root Cause Analysis: Data Sparsity and Embedding Language Mismatch}
+
+Two independent root causes were identified:
+
+\paragraph{Cause 1 — Data Sparsity.}
+The demo database contains only a small number of books. When the cosine similarity space is sparse, the top-K retrieval algorithm is forced to return the \textit{nearest neighbors available}, even when they are semantically distant from the query. The system does not have the option to return ``no match'' — it always fills the top-K slots — so off-topic books appear as results.
+
+\begin{table}[H]
+\centering
+\caption{Semantic Search Failure Example — Data Sparsity}
+\begin{tabularx}{\textwidth}{|p{3.5cm}|X|c|}
+\hline
+\textbf{Query} & \textbf{Top Retrieved Books} & \textbf{Judge Score} \\
+\hline
+``basic Python programming books'' &
+1. Basic C++ Programming (0.65) \newline
+2. Introduction to Artificial Intelligence (0.58) \newline
+3. How to Win Friends and Influence People (0.42) & 2.67 / 5.0 \\
+\hline
+\end{tabularx}
+\end{table}
+
+\paragraph{Cause 2 — Embedding Model Language Mismatch.}
+The deployed embedding model is \texttt{sentence-transformers/all-MiniLM-L6-v2}, which was trained \textbf{primarily on English corpora}. When a patron enters a Vietnamese query, the model encodes it into a lower-quality vector that does not align well with the vector space built from the book metadata.
+
+A natural proposed improvement was to \textbf{translate the Vietnamese query to English} before encoding. This approach was investigated but ultimately rejected for the following reason: the book embedding vectors stored in the in-memory cache were themselves generated from \textbf{Vietnamese-language text} (see \texttt{search.py}, lines 79--84 below). Translating only the query introduces a \textit{cross-language vector mismatch}: the English query vector and the Vietnamese book vectors occupy different regions of the embedding space, producing worse similarity scores, not better ones.
+
+\begin{lstlisting}[language=R, caption={Book text fed to the embedding model — Vietnamese language}]
+text_to_embed = (
+    f"Ten sach: {title}. "
+    f"Tac gia: {author_str}. "
+    f"Danh muc: {category_name}. "
+    f"Tom tat: {summary}"
+)
+\end{lstlisting}
+
+The correct architectural fix requires \textbf{consistency}: both the indexed book text and the query must be encoded using the same language or the same multilingual model. Two viable approaches are compared below:
+
+\begin{table}[H]
+\centering
+\caption{Architectural Fix Options for Language Mismatch}
+\begin{tabularx}{\textwidth}{|p{4cm}|X|p{3cm}|}
+\hline
+\textbf{Approach} & \textbf{Description} & \textbf{Trade-offs} \\
+\hline
+Translate book metadata to English at index time & Translate all title/summary fields before embedding; store English vectors & One-time cost; requires re-indexing all books \\
+\hline
+Replace model with multilingual embedding & Switch to \texttt{paraphrase-multilingual-MiniLM-L12-v2}, which maps Vietnamese and English into the same vector space & Model download $\sim$120 MB; no translation needed \\
+\hline
+\end{tabularx}
+\end{table}
+
+\noindent The multilingual model approach is preferred for future work because it eliminates the translation dependency and maintains consistency without requiring a re-index pipeline.
+
+\subsection{Limitations and Future Work}
+
+The current AI evaluation framework is functional but subject to the following limitations:
+
+\begin{itemize}
+    \item \textbf{Data sparsity:} The demo corpus is too small to produce meaningful semantic coverage. Expanding the catalog to thousands of actual library records would significantly improve Semantic Search performance.
+    \item \textbf{Language coverage:} The monolingual English embedding model underserves Vietnamese-language patrons. Adopting a multilingual model is the highest-priority improvement for the search subsystem.
+    \item \textbf{Judge model dependency:} The AI-as-a-Judge pipeline relies on the Gemini API, which is subject to rate limiting and quota constraints. A local open-source judge model (e.g., Llama-3-based) would make the evaluation infrastructure fully self-contained.
+    \item \textbf{Chatbot context window:} The RAG pipeline retrieves only the top-3 context chunks. For complex multi-part questions, increasing \texttt{top\_k} to 5 or 7 may improve completeness without significantly increasing latency.
+\end{itemize}
