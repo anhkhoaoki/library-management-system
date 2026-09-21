@@ -1,0 +1,12 @@
+process.env.NODE_ENV = 'test';
+process.env.JWT_SECRET = 'unit-test-jwt-secret';
+process.env.JWT_REFRESH_SECRET = 'unit-test-jwt-refresh';
+process.env.JWT_EXPIRES_IN = '15m';
+process.env.JWT_REFRESH_EXPIRES_IN = '7d';
+process.env.BCRYPT_ROUNDS = '4';
+process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test';
+process.env.SMTP_HOST = 'localhost';
+process.env.SMTP_PORT = '587';
+process.env.SMTP_USER = 'test';
+process.env.SMTP_PASS = 'test';
+process.env.EMAIL_FROM = 'noreply@test.local';
