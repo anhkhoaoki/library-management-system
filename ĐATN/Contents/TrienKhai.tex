@@ -1,1 +1,41 @@
 \section{Deployment stage}
+
+This section describes the deployment strategy and infrastructure setup for the project. The system is distributed across different cloud providers to leverage their specific strengths: Vercel for the frontend and Express backend due to its seamless CI/CD integration and serverless architecture, and Google Cloud Run for the AI service to handle containerized machine learning workloads efficiently.
+
+\subsection{Frontend Deployment}
+The frontend application, built with React and Vite, is deployed on Vercel. Vercel provides a global Edge Network that ensures fast content delivery and high availability. The deployment process is integrated directly with the GitHub repository. Upon every push to the main branch, Vercel automatically triggers a new build process, executing the production build script, and updates the live website. Environment variables, such as backend API URLs, are securely managed within the Vercel dashboard.
+
+\subsection{Backend Deployment}
+The backend service, built with Node.js and Express, is also deployed on Vercel, utilizing Serverless Functions. This approach eliminates the need for manual server provisioning and scales automatically based on incoming traffic.
+To configure the deployment, a \texttt{vercel.json} file is utilized at the root of the backend directory to specify the build environment and routing rules. The configuration directs all incoming API requests to the main application entry point \texttt{src/app.ts}, utilizing the \texttt{@vercel/node} runtime:
+
+\begin{verbatim}
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/app.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "src/app.ts"
+    }
+  ]
+}
+\end{verbatim}
+This setup allows Express routing to function seamlessly within a serverless environment.
+
+\subsection{AI Service Deployment}
+The AI service, which handles resource-intensive tasks such as natural language processing and semantic search, is developed in Python. It requires a specific runtime environment with complex dependencies defined in \texttt{requirements.txt}. To ensure consistency across environments, it is containerized using Docker and deployed to Google Cloud Run.
+
+\begin{itemize}
+    \item \textbf{Containerization:} A \texttt{Dockerfile} is utilized to package the Python application, its system dependencies, and Python packages into a standardized Docker image.
+    \item \textbf{Google Cloud Run:} Cloud Run is a fully managed compute platform that automatically scales stateless containers. It is chosen for the AI service because it can efficiently provision the necessary CPU and memory resources for inference requests and scales down to zero when idle, optimizing operational costs.
+    \item \textbf{Deployment Process:} The Docker image is built and pushed to Google Artifact Registry. A Cloud Run service is then deployed referencing the uploaded image. The service is securely configured with necessary environment variables and allocated sufficient resources to handle concurrent AI workloads.
+\end{itemize}
+
+\subsection{System Integration}
+The decoupled deployment architecture ensures that each service can scale independently based on its specific load. The frontend communicates with the Vercel-hosted Express backend via standard HTTPS RESTful APIs. The Express backend, in turn, forwards specialized AI requests to the Google Cloud Run endpoint, acting as an API gateway. This modular deployment strategy enhances fault tolerance, maintainability, and scalability.
