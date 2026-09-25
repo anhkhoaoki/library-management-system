@@ -14,6 +14,7 @@ from app.services.search_service import (
     generate_suggested_queries,
 )
 from app.core.gemini_client import get_embeddings
+from app.core.config import settings
 
 router = APIRouter()
 
@@ -42,9 +43,11 @@ async def _fetch_and_build_cache() -> List[dict]:
     """Tải sách từ Node.js Backend và sinh vector embedding cho từng cuốn."""
     try:
         embedder = get_embeddings()
-        async with httpx.AsyncClient(timeout=20.0) as client:
-            res = await client.get("http://localhost:3000/api/v1/books?limit=200")
+        backend_url = settings.BACKEND_URL.rstrip("/")
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            res = await client.get(f"{backend_url}/api/v1/books?limit=200")
             if res.status_code != 200:
+                print(f"[Fetch Cache Error] Backend trả về status {res.status_code}")
                 return []
 
             data = res.json()
