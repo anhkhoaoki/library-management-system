@@ -159,23 +159,37 @@
 \contentsline {paragraph}{\numberline {6.5.1.5}Audit Logs Page}{79}{paragraph.6.5.1.5}%
 \contentsline {paragraph}{\numberline {6.5.1.6}Backup \& Disaster Recovery Page}{79}{paragraph.6.5.1.6}%
 \contentsline {subsubsection}{\numberline {6.5.2}Technical Implementation Highlights}{80}{subsubsection.6.5.2}%
-\contentsline {section}{\numberline {7}System Testing}{81}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Test Objectives and Environment}{81}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}Unit Testing}{81}{subsection.7.2}%
-\contentsline {subsection}{\numberline {7.3}Integration Testing}{82}{subsection.7.3}%
-\contentsline {subsection}{\numberline {7.4}System Testing}{83}{subsection.7.4}%
-\contentsline {subsection}{\numberline {7.5}Code Quality Testing}{84}{subsection.7.5}%
-\contentsline {subsection}{\numberline {7.6}Test Summary}{85}{subsection.7.6}%
-\contentsline {section}{\numberline {8}AI Features Evaluation}{86}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Why Traditional Testing is Insufficient for AI}{86}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}AI-as-a-Judge Methodology}{86}{subsection.8.2}%
-\contentsline {subsection}{\numberline {8.3}Chatbot RAG Evaluation}{87}{subsection.8.3}%
-\contentsline {subsection}{\numberline {8.4}Semantic Search Evaluation}{89}{subsection.8.4}%
-\contentsline {paragraph}{\numberline {8.4.0.1}Cause 1 — Data Sparsity.}{90}{paragraph.8.4.0.1}%
-\contentsline {paragraph}{\numberline {8.4.0.2}Cause 2 — Embedding Model Language Mismatch.}{90}{paragraph.8.4.0.2}%
-\contentsline {subsection}{\numberline {8.5}Limitations and Future Work}{91}{subsection.8.5}%
-\contentsline {section}{\numberline {9}Summary and Conclusion}{92}{section.9}%
-\contentsline {subsection}{\numberline {9.1}Project Accomplishments and Implementation Summary}{92}{subsection.9.1}%
-\contentsline {subsection}{\numberline {9.2}Summary of Completed Project Lifecycle}{92}{subsection.9.2}%
-\contentsline {section}{\numberline {10}References}{92}{section.10}%
-\contentsline {section}{\numberline {11}Appendix}{94}{section.11}%
+\contentsline {subsection}{\numberline {6.6}Deployment Stage}{80}{subsection.6.6}%
+\contentsline {subsubsection}{\numberline {6.6.1}Frontend Deployment}{80}{subsubsection.6.6.1}%
+\contentsline {subsubsection}{\numberline {6.6.2}Backend Deployment}{80}{subsubsection.6.6.2}%
+\contentsline {subsubsection}{\numberline {6.6.3}AI Service Deployment}{81}{subsubsection.6.6.3}%
+\contentsline {subsubsection}{\numberline {6.6.4}System Integration}{81}{subsubsection.6.6.4}%
+\contentsline {section}{\numberline {7}System Testing}{82}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Test Objectives and Environment}{82}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Unit Testing}{82}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Integration Testing}{83}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}System Testing}{84}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}Code Quality Testing}{85}{subsection.7.5}%
+\contentsline {subsection}{\numberline {7.6}Test Summary}{86}{subsection.7.6}%
+\contentsline {section}{\numberline {8}AI Features Evaluation}{87}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Why Traditional Testing is Insufficient for AI}{87}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}AI-as-a-Judge Methodology}{87}{subsection.8.2}%
+\contentsline {subsubsection}{\numberline {8.2.1}Chatbot Evaluation Metrics (RAG Framework)}{87}{subsubsection.8.2.1}%
+\contentsline {subsubsection}{\numberline {8.2.2}Semantic Search Evaluation Metrics}{87}{subsubsection.8.2.2}%
+\contentsline {subsection}{\numberline {8.3}Chatbot RAG Evaluation Results}{88}{subsection.8.3}%
+\contentsline {subsubsection}{\numberline {8.3.1}Test Dataset Setup}{88}{subsubsection.8.3.1}%
+\contentsline {subsubsection}{\numberline {8.3.2}Detailed Chatbot Evaluation Results Table}{88}{subsubsection.8.3.2}%
+\contentsline {subsubsection}{\numberline {8.3.3}Chatbot Evaluation Analysis}{88}{subsubsection.8.3.3}%
+\contentsline {subsection}{\numberline {8.4}Semantic Search Evaluation Results}{88}{subsection.8.4}%
+\contentsline {subsubsection}{\numberline {8.4.1}Test Dataset Setup}{88}{subsubsection.8.4.1}%
+\contentsline {subsubsection}{\numberline {8.4.2}Detailed Search Evaluation Results Table}{89}{subsubsection.8.4.2}%
+\contentsline {subsubsection}{\numberline {8.4.3}Search Performance Metrics Analysis}{89}{subsubsection.8.4.3}%
+\contentsline {subsection}{\numberline {8.5}Failure Analysis and Lessons Learned}{89}{subsection.8.5}%
+\contentsline {subsubsection}{\numberline {8.5.1}Cause 1: Embedding Model Language Mismatch}{89}{subsubsection.8.5.1}%
+\contentsline {subsubsection}{\numberline {8.5.2}Cause 2: Vector Similarity Threshold Filtering}{89}{subsubsection.8.5.2}%
+\contentsline {section}{\numberline {9}Summary and Future Work}{90}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Achieved Results}{90}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Remarks and Evaluation}{90}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Future Work}{90}{subsection.9.3}%
+\contentsline {section}{\numberline {10}References}{91}{section.10}%
+\contentsline {section}{\numberline {11}Appendix}{92}{section.11}%

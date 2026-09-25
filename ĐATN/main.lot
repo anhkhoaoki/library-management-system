@@ -29,19 +29,12 @@
 \contentsline {table}{\numberline {28}{\ignorespaces Use-case Specification: Manage Branch Libraries}}{29}{table.28}%
 \contentsline {table}{\numberline {29}{\ignorespaces Use-case Specification: View Audit Logs}}{30}{table.29}%
 \contentsline {table}{\numberline {30}{\ignorespaces System Entities and Database Definitions}}{33}{table.caption.22}%
-\contentsline {table}{\numberline {31}{\ignorespaces Scope and Results of Unit Testing}}{81}{table.caption.88}%
-\contentsline {table}{\numberline {32}{\ignorespaces Scope and Results of Integration Testing}}{82}{table.caption.90}%
-\contentsline {table}{\numberline {33}{\ignorespaces System Testing Workflows}}{83}{table.caption.92}%
-\contentsline {table}{\numberline {34}{\ignorespaces Source Code Quality Test Results}}{84}{table.caption.94}%
-\contentsline {table}{\numberline {35}{\ignorespaces Backend Test Summary}}{85}{table.caption.96}%
-\contentsline {table}{\numberline {36}{\ignorespaces Deterministic vs. Non-deterministic Testing}}{86}{table.caption.98}%
-\contentsline {table}{\numberline {37}{\ignorespaces AI Evaluation Metrics Definitions}}{86}{table.caption.101}%
-\contentsline {table}{\numberline {38}{\ignorespaces Chatbot Evaluation — Group 1: Policy and FAQ Queries}}{88}{table.caption.105}%
-\contentsline {table}{\numberline {39}{\ignorespaces Sample Ground Truth vs.~Chatbot Answer — FAQ Case \#2}}{88}{table.caption.106}%
-\contentsline {table}{\numberline {40}{\ignorespaces Chatbot Evaluation — Group 2: Personal Account Queries (Function Calling)}}{89}{table.caption.108}%
-\contentsline {table}{\numberline {41}{\ignorespaces Sample Function Calling Interaction — Case \#12}}{89}{table.caption.109}%
-\contentsline {table}{\numberline {42}{\ignorespaces Chatbot Evaluation — Overall Metrics Summary}}{89}{table.caption.111}%
-\contentsline {table}{\numberline {43}{\ignorespaces Semantic Search Evaluation Test Cases}}{90}{table.caption.114}%
-\contentsline {table}{\numberline {44}{\ignorespaces Semantic Search Failure Example — Data Sparsity}}{90}{table.caption.116}%
-\contentsline {table}{\numberline {45}{\ignorespaces Architectural Fix Options for Language Mismatch}}{91}{table.caption.117}%
-\contentsline {table}{\numberline {46}{\ignorespaces Summary of Completed Project Deliverables}}{92}{table.46}%
+\contentsline {table}{\numberline {31}{\ignorespaces Scope and Results of Unit Testing}}{82}{table.caption.88}%
+\contentsline {table}{\numberline {32}{\ignorespaces Scope and Results of Integration Testing}}{83}{table.caption.90}%
+\contentsline {table}{\numberline {33}{\ignorespaces System Testing Workflows}}{84}{table.caption.92}%
+\contentsline {table}{\numberline {34}{\ignorespaces Source Code Quality Test Results}}{85}{table.caption.94}%
+\contentsline {table}{\numberline {35}{\ignorespaces Backend Test Summary}}{86}{table.caption.96}%
+\contentsline {table}{\numberline {36}{\ignorespaces Deterministic Testing vs. AI Feature Evaluation}}{87}{table.caption.98}%
+\contentsline {table}{\numberline {37}{\ignorespaces Detailed RAG Chatbot Evaluation Results (Scale 1--5)}}{88}{table.caption.99}%
+\contentsline {table}{\numberline {38}{\ignorespaces Detailed Semantic Search Evaluation Results}}{89}{table.caption.100}%
+\contentsline {table}{\numberline {39}{\ignorespaces Semantic Search Evaluation Metrics Summary}}{89}{table.caption.101}%

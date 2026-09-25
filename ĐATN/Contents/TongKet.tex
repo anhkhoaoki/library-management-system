@@ -1,37 +1,34 @@
-\section{Summary and Conclusion}
+\section{Summary and Future Work}
 
-\subsection{Project Accomplishments and Implementation Summary}
-
-This capstone graduation project has successfully completed the comprehensive design, development, security optimization, and cloud server deployment of the Online Library Management System. By modernizing traditional circulation workflows and embedding artificial intelligence capabilities, the platform provides an end-to-end, intelligent solution serving readers, librarians, and system administrators. The primary accomplishments of the project include:
-
+\subsection{Achieved Results}
+The graduation project has successfully designed and implemented an AI-integrated Online Library Management System. The main achievements include:
 \begin{itemize}
-    \item \textbf{Comprehensive System Analysis and Design:} Formulated complete technical architecture documentation, including a Three-Tier Architecture model, Enhanced Entity-Relationship Diagrams (EERD), class diagrams, activity diagrams, and sequence diagrams covering all operational workflows.
-
-    \item \textbf{Full-Stack Platform Implementation:} Built a robust machine server utilizing Node.js, Express.js, TypeScript, and Prisma ORM connected to PostgreSQL, alongside a high-performance single-page web application (SPA) developed using React.js and Vite.
-
-    \item \textbf{AI-Powered Smart Modules:} Integrated Google Generative AI (Gemini API) and \texttt{pgvector} to deliver natural language semantic search, automated cataloging via ISBN lookup, automated document summarization, personalized recommendation algorithms, and a 24/7 AI virtual assistant (Chatbot with RAG context).
-
-    \item \textbf{Core Circulation Management:} Implemented complete checkouts, returns, hold queue management, online loan renewals, inter-branch physical transfers, automated overdue fine calculations, and multi-channel notifications (In-app and Email via Nodemailer).
-
-    \item \textbf{Security Hardening, Optimization, and Deployment:} Executed rigorous security audits against Insecure Direct Object References (IDOR) and N+1 query bottlenecks; configured Cloudflare CDN, \texttt{iptables} rate limiting for DoS/DDoS mitigation, request timeout constraints, and production server deployment.
+    \item \textbf{Modern Full-Stack Development:} Built a stable system comprising a Frontend (React.js, Vite), Backend (Node.js, Express, Prisma, PostgreSQL), and an AI Microservice (Python, FastAPI). The system is successfully deployed on cloud environments (Vercel, Google Cloud Run).
+    \item \textbf{Effective AI Integration:} Successfully implemented Hybrid Semantic Search, an AI Virtual Assistant (Chatbot) utilizing RAG to answer library regulations, a personalized book recommendation system, and automated ISBN cataloging.
+    \item \textbf{Comprehensive Library Digitization:} Completed core operational workflows including catalog management, physical copy inventory, borrow/return processes, renewals, reservations, inter-branch transfers, and multi-channel notification systems.
+    \item \textbf{Optimization and Security:} Addressed fundamental security vulnerabilities such as IDOR, SQL Injection (via ORM), configured CORS, implemented Rate Limiting, and optimized database query performance (e.g., N+1 queries).
 \end{itemize}
 
-\subsection{Summary of Completed Project Lifecycle}
+\subsection{Remarks and Evaluation}
+\textbf{Strengths:}
+\begin{itemize}
+    \item The microservices-oriented architecture cleanly separates standard business logic (Backend) from intensive computational tasks (AI Service), facilitating scalability and ease of maintenance.
+    \item User experience is significantly enhanced through AI features such as natural language search and 24/7 chatbot support.
+    \item The system operates stably with an intuitive interface and fast response times, thanks to caching mechanisms and query optimizations.
+\end{itemize}
 
-The execution lifecycle of the graduation project—covering architectural design, full-stack implementation, AI microservice integration, security hardening, and final server deployment—is summarized in Table~\ref{tab:project_summary}.
+\textbf{Limitations:}
+\begin{itemize}
+    \item Due to deployment on Free Tier infrastructure (Vercel and Google Cloud Run), the system occasionally experiences "Cold Starts" on initial requests or faces execution timeouts for complex AI tasks.
+    \item The personalized recommendation algorithm has not yet reached its full potential due to the limited amount of historical borrowing and rating data in the testing environment (the Cold-Start problem for Recommender Systems).
+    \item Some advanced features, such as automated book summarization, were developed but temporarily disabled due to API cost constraints and LLM rate limits.
+\end{itemize}
 
-\begin{longtable}{|p{2.2cm}|p{3.8cm}|p{9.0cm}|}
-    \hline
-    \textbf{Phase} & \textbf{Core Deliverables}                     & \textbf{Summary of Accomplishments}                                                                                                                                                                                 \\
-    \hline
-    Phase 1        & System Analysis \& Foundational Infrastructure & Conducted domain analysis, designed database EERD, established Node.js/Express.js backend, built React.js frontend, and implemented basic cataloging and user authentication modules.                               \\
-    \hline
-    Phase 2        & Advanced Circulation        & Developed physical copy inventory tracking, hold queue reservations, online loan renewals, inter-branch transfer logistics, and fine calculation engines.                           \\
-    \hline
-    Phase 3        & AI Microservices \& Intelligent Features       & Configured \texttt{pgvector} for vector embeddings, built natural language semantic search, integrated Gemini API for document summarization, deployed recommendation algorithms, and created RAG-assisted Chatbot. \\
-    \hline
-    Phase 4        & Security, Performance \& Production Deployment & Conducted security audits (IDOR prevention, transaction atomicity, input sanitization), query optimization, \texttt{iptables} rate limiting, Cloudflare CDN integration, and production server deployment.          \\
-    \hline
-    \caption{Summary of Completed Project Deliverables}
-    \label{tab:project_summary}
-\end{longtable}
+\subsection{Future Work}
+Based on the current limitations and expansion potential, the project proposes the following future development directions:
+\begin{itemize}
+    \item \textbf{Infrastructure Upgrade:} Migrate to dedicated paid cloud infrastructure (e.g., AWS or Google Cloud Platform) to eliminate Cold Starts, increase bandwidth, and support a larger concurrent user base.
+    \item \textbf{AI Optimization and Expansion:} Research and fine-tune lightweight open-source LLMs (e.g., Llama 3 or Mistral) deployed internally to reduce reliance on third-party APIs (Gemini), thereby lowering costs and improving response times. Restore and upgrade the Function Calling capabilities of the Chatbot to allow users to query personal account information.
+    \item \textbf{Enhanced Recommendation System:} Integrate advanced machine learning signals (e.g., Deep Learning-based recommender systems) and collect additional user behavior data (such as page view duration and click-through rates) to provide more accurate recommendations.
+    \item \textbf{Mobile Application Development:} Build a cross-platform Mobile App using React Native or Flutter, integrating barcode/QR code scanning to assist librarians in inventory management and provide readers with faster on-the-go interactions.
+\end{itemize}
