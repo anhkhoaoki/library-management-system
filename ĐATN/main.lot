@@ -29,12 +29,13 @@
 \contentsline {table}{\numberline {28}{\ignorespaces Use-case Specification: Manage Branch Libraries}}{29}{table.28}%
 \contentsline {table}{\numberline {29}{\ignorespaces Use-case Specification: View Audit Logs}}{30}{table.29}%
 \contentsline {table}{\numberline {30}{\ignorespaces System Entities and Database Definitions}}{33}{table.caption.22}%
-\contentsline {table}{\numberline {31}{\ignorespaces Scope and Results of Unit Testing}}{82}{table.caption.88}%
-\contentsline {table}{\numberline {32}{\ignorespaces Scope and Results of Integration Testing}}{83}{table.caption.90}%
-\contentsline {table}{\numberline {33}{\ignorespaces System Testing Workflows}}{84}{table.caption.92}%
-\contentsline {table}{\numberline {34}{\ignorespaces Source Code Quality Test Results}}{85}{table.caption.94}%
-\contentsline {table}{\numberline {35}{\ignorespaces Backend Test Summary}}{86}{table.caption.96}%
-\contentsline {table}{\numberline {36}{\ignorespaces Deterministic Testing vs. AI Feature Evaluation}}{87}{table.caption.98}%
-\contentsline {table}{\numberline {37}{\ignorespaces Detailed RAG Chatbot Evaluation Results (Scale 1--5)}}{88}{table.caption.99}%
-\contentsline {table}{\numberline {38}{\ignorespaces Detailed Semantic Search Evaluation Results}}{89}{table.caption.100}%
-\contentsline {table}{\numberline {39}{\ignorespaces Semantic Search Evaluation Metrics Summary}}{89}{table.caption.101}%
+\contentsline {table}{\numberline {31}{\ignorespaces Comprehensive Technology Stack Summary of the BkLib Platform}}{69}{table.caption.66}%
+\contentsline {table}{\numberline {32}{\ignorespaces Scope and Results of Unit Testing}}{88}{table.caption.89}%
+\contentsline {table}{\numberline {33}{\ignorespaces Scope and Results of Integration Testing}}{89}{table.caption.91}%
+\contentsline {table}{\numberline {34}{\ignorespaces System Testing Workflows}}{90}{table.caption.93}%
+\contentsline {table}{\numberline {35}{\ignorespaces Source Code Quality Test Results}}{91}{table.caption.95}%
+\contentsline {table}{\numberline {36}{\ignorespaces Backend Test Summary}}{92}{table.caption.97}%
+\contentsline {table}{\numberline {37}{\ignorespaces Deterministic Testing vs. AI Feature Evaluation}}{93}{table.caption.99}%
+\contentsline {table}{\numberline {38}{\ignorespaces Detailed RAG Chatbot Evaluation Results (Scale 1--5)}}{94}{table.caption.100}%
+\contentsline {table}{\numberline {39}{\ignorespaces Detailed Semantic Search Evaluation Results}}{95}{table.caption.101}%
+\contentsline {table}{\numberline {40}{\ignorespaces Semantic Search Evaluation Metrics Summary}}{95}{table.caption.102}%

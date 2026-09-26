@@ -163,7 +163,7 @@ The \textbf{Account and Access Management} class diagram models object structure
 
 The central entity is \texttt{User}, containing attributes \texttt{id}, \texttt{email}, \texttt{username}, \texttt{fullName}, \texttt{phone}, \texttt{avatarUrl}, \texttt{studentId}, alongside security attributes \texttt{passwordHash}, \texttt{mfaEnabled}, \texttt{failedLoginCount}, \texttt{lockedUntil}, \texttt{lastLoginAt}, and \texttt{createdAt}. The core method \texttt{validatePassword(rawPassword)} performs credential verification.
 
-\texttt{User} holds associations with \texttt{Role} (GUEST, READER, LIBRARIAN, ADMIN) and \texttt{UserStatus} (PENDING\_VERIFICATION, ACTIVE, SUSPENDED, BANNED). \texttt{User} associates $1 - 0..*$ with \texttt{OtpToken} (method \texttt{isValid()}) and $1 - 0..*$ with \texttt{BorrowRecord}.
+\texttt{User} holds associations with \texttt{Role} (READER, LIBRARIAN, ADMIN) and \texttt{UserStatus} (PENDING\_VERIFICATION, ACTIVE, SUSPENDED, BANNED). \texttt{User} associates $1 - 0..*$ with \texttt{OtpToken} (method \texttt{isValid()}) and $1 - 0..*$ with \texttt{BorrowRecord}.
 
 Architecturally, \texttt{AuthController} relies on \texttt{AuthService} (\texttt{registerUser}, \texttt{verifyRegistrationOtp}, \texttt{authenticate}, \texttt{processForgotPassword}, \texttt{resetPasswordUser}). \texttt{UserController} relies on \texttt{UserService} (\texttt{getUserById}, \texttt{updateUserProfile}, \texttt{getUserBorrowHistory}). \texttt{AdminUserController} uses \texttt{UserManagementService} (\texttt{searchUsers}, \texttt{getUserDetail}, \texttt{changeUserStatus}, \texttt{changeUserRole}).
 
@@ -258,7 +258,10 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 \texttt{AuditLogController} uses \texttt{AuditLogService}. \texttt{ReportController} uses \texttt{ReportingService} (\texttt{ReportGenerator}). \texttt{SystemConfigController} uses \texttt{SystemConfigService}. \texttt{BackupController} uses \texttt{BackupService} (\texttt{DatabaseManager}). \texttt{BranchController} uses \texttt{BranchService}. \texttt{DashboardController} uses \texttt{DashboardService} interfacing with \texttt{PredictiveModelClient} for demand forecasting.
 
 \subsection{Activity Diagrams}
+
 \subsubsection{Account Registration}
+
+The Account Registration activity diagram illustrates the end-to-end operational workflow when a new guest user creates an account in the system. This process ensures that user inputs comply with system validation rules, prevents duplicate identity registration via unique email/phone checks, and guarantees secure user verification through Multi-Factor Authentication (OTP/Activation links) before activating the profile.
 
 \begin{figure}[H]
 	\centering
@@ -290,6 +293,8 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 
 \subsubsection{System Login}
 
+The System Login activity diagram depicts the authentication sequence for existing users accessing the system. It handles identity verification against stored credentials and incorporates adaptive security controls—such as mandatory Multi-Factor Authentication (MFA) and automated temporary account lockouts after multiple failed attempts—to protect the platform against brute-force attacks.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/dangnhap.png}
@@ -311,6 +316,8 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 
 \subsubsection{Password Reset}
 
+The Password Reset activity diagram outlines the self-service credential recovery mechanism for users who have forgotten their passwords. The workflow relies on secure, time-sensitive verification tokens sent directly to the user's registered email address, ensuring that password updates occur safely without administrator intervention.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/datlai.png}
@@ -331,6 +338,8 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 
 \subsubsection{View Loan/Return History}
 
+The View Loan/Return History activity diagram models how users query and inspect their personal borrowing records over time. It demonstrates the interactions involved in fetching structured loan logs from the persistent database and allowing users to dynamically filter results based on execution dates or current item statuses (e.g., Active, Returned, Overdue).
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/xemlichsu.png}
@@ -350,6 +359,8 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 
 \subsubsection{User Account Management}
 
+The User Account Management activity diagram presents the administrative control workflow for managing user accounts system-wide. Authorized System Administrators can search, review, create, edit, lock/unlock, or adjust role permissions (Role-Based Access Control) for any user profile while maintaining overall access compliance.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/quanly.png}
@@ -366,6 +377,8 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 \end{enumerate}
 
 \subsubsection{Add / Edit / Delete Catalog Record}
+
+This activity diagram describes the cataloging management actions performed by Librarians to keep the library database accurate. It handles single-item entries, updates, and soft deletions, including validation checks to prevent the deletion of items currently actively checked out by patrons.
 
 \begin{figure}[H]
 	\centering
@@ -385,6 +398,8 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 
 \subsubsection{Batch Catalog Data Ingestion}
 
+The Batch Catalog Data Ingestion activity diagram details the process of importing bulk book catalog data into the system using external files (CSV/Excel). The workflow highlights parsing, pre-import validation, error logging for malformed records, and database transaction execution to facilitate rapid catalog updates.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/nhap.png}
@@ -403,6 +418,8 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 
 \subsubsection{Automated Cataloging via ISBN}
 
+The Automated Cataloging via ISBN activity diagram depicts how the system integrates with external metadata services (Google Books API, Open Library API). Librarians provide an ISBN code, and the system automatically queries external APIs to populate book metadata fields, reducing manual data entry overhead.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/bienmuc.png}
@@ -419,6 +436,8 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 \end{enumerate}
 
 \subsubsection{Physical Material Checkout}
+
+The Physical Material Checkout activity diagram specifies the desk circulation process when a reader borrows physical books. It captures barcode scanning operations, verifies reader eligibility (account status, unpaid fine limits, max loan allowances), updates item copy availability, and registers checkout records.
 
 \begin{figure}[H]
 	\centering
@@ -438,6 +457,8 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 
 \subsubsection{Material Return}
 
+The Material Return activity diagram details the operational flow executed when physical books are returned to the library desk. The system closes the active borrow record, evaluates potential overdue days to initiate fine calculation workflows if necessary, and inspects reservation queues to transition the copy state appropriately.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/tra.png}
@@ -456,6 +477,8 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 
 \subsubsection{Calculate and Assess Overdue Fines}
 
+The Calculate and Assess Overdue Fines activity diagram models the financial penalty workflow for items returned after their due dates. The system automatically computes overdue durations (excluding official library holidays), applies daily penalty rates, and posts the resulting fine balance to the reader's account or processes immediate payment receipts.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.5\linewidth]{Images/phiphat.png}
@@ -471,6 +494,8 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 \end{enumerate}
 
 \subsubsection{Online Loan Renewal}
+
+The Online Loan Renewal activity diagram presents the self-service capability that allows readers to extend their borrowing period over the web. The system validates renewal constraints—such as ensuring maximum allowed renewals haven't been exceeded and checking that no other patron has placed a hold reservation on the item.
 
 \begin{figure}[H]
 	\centering
@@ -488,6 +513,8 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 
 \subsubsection{Place Item Hold}
 
+The Place Item Hold activity diagram presents the reservation process when a requested material is currently out of stock. The system verifies that the user does not currently hold an active copy of the item and assigns them a sequential queue position for automated pickup notification when a copy is returned.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.5\linewidth]{Images/dat.png}
@@ -503,6 +530,8 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 \end{enumerate}
 
 \subsubsection{Document Catalog Search}
+
+The Document Catalog Search activity diagram models how users explore the library catalog. It depicts keyword query submission, indexed database querying, paginated search result rendering, and navigation to detailed document view pages.
 
 \begin{figure}[H]
 	\centering
@@ -521,6 +550,9 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 \subsection{Sequence Diagrams}
 
 \subsubsection{Account Registration}
+
+The Account Registration sequence diagram illustrates the step-by-step object interactions between the Reader interface, Authentication Controller, User Service, Notification Dispatcher, and Database. It details how user inputs are validated, how OTP verification tokens are dispatched asynchronously, and how the database transaction completes account activation upon successful code validation.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/Seq_Dang ky.png}
@@ -528,6 +560,7 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 	\caption{Sequence Diagram for Account Registration}
 	\label{fig:sequence_register}
 \end{figure}
+
 \begin{enumerate}
 	\item Reader accesses registration view.
 	\item Submits details; system validates inputs and checks for duplicates.
@@ -536,6 +569,9 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 \end{enumerate}
 
 \subsubsection{Account Login}
+
+The Account Login sequence diagram outlines the interactive messages passed between the User Interface, Authentication Controller, Security Service, and Database during authentication. It captures credential validation, role and status verification, Multi-Factor Authentication (MFA) evaluation, and the final issuance of a JSON Web Token (JWT) session upon authorization.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/Seq_Dang nhap.png}
@@ -543,6 +579,7 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 	\caption{Sequence Diagram for Account Login}
 	\label{fig:sequence_login}
 \end{figure}
+
 \begin{enumerate}
 	\item User submits credentials.
 	\item System matches credentials against DB.
@@ -550,6 +587,9 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 \end{enumerate}
 
 \subsubsection{Account Password Reset}
+
+The Account Password Reset sequence diagram specifies the system interactions during a self-service credential recovery flow. It demonstrates how the system validates user identity via email lookup, generates temporary reset tokens, dispatches secure email links, and executes hashed password updates upon token verification.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/Seq_Reset mat khau.png}
@@ -557,6 +597,7 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 	\caption{Sequence Diagram for Account Password Reset}
 	\label{fig:sequence_reset_password}
 \end{figure}
+
 \begin{enumerate}
 	\item User requests password reset by entering registered email.
 	\item System verifies email, generates reset token, and dispatches reset link via email.
@@ -564,6 +605,9 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 \end{enumerate}
 
 \subsubsection{Document Search}
+
+The Document Search sequence diagram describes the message flow initiated when a user queries the catalog. It depicts the communication between the UI, Search Service, and Catalog Database, including query parsing, index execution, paginated dataset retrieval, and detail view fetching.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/Seq_Tim kiem.png}
@@ -571,6 +615,7 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 	\caption{Sequence Diagram for Document Search}
 	\label{fig:sequence_search}
 \end{figure}
+
 \begin{enumerate}
 	\item Reader enters search query.
 	\item Search engine queries catalog database and returns filtered, paginated results.
@@ -578,7 +623,13 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 \end{enumerate}
 
 \subsubsection{Add / Edit / Delete Document}
+
+This sub-section models the sequential operations performed by Librarians to manage individual catalog entries, including creation, modification, and soft deletion workflows.
+
 \subsubsubsection{Add Document}
+
+The Add Document sequence diagram details the interaction between the Librarian UI, Catalog Controller, ISBN API Integration Service, LLM Summary Engine, and Database when entering a new book record into the system.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/Seq_Them tai lieu.png}
@@ -586,9 +637,13 @@ Core entities: \texttt{AuditLog} (\texttt{action}, \texttt{oldData}, \texttt{new
 	\caption{Sequence Diagram for Add Document}
 	\label{fig:sequence_add_document}
 \end{figure}
+
 Librarian enters metadata manually or fetches via ISBN API (UC-CAT-03), optionally generating AI summary (UC-CAT-04), and saves record.
 
 \subsubsubsection{Edit Document}
+
+The Edit Document sequence diagram illustrates the lifecycle of updating an existing document metadata record, ensuring input validation and persistence in PostgreSQL via Prisma ORM.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/Seq_Sua tai lieu.png}
@@ -596,9 +651,13 @@ Librarian enters metadata manually or fetches via ISBN API (UC-CAT-03), optional
 	\caption{Sequence Diagram for Edit Document}
 	\label{fig:sequence_edit_document}
 \end{figure}
+
 Librarian edits pre-filled item fields, system validates inputs, and updates DB record.
 
 \subsubsubsection{Delete Document}
+
+The Delete Document sequence diagram models the safety checks and deletion execution flow, verifying that the physical item is not currently checked out before performing a soft deletion.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/Seq_Xoa tai lieu.png}
@@ -606,9 +665,13 @@ Librarian edits pre-filled item fields, system validates inputs, and updates DB 
 	\caption{Sequence Diagram for Delete Document}
 	\label{fig:sequence_delete_document}
 \end{figure}
+
 System verifies item is not currently borrowed, librarian confirms deletion, and system performs soft delete.
 
 \subsubsection{Batch Document Import}
+
+The Batch Document Import sequence diagram illustrates the communication between the UI, Import Controller, File Parsing Service, Validation Service, and Database during bulk data processing. It details batch database insert transactions and error response summaries.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/Seq_Them hang loat.png}
@@ -616,9 +679,13 @@ System verifies item is not currently borrowed, librarian confirms deletion, and
 	\caption{Sequence Diagram for Batch Document Import}
 	\label{fig:sequence_import_documents}
 \end{figure}
+
 Librarian uploads file; system validates rows, imports valid entries, and reports error summary.
 
 \subsubsection{Reserve Document}
+
+The Reserve Document sequence diagram depicts object interactions when a patron places a hold request on an out-of-stock book. It details copy availability verification, reservation queue insertion, and automated notification dispatch.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/Seq_Dat muon sach.png}
@@ -626,9 +693,13 @@ Librarian uploads file; system validates rows, imports valid entries, and report
 	\caption{Sequence Diagram for Reserve Document}
 	\label{fig:sequence_reserve_document}
 \end{figure}
+
 System checks for duplicate borrowings and copy availability; if zero available copies exist, appends user to queue and sends email confirmation.
 
 \subsubsection{Fine Calculation Update}
+
+The Fine Calculation Update sequence diagram models interactions between the Fine Controller, Fine Calculation Service, and User Ledger Database. It covers automated overdue duration checks, daily rate applications, and ledger updating.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/Seq_Tien phat.png}
@@ -636,9 +707,13 @@ System checks for duplicate borrowings and copy availability; if zero available 
 	\caption{Sequence Diagram for Fine Calculation Update}
 	\label{fig:sequence_fine}
 \end{figure}
+
 System verifies borrower fine threshold, scans items, creates loan ticket, and decrements copy inventory.
 
 \subsubsection{Process Document Loan}
+
+The Process Document Loan sequence diagram displays the message exchanges between the Librarian UI, Circulation Service, Account Service, and Database when issuing a physical item checkout at the circulation desk.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/Seq_Muon sach.png}
@@ -646,9 +721,13 @@ System verifies borrower fine threshold, scans items, creates loan ticket, and d
 	\caption{Sequence Diagram for Process Document Loan}
 	\label{fig:sequence_borrow}
 \end{figure}
+
 Librarian validates reader eligibility, verifies item hold status, checks loan limits, and creates loan ticket.
 
 \subsubsection{Extend Document Loan}
+
+The Extend Document Loan sequence diagram presents object interactions involved in extending an active loan period, verifying renewal quotas, and ensuring no pending hold requests exist prior to updating the due date.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/Seq_Gia han.png}
@@ -656,9 +735,13 @@ Librarian validates reader eligibility, verifies item hold status, checks loan l
 	\caption{Sequence Diagram for Extend Document Loan}
 	\label{fig:sequence_extend_borrow}
 \end{figure}
+
 System checks renewal allowances and hold queue status; extends due date upon approval.
 
 \subsubsection{Return Document}
+
+The Return Document sequence diagram details the end-to-end operational exchanges when processing returned physical items, evaluating potential overdue fines, updating inventory statuses, and triggering hold availability alerts for waiting patrons.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/Seq_Tra sach.png}
@@ -666,4 +749,5 @@ System checks renewal allowances and hold queue status; extends due date upon ap
 	\caption{Sequence Diagram for Return Document}
 	\label{fig:sequence_return}
 \end{figure}
+
 Librarian scans item, system assesses overdue fine if applicable, checks hold queue, updates copy status, and closes loan ticket.
