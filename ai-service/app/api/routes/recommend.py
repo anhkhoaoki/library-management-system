@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 
 from app.services.recommendation_service import get_personalized_recommendations
-from app.api.routes.search import get_book_embeddings
+from app.services.vector_store import get_all_books_with_embeddings
 
 router = APIRouter()
 
@@ -69,11 +69,11 @@ async def personalized_recommendations(request: RecommendRequest):
     if not request.userId:
         raise HTTPException(status_code=400, detail="userId là bắt buộc")
 
-    # Lấy embedding cache (shared với search endpoint — không cần rebuild)
+    # Lấy danh sách sách kèm embedding từ pgvector (dùng cho content-based filtering)
     try:
-        book_embeddings = await get_book_embeddings()
+        book_embeddings = get_all_books_with_embeddings()
     except Exception as e:
-        print(f"[Recommend] Lỗi khi lấy embedding cache: {e}")
+        print(f"[Recommend] Lỗi khi lấy book embeddings từ pgvector: {e}")
         book_embeddings = []
 
     # Nếu chưa có lịch sử hoặc cache trống → cold start (Node.js xử lý)

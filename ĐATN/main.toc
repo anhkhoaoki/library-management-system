@@ -182,11 +182,9 @@
 \contentsline {subsubsection}{\numberline {8.3.3}Chatbot Evaluation Analysis}{88}{subsubsection.8.3.3}%
 \contentsline {subsection}{\numberline {8.4}Semantic Search Evaluation Results}{88}{subsection.8.4}%
 \contentsline {subsubsection}{\numberline {8.4.1}Test Dataset Setup}{88}{subsubsection.8.4.1}%
-\contentsline {subsubsection}{\numberline {8.4.2}Detailed Search Evaluation Results Table}{89}{subsubsection.8.4.2}%
-\contentsline {subsubsection}{\numberline {8.4.3}Search Performance Metrics Analysis}{89}{subsubsection.8.4.3}%
-\contentsline {subsection}{\numberline {8.5}Failure Analysis and Lessons Learned}{89}{subsection.8.5}%
-\contentsline {subsubsection}{\numberline {8.5.1}Cause 1: Embedding Model Language Mismatch}{89}{subsubsection.8.5.1}%
-\contentsline {subsubsection}{\numberline {8.5.2}Cause 2: Vector Similarity Threshold Filtering}{89}{subsubsection.8.5.2}%
+\contentsline {subsubsection}{\numberline {8.4.2}Overall Performance Metrics}{89}{subsubsection.8.4.2}%
+\contentsline {subsubsection}{\numberline {8.4.3}Detailed Search Evaluation Results Table}{89}{subsubsection.8.4.3}%
+\contentsline {subsubsection}{\numberline {8.4.4}Search Performance Analysis}{89}{subsubsection.8.4.4}%
 \contentsline {section}{\numberline {9}Summary and Future Work}{90}{section.9}%
 \contentsline {subsection}{\numberline {9.1}Achieved Results}{90}{subsection.9.1}%
 \contentsline {subsection}{\numberline {9.2}Remarks and Evaluation}{90}{subsection.9.2}%

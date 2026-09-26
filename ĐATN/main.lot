@@ -36,5 +36,5 @@
 \contentsline {table}{\numberline {35}{\ignorespaces Backend Test Summary}}{86}{table.caption.96}%
 \contentsline {table}{\numberline {36}{\ignorespaces Deterministic Testing vs. AI Feature Evaluation}}{87}{table.caption.98}%
 \contentsline {table}{\numberline {37}{\ignorespaces Detailed RAG Chatbot Evaluation Results (Scale 1--5)}}{88}{table.caption.99}%
-\contentsline {table}{\numberline {38}{\ignorespaces Detailed Semantic Search Evaluation Results}}{89}{table.caption.100}%
-\contentsline {table}{\numberline {39}{\ignorespaces Semantic Search Evaluation Metrics Summary}}{89}{table.caption.101}%
+\contentsline {table}{\numberline {38}{\ignorespaces Semantic Search Evaluation Metrics Summary (pgvector)}}{89}{table.caption.100}%
+\contentsline {table}{\numberline {39}{\ignorespaces Detailed Semantic Search Evaluation Results (pgvector, 15 queries)}}{89}{table.caption.101}%

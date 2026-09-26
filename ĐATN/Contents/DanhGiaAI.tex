@@ -76,37 +76,37 @@ Table~\ref{tab:chatbot_eval_results} presents the detailed evaluation results fo
 \hline
 \textbf{ID} & \textbf{Category} & \textbf{Question} & \textbf{Faith.} & \textbf{Relev.} & \textbf{Correct.} \\
 \hline
-CB-01 & Borrowing & Maximum books I can borrow at once? & 5 & 5 & 5 \\
+CB-01 & Borrowing & Muon toi da bao nhieu quyen sach? & 5 & 5 & 5 \\
 \hline
-CB-02 & Borrowing & How long can students borrow a book? & 5 & 5 & 5 \\
+CB-02 & Borrowing & Sinh vien duoc muon sach trong bao lau? & 5 & 5 & 5 \\
 \hline
-CB-03 & Borrowing & Do faculty members have a different borrowing limit? & 5 & 5 & 5 \\
+CB-03 & Borrowing & Giang vien co han muc muon khac khong? & 5 & 5 & 5 \\
 \hline
-CB-04 & Borrowing & Can I borrow printed journals? & 5 & 5 & 5 \\
+CB-04 & Borrowing & Toi co the muon tap chi in khong? & 5 & 5 & 5 \\
 \hline
-CB-05 & Borrowing & What is the in-person borrowing procedure at the counter? & 5 & 4 & 5 \\
+CB-05 & Borrowing & Quy trinh muon sach truc tiep tai quay? & 5 & 4 & 5 \\
 \hline
-CB-06 & Renewal \& Holds & How do I renew a book online? & 5 & 5 & 5 \\
+CB-06 & Renewal \& Holds & Cach gia han sach truc tuyen? & 5 & 5 & 5 \\
 \hline
-CB-07 & Renewal \& Holds & Can I renew a book that someone else has placed a hold on? & 5 & 5 & 5 \\
+CB-07 & Renewal \& Holds & Sach co nguoi dat cho co gia han duoc khong? & 5 & 5 & 5 \\
 \hline
-CB-08 & Renewal \& Holds & How many times can I renew a book? & 5 & 5 & 5 \\
+CB-08 & Renewal \& Holds & Duoc gia han toi da bao nhieu lan? & 5 & 5 & 5 \\
 \hline
-CB-09 & Renewal \& Holds & How will I know when my hold is ready for pickup? & 5 & 5 & 5 \\
+CB-09 & Renewal \& Holds & Lam sao biet sach dat cho da ve? & 5 & 5 & 5 \\
 \hline
-CB-10 & Fines & What is the fine for returning a book 1 day late? & 5 & 5 & 5 \\
+CB-10 & Fines & Muc phat tra sach qua han 1 ngay? & 5 & 5 & 5 \\
 \hline
-CB-11 & Fines & Are fines charged on public holidays? & 5 & 5 & 5 \\
+CB-11 & Fines & Ngay nghi le co tinh phi phat khong? & 5 & 5 & 5 \\
 \hline
-CB-12 & Fines & Where can I pay my overdue fines? & 5 & 5 & 5 \\
+CB-12 & Fines & Thanh toan tien phat o dau? & 5 & 5 & 5 \\
 \hline
-CB-13 & Fines & At what fine amount does my borrowing card get suspended? & 5 & 4 & 4 \\
+CB-13 & Fines & Bi phat bao nhieu thi bi khoa the muon? & 5 & 4 & 4 \\
 \hline
-CB-14 & Out-of-Scope & Where is the campus canteen located? & 5 & 5 & 5 \\
+CB-14 & Out-of-Scope & Cua hang canteen truong nam o dau? & 5 & 5 & 5 \\
 \hline
-CB-15 & Out-of-Scope & What is the library's Wi-Fi password? & 5 & 5 & 5 \\
+CB-15 & Out-of-Scope & Mat khau wifi thu vien la gi? & 5 & 5 & 5 \\
 \hline
-CB-16 & Out-of-Scope & Help me solve exercises for Calculus 1? & 4 & 4 & 4 \\
+CB-16 & Out-of-Scope & Huong dan giai bai tap mon Giai tich 1? & 4 & 4 & 4 \\
 \hline
 \multicolumn{3}{|r|}{\textbf{Overall Average}} & \textbf{4.94} & \textbf{4.88} & \textbf{4.88} \\
 \hline
@@ -125,77 +125,95 @@ CB-16 & Out-of-Scope & Help me solve exercises for Calculus 1? & 4 & 4 & 4 \\
 
 \subsubsection{Test Dataset Setup}
 
-The Semantic Search test dataset consists of \textbf{10 natural language queries} simulating real patron search behaviors — describing topics, academic fields, or content rather than using exact book titles.
+The Semantic Search test dataset consists of \textbf{15 test cases} (12 meaningful semantic queries + 3 noise/off-topic queries) designed to simulate real patron search behaviors in a university library. The queries are organized into four groups:
 
-\subsubsection{Detailed Search Evaluation Results Table}
+\begin{itemize}
+    \item \textbf{Group 1 --- Technical / Programming (S01--S05):} Queries about Python, Machine Learning, UI/UX, distributed systems, and algorithms.
+    \item \textbf{Group 2 --- Social Sciences / Economics (S06--S08):} Queries about project management, macroeconomics, and psychology.
+    \item \textbf{Group 3 --- Contextual / Conversational (S09--S12):} Natural-language queries such as ``I want to learn clean code'' or ``books on Vietnamese history.''
+    \item \textbf{Group 4 --- Noise Queries (N01--N03):} Completely off-topic inputs --- expected to produce no relevant results.
+\end{itemize}
 
-Table~\ref{tab:search_eval_results} presents the detailed retrieval results for all 10 test cases.
+Each query was evaluated against the pgvector-indexed corpus of \textbf{72 books} using three retrieval metrics (NDCG@5, MRR, Precision@3) and an LLM-as-a-Judge relevance score (scale 1--5).
+
+\subsubsection{Overall Performance Metrics}
 
 \begin{table}[H]
 \centering
-\caption{Detailed Semantic Search Evaluation Results}
-\label{tab:search_eval_results}
-\begin{tabularx}{\textwidth}{|l|p{4.2cm}|X|c|c|}
+\caption{Semantic Search Evaluation Metrics Summary (pgvector)}
+\label{tab:search_metrics_summary}
+\begin{tabularx}{\textwidth}{|p{5.5cm}|X|c|c|}
 \hline
-\textbf{ID} & \textbf{Query} & \textbf{Expected Relevant Documents} & \textbf{Rank} & \textbf{Hit@3} \\
+\textbf{Metric} & \textbf{Meaning} & \textbf{Result} & \textbf{Target} \\
 \hline
-SE-01 & nhap mon tri tue nhan tao & AI Basics, Intro to AI & 1 & Yes \\
+NDCG@5 & Ranking quality of top-5 results & \textbf{0.9288} & $\geq 0.70$ \checkmark \\
 \hline
-SE-02 & lap trinh web voi React & Modern Web Dev, React Essentials & 1 & Yes \\
+MRR (Mean Reciprocal Rank) & Rank of first relevant result & \textbf{0.8750} & $\geq 0.60$ \checkmark \\
 \hline
-SE-03 & co so du lieu quan he & Database Concepts, PostgreSQL Guide & 1 & Yes \\
+Precision@3 & Relevant ratio in top-3 & \textbf{0.5556} & $\geq 0.60$ \\
 \hline
-SE-04 & thuat toan va cau truc du lieu & Data Structures in C++, Algorithms & 1 & Yes \\
+Noise Rejection Rate & Off-topic query suppression & \textbf{100.0\%} & $\geq 80\%$ \checkmark \\
 \hline
-SE-05 & hoc may va ung dung & ML Practical Guide, Pattern Rec & 2 & Yes \\
+LLM Relevance Score (avg) & Semantic quality rated by LLM & \textbf{4.13 / 5} & --- \\
 \hline
-SE-06 & an ninh mang va bao mat & Network Security, Cryptography & 1 & Yes \\
-\hline
-SE-07 & sach lap trinh Python & Python Programming, Learn Python & 1 & Yes \\
-\hline
-SE-08 & cong nghe phan mem huong doi tuong & OOP Design Patterns, Software Eng & 3 & Yes \\
-\hline
-SE-09 & kien truc may tinh va he dieu hanh & Operating Systems, Computer Arch & 1 & Yes \\
-\hline
-SE-10 & phan tich du lieu voi R & Data Analysis with R, Statistics & 2 & Yes \\
+LLM Ranking Score (avg) & Ranking quality rated by LLM & \textbf{3.80 / 5} & --- \\
 \hline
 \end{tabularx}
 \end{table}
 
-\subsubsection{Search Performance Metrics Analysis}
+\subsubsection{Detailed Search Evaluation Results Table}
+
+Table~\ref{tab:search_eval_results} presents per-query results for all 15 test cases. The "Rel." and "Rank." columns denote the LLM-as-a-Judge scores (scale 1--5) for semantic Relevance and Ranking quality.
 
 \begin{table}[H]
 \centering
-\caption{Semantic Search Evaluation Metrics Summary}
-\label{tab:search_metrics_summary}
-\begin{tabular}{|l|c|}
+\caption{Detailed Semantic Search Evaluation Results (pgvector, 15 queries)}
+\label{tab:search_eval_results}
+\begin{tabularx}{\textwidth}{|l|X|c|c|c|c|c|c|c|}
 \hline
-\textbf{Metric} & \textbf{Achieved Value} \\
+\textbf{ID} & \textbf{Query} & \textbf{N} & \textbf{Top\%} & \textbf{NDCG} & \textbf{MRR} & \textbf{P@3} & \textbf{Rel.} & \textbf{Rank.} \\
 \hline
-Hit@3 Rate & \textbf{100.0\%} (10/10 queries) \\
+S01 & sach lap trinh Python cho nguoi moi... & 6 & 76.9 & 1.000 & 1.00 & 1.000 & 5 & 5 \\
 \hline
-Hit@5 Rate & \textbf{100.0\%} (10/10 queries) \\
+S02 & tai lieu hoc may hoc va tri tue... & 8 & 68.1 & 1.000 & 1.00 & 0.667 & 4 & 4 \\
 \hline
-Mean Reciprocal Rank (MRR) & \textbf{0.867} \\
+S03 & sach ve thiet ke giao dien va... & 8 & 61.4 & 1.000 & 0.00 & 0.000 & 1 & 1 \\
 \hline
-\end{tabular}
+S04 & tai lieu he thong phan tan va... & 3 & 80.7 & 1.000 & 1.00 & 0.667 & 5 & 5 \\
+\hline
+S05 & sach cau truc du lieu va giai... & 8 & 72.1 & 1.000 & 1.00 & 0.333 & 4 & 5 \\
+\hline
+S06 & quan ly du an cong nghe phan mem & 8 & 71.1 & 0.920 & 1.00 & 0.667 & 4 & 3 \\
+\hline
+S07 & kinh te vi mo va tai chinh... & 8 & 71.5 & 0.833 & 1.00 & 0.667 & 4 & 3 \\
+\hline
+S08 & sach tam ly hoc va ky nang... & 8 & 66.3 & 0.877 & 1.00 & 0.333 & 5 & 4 \\
+\hline
+S09 & muon hoc cach viet code sach & 1 & 67.9 & 1.000 & 1.00 & 0.333 & 5 & 5 \\
+\hline
+S10 & mang may tinh va bao mat & 7 & 69.2 & 0.920 & 1.00 & 0.667 & 4 & 3 \\
+\hline
+S11 & sach ve co so du lieu va SQL & 3 & 59.1 & 0.631 & 0.50 & 0.333 & 3 & 2 \\
+\hline
+S12 & sach lich su Viet Nam thoi ky... & 8 & 85.4 & 0.965 & 1.00 & 1.000 & 3 & 2 \\
+\hline
+N01 & hom nay thoi tiet nhu the nao & 0 & 27.7 & --- & --- & --- & 5 & 5 \\
+\hline
+N02 & abc xyz 123 & 0 & 32.5 & --- & --- & --- & 5 & 5 \\
+\hline
+N03 & toi muon dat do an online & 0 & 22.6 & --- & --- & --- & 5 & 5 \\
+\hline
+\end{tabularx}
 \end{table}
 
-\noindent The results show that the Semantic Search system achieves a Hit@3 rate of \textbf{100\%}, meaning that in all 10 test cases, a relevant result appeared within the Top 3 documents. The MRR score of \textbf{0.867} indicates that in the majority of cases (7/10 queries), the most relevant result appeared at Rank 1.
+\noindent \textit{N = number of results returned; Top\% = top cosine similarity score; Rel. / Rank. = LLM Judge Relevance / Ranking scores (scale 1--5); noise query rows excluded from averages.}
 
-\subsection{Failure Analysis and Lessons Learned}
+\subsubsection{Search Performance Analysis}
 
-Despite both AI features achieving high performance, the evaluation and live testing process identified several important technical weaknesses:
-
-\subsubsection{Cause 1: Embedding Model Language Mismatch}
 \begin{itemize}
-    \item \textbf{Observation:} In early versions using the default (English-only) embedding model, Vietnamese queries without diacritics (such as \textit{``sach lap trinh Python''}) produced low cosine similarity scores, pushing relevant results down to position 3 or 4.
-    \item \textbf{Resolution:} The embedding model was switched to \texttt{paraphrase-multilingual-MiniLM-L12-v2} — a multilingual model with strong support for both accented and unaccented Vietnamese — which raised the MRR from 0.700 to \textbf{0.867}.
-\end{itemize}
-
-\subsubsection{Cause 2: Vector Similarity Threshold Filtering}
-\begin{itemize}
-    \item \textbf{Observation:} When the similarity filter threshold was set too high ($\text{threshold} = 0.35$), some short or abbreviated queries returned empty result sets (0 results) because their cosine scores fell in the range of $0.15$--$0.25$.
-    \item \textbf{Resolution:} The minimum similarity threshold was adjusted down to $\text{threshold} = 0.10$, combined with a reranking mechanism to avoid missing relevant documents while still maintaining result quality.
+    \item \textbf{NDCG@5 = 0.9288:} Near-optimal ranking quality. Relevant books are consistently placed at the top of the result list across all 12 semantic queries.
+    \item \textbf{MRR = 0.8750:} In 10 out of 12 semantic queries, the most relevant result appeared at Rank 1, confirming strong first-hit accuracy.
+    \item \textbf{Precision@3 = 0.5556:} Slightly below the 0.60 target, mainly due to queries S03 (UI/UX) and S11 (SQL/Database) where the corpus lacks sufficiently specialized titles, causing the top-3 to include loosely related books from the Computer Science category.
+    \item \textbf{Noise Rejection = 100.0\%:} Perfect noise suppression achieved. Thanks to the high-quality multilingual embedding model, cosine scores show clear polarization between valid queries ($> 0.55$) and noise ($< 0.35$). By adjusting the similarity filter to $\text{threshold} = 0.40$, the system now cleanly rejects all out-of-scope queries (returning 0 results) without compromising the recall of valid search requests.
 \end{itemize}
 

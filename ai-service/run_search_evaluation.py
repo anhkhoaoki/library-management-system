@@ -292,16 +292,14 @@ async def run_search_evaluation():
     initialize_rag()
     print("→ Hoàn tất.\n")
 
-    # Lấy danh sách sách để dùng làm corpus
-    from app.api.routes.search import _fetch_and_build_cache
-    print("[2/3] Đang nạp và index danh sách sách vào bộ nhớ...")
-    book_embeddings = await _fetch_and_build_cache()
-    if not book_embeddings:
-        print("⚠️  Không thể tải danh sách sách. Kiểm tra Node.js backend đang chạy không?")
+    # Use pgvector for search
+    from app.services.vector_store import pgvector_search, count_indexed_books
+    print("[2/3] Checking pgvector index...")
+    total = count_indexed_books()
+    if total == 0:
+        print("WARNING: No books indexed in pgvector. Run POST /search/refresh-cache first.")
         return
-    print(f"→ Đã index {len(book_embeddings)} cuốn sách.\n")
-
-    from app.services.search_service import semantic_search
+    print(f"-> Found {total} books indexed in pgvector.\n")
 
     print(f"[3/3] Bắt đầu đánh giá {len(SEARCH_TEST_CASES)} câu hỏi kiểm thử...\n")
 
@@ -322,28 +320,23 @@ async def run_search_evaluation():
 
         print(f"  [{i+1}/{len(SEARCH_TEST_CASES)}] {qid}: '{query[:60]}'")
 
-        # Chạy tìm kiếm
+        # Search via pgvector
         try:
-            raw_results = await semantic_search(
-                query=query,
-                book_embeddings=book_embeddings,
-                limit=10,
-            )
+            raw_results = pgvector_search(query=query, limit=10, min_similarity=0.40)
             top_score = raw_results[0].get("score", 0) if raw_results else 0
 
-            # Xác định ngưỡng lọc
-            if top_score >= 0.35:
-                threshold = max(0.30, top_score * 0.35)
-            elif top_score >= 0.20:
-                threshold = 0.15
+            if top_score >= 0.50:
+                threshold = max(0.40, top_score * 0.45)
+            elif top_score >= 0.30:
+                threshold = 0.40
             else:
-                threshold = 0.0
+                threshold = 0.40
                 fallback_count += 1
 
             filtered = [r for r in raw_results if r.get("score", 0) >= threshold][:8]
 
         except Exception as e:
-            print(f"    ⚠️  Lỗi tìm kiếm: {e}")
+            print(f"    Warning - search error: {e}")
             filtered = []
             fallback_count += 1
 

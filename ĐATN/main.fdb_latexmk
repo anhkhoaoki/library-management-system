@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1790343676.61194 "main.tex" "main.pdf" "main" 1790343696.88185 0
+["pdflatex"] 1790425052.58151 "f:/NEW/KHOA/HK252/DATN/demo/ĐATN/main.tex" "main.pdf" "main" 1790425083.0912 0
   "C:/Users/Admin/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1790327350.91835 89997 008b71c0c00a33f5fc03307b772025e5 ""
   "C:/Users/Admin/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/tcss0800.pk" 1788436991.77892 8608 659ab765809f8026d4415a8005aa72e8 ""
   "C:/Users/Admin/AppData/Local/MiKTeX/fonts/tfm/public/rsfs/rsfs10.tfm" 1779451932.33365 688 37338d6ab346c2f1466b29e195316aa4 ""
@@ -76,7 +76,7 @@
   "C:/Users/Admin/AppData/Roaming/MiKTeX/tex/latex/zref/zref-abspage.sty" 1773584792 2269 91cd03da61ab1da00145ba8a81560051 ""
   "C:/Users/Admin/AppData/Roaming/MiKTeX/tex/latex/zref/zref-base.sty" 1773584792 20785 8db5f0a2b2ce96dda9fac87ccab29449 ""
   "Contents/DacTaChiTietCacUseCase.tex" 1789889881.7482 49100 9c8d8a329501f6abae4dfa5641641326 ""
-  "Contents/DanhGiaAI.tex" 1790343614.36399 10193 046419961850f60a69cb5183f78c82c0 ""
+  "Contents/DanhGiaAI.tex" 1790425024.52058 13204 28988c58ebe36958ce317f81c4b95b12 ""
   "Contents/GioiThieu.tex" 1788410784 11922 9e056762f7b127a2f16f8e256c584676 ""
   "Contents/Hethonglienquan.tex" 1788410784 10633 74c8633c9bcf3509c5b5a24fa1809815 ""
   "Contents/HienThuc.tex" 1790341937.31993 33234 b20f6268de919dac10581fc0621ed23c ""
@@ -122,6 +122,7 @@
   "F:/MkTex/fonts/type1/public/amsfonts/cm/cmsy8.pfb" 1247596667 32626 4f5c1b83753b1dd3a97d1b399a005b4b ""
   "F:/MkTex/fonts/type1/public/amsfonts/cm/cmtt10.pfb" 1247596667 31099 c85edf1dd5b9e826d67c9c7293b6786c ""
   "F:/MkTex/fonts/type1/public/amsfonts/cm/cmtt8.pfb" 1247596666 24287 6b803fa9eb1ddff9112e00519b09dd9e ""
+  "F:/MkTex/fonts/type1/public/amsfonts/symbols/msam10.pfb" 1247596673 31764 459c573c03a4949a528c2cc7f557e217 ""
   "F:/MkTex/fonts/type1/urw/symbol/usyr.pfb" 1136828148 33709 b09d2e140b7e807d3a97058263ab6693 ""
   "F:/MkTex/fonts/type1/urw/times/utmb8a.pfb" 1136828148 44729 811d6c62865936705a31c797a1d5dada ""
   "F:/MkTex/fonts/type1/urw/times/utmr8a.pfb" 1136828148 46026 6dab18b61c907687b520c72847215a68 ""
@@ -358,12 +359,12 @@
   "Intro/TomTat.tex" 1788410784 3569 3e52549039170d0619a315e81b4d660c ""
   "Outro/PhuLuc.tex" 1788410784 18 72d901a0fcc4a2ee750c367ce671aee4 ""
   "Outro/TaiLieuThamKhao.tex" 1788410784 1682 74921139f65c303e56c1ada865d41a19 ""
-  "main.aux" 1790343695.83065 59864 95be60d701f70431b9ff9d22d007f277 "pdflatex"
-  "main.lof" 1790343695.85881 9342 db6b696731db126cda173d7ea9dd0d7e "pdflatex"
-  "main.lot" 1790343695.85934 4648 5b38543a095121d2ea3e350653064292 "pdflatex"
-  "main.out" 1790343695.84739 33659 13dabc1c2b45190e46b989050de4c5ad "pdflatex"
-  "main.tex" 1790341855.21604 8105 8a14ca5eb8c97c16637f8e4d9bd261d1 ""
-  "main.toc" 1790343695.85881 19073 cfe440282b7ec1ed81e1ff716cff0b05 "pdflatex"
+  "f:/NEW/KHOA/HK252/DATN/demo/ĐATN/main.tex" 1790341855.21604 8105 8a14ca5eb8c97c16637f8e4d9bd261d1 ""
+  "main.aux" 1790425081.79297 60059 6c0cfb5f04efa78a4a7c49161531c681 "pdflatex"
+  "main.lof" 1790425081.83058 9342 db6b696731db126cda173d7ea9dd0d7e "pdflatex"
+  "main.lot" 1790425081.83058 4682 9102b1c720e73bbaad5cc8e55a26aab5 "pdflatex"
+  "main.out" 1790425081.81658 33773 85a7d8955a10178b61bc867d2555edb2 "pdflatex"
+  "main.toc" 1790425081.83058 19159 c2abc499a911c25d8596552a148d6650 "pdflatex"
   (generated)
   "main.aux"
   "main.lof"

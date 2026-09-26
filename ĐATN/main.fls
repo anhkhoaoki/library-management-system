@@ -1,6 +1,6 @@
 PWD F:\NEW\KHOA\HK252\DATN\demo\ĐATN
 INPUT C:\Users\Admin\AppData\Local\MiKTeX\miktex\data\le\pdftex\pdflatex.fmt
-INPUT main.tex
+INPUT f:\NEW\KHOA\HK252\DATN\demo\ĐATN\main.tex
 OUTPUT main.log
 INPUT F:\MkTex\tex\latex\base\article.cls
 INPUT F:\MkTex\tex\latex\base\article.cls
@@ -475,11 +475,11 @@ INPUT F:\MkTex\fonts\tfm\adobe\times\ptmb7t.tfm
 INPUT F:\MkTex\fonts\tfm\adobe\times\ptmr7t.tfm
 INPUT F:\MkTex\fonts\vf\adobe\times\ptmr7t.vf
 INPUT F:\MkTex\fonts\tfm\adobe\times\ptmr8r.tfm
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
 OUTPUT main.toc
-INPUT .\Images\hcmut.png
-INPUT .\Images\hcmut.png
-INPUT .\Images\hcmut.png
-INPUT .\Images\hcmut.png
 INPUT .\Images\hcmut.png
 INPUT .\Images\hcmut.png
 INPUT .\Images\hcmut.png
@@ -1554,6 +1554,10 @@ INPUT .\Images\hcmut.png
 INPUT .\Images\hcmut.png
 INPUT .\Images\hcmut.png
 INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
 INPUT .\Contents\TongKet.tex
 INPUT .\Contents\TongKet.tex
 INPUT .\Contents\TongKet.tex
@@ -1602,6 +1606,8 @@ INPUT F:\MkTex\fonts\type1\public\amsfonts\cm\cmtt10.pfb
 INPUT F:\MkTex\fonts\type1\public\amsfonts\cm\cmtt10.pfb
 INPUT F:\MkTex\fonts\type1\public\amsfonts\cm\cmtt8.pfb
 INPUT F:\MkTex\fonts\type1\public\amsfonts\cm\cmtt8.pfb
+INPUT F:\MkTex\fonts\type1\public\amsfonts\symbols\msam10.pfb
+INPUT F:\MkTex\fonts\type1\public\amsfonts\symbols\msam10.pfb
 INPUT F:\MkTex\fonts\type1\urw\symbol\usyr.pfb
 INPUT F:\MkTex\fonts\type1\urw\symbol\usyr.pfb
 INPUT F:\MkTex\fonts\type1\urw\times\utmb8a.pfb

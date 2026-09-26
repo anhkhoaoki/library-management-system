@@ -325,7 +325,7 @@ async def semantic_search(
     # ── Bước 4: Lọc ngưỡng điểm tối thiểu ──────────────────────────
     # Ngưỡng 0.10 để tránh lọc hết kết quả với corpus nhỏ.
     # Với corpus lớn hơn có thể nâng lên 0.25–0.35.
-    MIN_THRESHOLD = 0.10
+    MIN_THRESHOLD = 0.40
     filtered = [b for b in scored if b["score"] >= MIN_THRESHOLD]
 
     return filtered[:limit]

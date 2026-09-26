@@ -1,10 +1,17 @@
+"""
+Search Router — Semantic Search với pgvector (PostgreSQL)
+
+Luồng hoạt động:
+  - Startup: Gọi ensure_schema() để đảm bảo bảng book_embeddings và HNSW index tồn tại.
+  - POST /search/refresh-cache: Kéo sách từ Backend → upsert vector vào PostgreSQL.
+  - POST /search/semantic: Encode query → pgvector_search() → trả kết quả.
+"""
 from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import Optional, List
-import asyncio
 import httpx
+
 from app.services.search_service import (
-    semantic_search,
     extract_search_intent,
     normalize_search_text,
     sanitize_book_result,
@@ -13,7 +20,12 @@ from app.services.search_service import (
     generate_result_explanation,
     generate_suggested_queries,
 )
-from app.core.gemini_client import get_embeddings
+from app.services.vector_store import (
+    upsert_books,
+    pgvector_search,
+    get_all_books_from_pgvector,
+    count_indexed_books,
+)
 from app.core.config import settings
 
 router = APIRouter()
@@ -29,128 +41,72 @@ class SemanticSearchResponse(BaseModel):
     results: List[dict] = []
     intent: Optional[str] = None
     isFallback: bool = False
-    searchMode: str = "semantic"         # "semantic" | "hybrid" | "keyword_fallback"
-    confidenceLevel: str = "high"        # "high" | "medium" | "low"
-    suggestedQueries: List[str] = []     # Gợi ý câu tìm kiếm tốt hơn khi low confidence
+    searchMode: str = "semantic"       # "semantic" | "hybrid" | "keyword_fallback"
+    confidenceLevel: str = "high"      # "high" | "medium" | "low"
+    suggestedQueries: List[str] = []
 
 
-# ─── In-memory cache ─────────────────────────────────────────────
-BOOK_EMBEDDINGS_CACHE: List[dict] = []
-_CACHE_LOCK = asyncio.Lock()
-
-
-async def _fetch_and_build_cache() -> List[dict]:
-    """Tải sách từ Node.js Backend và sinh vector embedding cho từng cuốn."""
+# ─── Helper: Kéo sách từ Backend và upsert vào pgvector ─────────────────────
+async def _fetch_and_upsert_books() -> int:
+    """Tải sách từ Node.js Backend và upsert vector vào PostgreSQL pgvector."""
     try:
-        embedder = get_embeddings()
         backend_url = settings.BACKEND_URL.rstrip("/")
-        async with httpx.AsyncClient(timeout=30.0) as client:
-            res = await client.get(f"{backend_url}/api/v1/books?limit=200")
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            res = await client.get(f"{backend_url}/api/v1/books?limit=500")
             if res.status_code != 200:
-                print(f"[Fetch Cache Error] Backend trả về status {res.status_code}")
-                return []
+                print(f"[Search] Backend trả về status {res.status_code}")
+                return 0
 
             data = res.json()
             books = []
             if isinstance(data, dict):
                 if "data" in data:
-                    inner_data = data["data"]
-                    books = inner_data.get("books", []) if isinstance(inner_data, dict) else inner_data
+                    inner = data["data"]
+                    books = inner.get("books", []) if isinstance(inner, dict) else inner
                 else:
                     books = data.get("books", [])
             elif isinstance(data, list):
                 books = data
 
             if not books:
-                return []
+                print("[Search] Không có sách nào từ Backend.")
+                return 0
 
-            temp_cache = []
-            for book in books:
-                title = book.get("title") or ""
-                summary = book.get("summary") or book.get("description") or ""
-                authors = book.get("authorNames") or []
-                category = book.get("category", {})
-                category_name = (
-                    category.get("name", "") if isinstance(category, dict) else ""
-                )
-                if not title:
-                    continue
-
-                # Văn bản nhúng: kết hợp tiêu đề + tác giả + danh mục + tóm tắt
-                # để tăng độ chính xác ngữ nghĩa
-                author_str = ", ".join(authors) if authors else ""
-                text_to_embed = (
-                    f"Tên sách: {title}. "
-                    f"Tác giả: {author_str}. "
-                    f"Danh mục: {category_name}. "
-                    f"Tóm tắt: {summary}"
-                )
-
-                try:
-                    if hasattr(embedder, "encode"):
-                        embedding = embedder.encode(text_to_embed).tolist()
-                    elif hasattr(embedder, "embed_query"):
-                        embedding = embedder.embed_query(text_to_embed)
-                    else:
-                        embedding = [0.0] * 384
-                except Exception as e:
-                    print(f"[Embedding Error] '{title}': {e}")
-                    embedding = [0.0] * 384
-
-                temp_cache.append({
-                    "id": book.get("id"),
-                    "title": title,
-                    "authorNames": authors,
-                    "coverImageUrl": book.get("coverImageUrl", ""),
-                    "summary": summary,
-                    "categoryName": category_name,
-                    "availableCopies": book.get("availableCopies", 0),
-                    "averageRating": book.get("averageRating", 0),
-                    "embedding": embedding,
-                })
-
-            print(f"[Search Cache] Đã index {len(temp_cache)} cuốn sách.")
-            return temp_cache
+            count = upsert_books(books)
+            return count
 
     except Exception as e:
-        print(f"[Fetch Cache Error] {e}")
-        return []
+        print(f"[Search] Lỗi khi fetch và upsert sách: {e}")
+        return 0
 
 
-async def get_book_embeddings() -> List[dict]:
-    """Lấy cache — tự động build nếu chưa có."""
-    global BOOK_EMBEDDINGS_CACHE
-    if BOOK_EMBEDDINGS_CACHE:
-        return BOOK_EMBEDDINGS_CACHE
-    async with _CACHE_LOCK:
-        if not BOOK_EMBEDDINGS_CACHE:
-            BOOK_EMBEDDINGS_CACHE = await _fetch_and_build_cache()
-    return BOOK_EMBEDDINGS_CACHE
-
-
-# ─── Endpoint: Làm mới cache thủ công ───────────────────────────
+# ─── Endpoint: Làm mới index sách trong pgvector ─────────────────────────────
 @router.post("/refresh-cache")
 async def refresh_book_cache():
-    """Buộc làm mới toàn bộ cache embedding khi có sách mới được thêm vào."""
-    global BOOK_EMBEDDINGS_CACHE
-    async with _CACHE_LOCK:
-        BOOK_EMBEDDINGS_CACHE = await _fetch_and_build_cache()
-    return {"message": f"Đã làm mới cache thành công. Tổng số sách: {len(BOOK_EMBEDDINGS_CACHE)}"}
+    """
+    Kéo toàn bộ sách từ Backend và upsert vector vào PostgreSQL (pgvector).
+    Gọi endpoint này sau khi thêm/sửa/xóa sách để giữ index đồng bộ.
+    """
+    count = await _fetch_and_upsert_books()
+    total = count_indexed_books()
+    return {
+        "message": f"Đã upsert {count} sách vào pgvector.",
+        "total_indexed": total,
+    }
 
 
-# ─── Endpoint: Tìm kiếm ngữ nghĩa chính ─────────────────────────
+# ─── Endpoint: Tìm kiếm ngữ nghĩa chính ─────────────────────────────────────
 @router.post("/semantic", response_model=SemanticSearchResponse)
 async def natural_language_search(request: SemanticSearchRequest):
     safe_query = sanitize_text(request.query or "")
     normalized_query = normalize_search_text(safe_query)
 
-    book_embeddings = await get_book_embeddings()
-
-    # Trường hợp 1: Chưa nhập hoặc query quá ngắn → hiển thị toàn bộ catalog
+    # Trường hợp 1: Query trống → trả toàn bộ catalog từ pgvector
     if not safe_query or len(normalized_query) < 3:
-        cleaned_books = [sanitize_book_result(book) for book in book_embeddings]
+        all_books = get_all_books_from_pgvector()
+        cleaned = [sanitize_book_result(b) for b in all_books]
         return SemanticSearchResponse(
-            results=cleaned_books,
+            results=cleaned,
             intent=None,
             isFallback=False,
             searchMode="semantic",
@@ -161,8 +117,7 @@ async def natural_language_search(request: SemanticSearchRequest):
     # Trường hợp 2: Tìm kiếm thực sự
     intent = None
     try:
-        intent_str = extract_search_intent(safe_query)
-        intent = intent_str
+        intent = extract_search_intent(safe_query)
     except Exception:
         try:
             from app.services.search_service import extract_search_intent_local
@@ -171,11 +126,11 @@ async def natural_language_search(request: SemanticSearchRequest):
             intent = None
 
     try:
-        # Chạy semantic search
-        results = await semantic_search(
+        # pgvector_search: encode query → tìm top-50 gần nhất trong PostgreSQL
+        results = pgvector_search(
             query=safe_query,
-            book_embeddings=book_embeddings,
             limit=50,
+            min_similarity=0.10,
         )
 
         if not results:
@@ -191,27 +146,22 @@ async def natural_language_search(request: SemanticSearchRequest):
         top_score = results[0].get("score", 0)
         confidence = _determine_confidence(top_score)
 
-        # Xác định ngưỡng và số lượng kết quả trả về theo confidence
+        # Xác định ngưỡng và số lượng kết quả trả về
         if confidence == "high":
-            # Trả về tất cả kết quả có score >= 35% của top score
-            threshold = max(0.30, top_score * 0.35)
+            threshold = max(0.40, top_score * 0.45)
             search_mode = "semantic"
-            max_results = request.limit  # 12
+            max_results = request.limit
         elif confidence == "medium":
-            # Kết hợp semantic và keyword
-            threshold = 0.20
+            threshold = 0.40
             search_mode = "hybrid"
             max_results = min(8, request.limit)
         else:
-            # Low confidence → fallback keyword
-            threshold = 0.10
+            threshold = 0.40
             search_mode = "keyword_fallback"
             max_results = min(5, request.limit)
 
-        # Lọc theo ngưỡng
         final_results = [r for r in results if r.get("score", 0) >= threshold][:max_results]
 
-        # Nếu sau lọc vẫn không có → trả gợi ý câu hỏi
         if not final_results:
             suggested = generate_suggested_queries(safe_query)
             return SemanticSearchResponse(
@@ -223,7 +173,7 @@ async def natural_language_search(request: SemanticSearchRequest):
                 suggestedQueries=suggested,
             )
 
-        # Thêm explanation cho top 3 kết quả (nếu confidence >= medium)
+        # Thêm explanation cho top 3
         if confidence in ("high", "medium"):
             for i, book in enumerate(final_results[:3]):
                 try:
@@ -239,7 +189,9 @@ async def natural_language_search(request: SemanticSearchRequest):
             for book in final_results:
                 book["explanation"] = None
 
-        # Gợi ý câu hỏi tốt hơn nếu confidence thấp
+        # Sanitize trước khi trả về
+        final_results = [sanitize_book_result(b) for b in final_results]
+
         suggested_queries = []
         if confidence == "low":
             suggested_queries = generate_suggested_queries(safe_query)
