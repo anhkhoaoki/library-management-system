@@ -83,11 +83,11 @@
 \contentsline {subsubsection}{\numberline {5.3.5}AI Virtual Assistant and Recommendations}{39}{subsubsection.5.3.5}%
 \contentsline {subsubsection}{\numberline {5.3.6}Notifications and Communication}{39}{subsubsection.5.3.6}%
 \contentsline {subsubsection}{\numberline {5.3.7}System Administration}{39}{subsubsection.5.3.7}%
-\contentsline {subsection}{\numberline {5.4}Activity Diagrams}{41}{subsection.5.4}%
-\contentsline {subsubsection}{\numberline {5.4.1}Account Registration}{41}{subsubsection.5.4.1}%
-\contentsline {subsubsection}{\numberline {5.4.2}System Login}{43}{subsubsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4}Activity Diagrams}{40}{subsection.5.4}%
+\contentsline {subsubsection}{\numberline {5.4.1}Account Registration}{40}{subsubsection.5.4.1}%
+\contentsline {subsubsection}{\numberline {5.4.2}System Login}{42}{subsubsection.5.4.2}%
 \contentsline {subsubsection}{\numberline {5.4.3}Password Reset}{44}{subsubsection.5.4.3}%
-\contentsline {subsubsection}{\numberline {5.4.4}View Loan/Return History}{45}{subsubsection.5.4.4}%
+\contentsline {subsubsection}{\numberline {5.4.4}View Loan/Return History}{44}{subsubsection.5.4.4}%
 \contentsline {subsubsection}{\numberline {5.4.5}User Account Management}{46}{subsubsection.5.4.5}%
 \contentsline {subsubsection}{\numberline {5.4.6}Add / Edit / Delete Catalog Record}{47}{subsubsection.5.4.6}%
 \contentsline {subsubsection}{\numberline {5.4.7}Batch Catalog Data Ingestion}{48}{subsubsection.5.4.7}%
@@ -96,12 +96,12 @@
 \contentsline {subsubsection}{\numberline {5.4.10}Material Return}{51}{subsubsection.5.4.10}%
 \contentsline {subsubsection}{\numberline {5.4.11}Calculate and Assess Overdue Fines}{52}{subsubsection.5.4.11}%
 \contentsline {subsubsection}{\numberline {5.4.12}Online Loan Renewal}{53}{subsubsection.5.4.12}%
-\contentsline {subsubsection}{\numberline {5.4.13}Place Item Hold}{54}{subsubsection.5.4.13}%
-\contentsline {subsubsection}{\numberline {5.4.14}Document Catalog Search}{55}{subsubsection.5.4.14}%
-\contentsline {subsection}{\numberline {5.5}Sequence Diagrams}{56}{subsection.5.5}%
-\contentsline {subsubsection}{\numberline {5.5.1}Account Registration}{56}{subsubsection.5.5.1}%
-\contentsline {subsubsection}{\numberline {5.5.2}Account Login}{57}{subsubsection.5.5.2}%
-\contentsline {subsubsection}{\numberline {5.5.3}Account Password Reset}{58}{subsubsection.5.5.3}%
+\contentsline {subsubsection}{\numberline {5.4.13}Place Item Hold}{53}{subsubsection.5.4.13}%
+\contentsline {subsubsection}{\numberline {5.4.14}Document Catalog Search}{54}{subsubsection.5.4.14}%
+\contentsline {subsection}{\numberline {5.5}Sequence Diagrams}{55}{subsection.5.5}%
+\contentsline {subsubsection}{\numberline {5.5.1}Account Registration}{55}{subsubsection.5.5.1}%
+\contentsline {subsubsection}{\numberline {5.5.2}Account Login}{56}{subsubsection.5.5.2}%
+\contentsline {subsubsection}{\numberline {5.5.3}Account Password Reset}{57}{subsubsection.5.5.3}%
 \contentsline {subsubsection}{\numberline {5.5.4}Document Search}{58}{subsubsection.5.5.4}%
 \contentsline {subsubsection}{\numberline {5.5.5}Add / Edit / Delete Document}{59}{subsubsection.5.5.5}%
 \contentsline {subsubsubsection}{\numberline {5.5.5.a}Add Document}{59}{subsubsubsection.5.5.5.1}%
@@ -109,85 +109,87 @@
 \contentsline {subsubsubsection}{\numberline {5.5.5.c}Delete Document}{60}{subsubsubsection.5.5.5.3}%
 \contentsline {subsubsection}{\numberline {5.5.6}Batch Document Import}{60}{subsubsection.5.5.6}%
 \contentsline {subsubsection}{\numberline {5.5.7}Reserve Document}{61}{subsubsection.5.5.7}%
-\contentsline {subsubsection}{\numberline {5.5.8}Fine Calculation Update}{61}{subsubsection.5.5.8}%
-\contentsline {subsubsection}{\numberline {5.5.9}Process Document Loan}{62}{subsubsection.5.5.9}%
+\contentsline {subsubsection}{\numberline {5.5.8}Fine Calculation Update}{62}{subsubsection.5.5.8}%
+\contentsline {subsubsection}{\numberline {5.5.9}Process Document Loan}{63}{subsubsection.5.5.9}%
 \contentsline {subsubsection}{\numberline {5.5.10}Extend Document Loan}{63}{subsubsection.5.5.10}%
 \contentsline {subsubsection}{\numberline {5.5.11}Return Document}{64}{subsubsection.5.5.11}%
-\contentsline {section}{\numberline {6}Implementation}{65}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Technology Stack}{65}{subsection.6.1}%
-\contentsline {subsubsection}{\numberline {6.1.1}Front-end: React.js and Vite}{65}{subsubsection.6.1.1}%
-\contentsline {subsubsection}{\numberline {6.1.2}Back-end: Node.js and Express}{65}{subsubsection.6.1.2}%
-\contentsline {subsubsection}{\numberline {6.1.3}Dedicated AI Microservice: Python and FastAPI}{65}{subsubsection.6.1.3}%
-\contentsline {subsubsection}{\numberline {6.1.4}ORM: Prisma}{66}{subsubsection.6.1.4}%
-\contentsline {subsubsection}{\numberline {6.1.5}Relational Database: PostgreSQL}{66}{subsubsection.6.1.5}%
-\contentsline {subsubsection}{\numberline {6.1.6}Vector Store and Embeddings: pgvector}{66}{subsubsection.6.1.6}%
-\contentsline {subsubsection}{\numberline {6.1.7}AI / LLM Capabilities: Embeddings, RAG, Summarization, and Chatbot}{66}{subsubsection.6.1.7}%
-\contentsline {subsubsection}{\numberline {6.1.8}Hybrid Search Strategy}{67}{subsubsection.6.1.8}%
-\contentsline {subsubsection}{\numberline {6.1.9}Security and Authentication: JWT, RBAC, and OTP}{67}{subsubsection.6.1.9}%
-\contentsline {subsubsection}{\numberline {6.1.10}External Integrations: Open Library, Google Books, and Nodemailer}{67}{subsubsection.6.1.10}%
-\contentsline {subsection}{\numberline {6.2}Authentication Module}{67}{subsection.6.2}%
-\contentsline {subsubsection}{\numberline {6.2.1}User Interface Implementation}{67}{subsubsection.6.2.1}%
-\contentsline {paragraph}{\numberline {6.2.1.1}Login Page}{67}{paragraph.6.2.1.1}%
-\contentsline {paragraph}{\numberline {6.2.1.2}Registration Page}{68}{paragraph.6.2.1.2}%
-\contentsline {paragraph}{\numberline {6.2.1.3}Password Reset Workflow (3-Step Modal)}{68}{paragraph.6.2.1.3}%
-\contentsline {subsubsection}{\numberline {6.2.2}Technical Implementation Highlights}{69}{subsubsection.6.2.2}%
-\contentsline {subsection}{\numberline {6.3}Reader Module}{69}{subsection.6.3}%
-\contentsline {subsubsection}{\numberline {6.3.1}User Interface Implementation}{70}{subsubsection.6.3.1}%
-\contentsline {paragraph}{\numberline {6.3.1.1}Homepage}{70}{paragraph.6.3.1.1}%
-\contentsline {paragraph}{\numberline {6.3.1.2}Catalog Search Page}{70}{paragraph.6.3.1.2}%
-\contentsline {paragraph}{\numberline {6.3.1.3}Active Loans Management Page}{70}{paragraph.6.3.1.3}%
-\contentsline {paragraph}{\numberline {6.3.1.4}Loan History Page}{71}{paragraph.6.3.1.4}%
-\contentsline {paragraph}{\numberline {6.3.1.5}Active Holds Page}{71}{paragraph.6.3.1.5}%
-\contentsline {paragraph}{\numberline {6.3.1.6}Virtual Assistant Chat Window}{72}{paragraph.6.3.1.6}%
-\contentsline {paragraph}{\numberline {6.3.1.7}Personal Profile \& Settings Page}{72}{paragraph.6.3.1.7}%
-\contentsline {subsubsection}{\numberline {6.3.2}Technical Implementation Highlights}{73}{subsubsection.6.3.2}%
-\contentsline {subsection}{\numberline {6.4}Librarian Module}{73}{subsection.6.4}%
-\contentsline {subsubsection}{\numberline {6.4.1}User Interface Implementation}{73}{subsubsection.6.4.1}%
-\contentsline {paragraph}{\numberline {6.4.1.1}Homepage}{73}{paragraph.6.4.1.1}%
-\contentsline {paragraph}{\numberline {6.4.1.2}Circulation Management Page}{74}{paragraph.6.4.1.2}%
-\contentsline {paragraph}{\numberline {6.4.1.3}Catalog Management Page}{74}{paragraph.6.4.1.3}%
-\contentsline {paragraph}{\numberline {6.4.1.4}Communication Management Page}{75}{paragraph.6.4.1.4}%
-\contentsline {paragraph}{\numberline {6.4.1.5}Reports \& Analytics Page}{75}{paragraph.6.4.1.5}%
-\contentsline {paragraph}{\numberline {6.4.1.6}Personal Profile \& Settings Page}{76}{paragraph.6.4.1.6}%
-\contentsline {subsubsection}{\numberline {6.4.2}Technical Implementation Highlights}{77}{subsubsection.6.4.2}%
-\contentsline {subsection}{\numberline {6.5}Administrator Module}{77}{subsection.6.5}%
-\contentsline {subsubsection}{\numberline {6.5.1}User Interface Implementation}{77}{subsubsection.6.5.1}%
-\contentsline {paragraph}{\numberline {6.5.1.1}System Overview Dashboard}{77}{paragraph.6.5.1.1}%
-\contentsline {paragraph}{\numberline {6.5.1.2}User Account Management Page}{78}{paragraph.6.5.1.2}%
-\contentsline {paragraph}{\numberline {6.5.1.3}System Configuration Page}{78}{paragraph.6.5.1.3}%
-\contentsline {paragraph}{\numberline {6.5.1.4}Branch Management Page}{79}{paragraph.6.5.1.4}%
-\contentsline {paragraph}{\numberline {6.5.1.5}Audit Logs Page}{79}{paragraph.6.5.1.5}%
-\contentsline {paragraph}{\numberline {6.5.1.6}Backup \& Disaster Recovery Page}{79}{paragraph.6.5.1.6}%
-\contentsline {subsubsection}{\numberline {6.5.2}Technical Implementation Highlights}{80}{subsubsection.6.5.2}%
-\contentsline {subsection}{\numberline {6.6}Deployment Stage}{80}{subsection.6.6}%
-\contentsline {subsubsection}{\numberline {6.6.1}Frontend Deployment}{80}{subsubsection.6.6.1}%
-\contentsline {subsubsection}{\numberline {6.6.2}Backend Deployment}{80}{subsubsection.6.6.2}%
-\contentsline {subsubsection}{\numberline {6.6.3}AI Service Deployment}{81}{subsubsection.6.6.3}%
-\contentsline {subsubsection}{\numberline {6.6.4}System Integration}{81}{subsubsection.6.6.4}%
-\contentsline {section}{\numberline {7}System Testing}{82}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Test Objectives and Environment}{82}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}Unit Testing}{82}{subsection.7.2}%
-\contentsline {subsection}{\numberline {7.3}Integration Testing}{83}{subsection.7.3}%
-\contentsline {subsection}{\numberline {7.4}System Testing}{84}{subsection.7.4}%
-\contentsline {subsection}{\numberline {7.5}Code Quality Testing}{85}{subsection.7.5}%
-\contentsline {subsection}{\numberline {7.6}Test Summary}{86}{subsection.7.6}%
-\contentsline {section}{\numberline {8}AI Features Evaluation}{87}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Why Traditional Testing is Insufficient for AI}{87}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}AI-as-a-Judge Methodology}{87}{subsection.8.2}%
-\contentsline {subsubsection}{\numberline {8.2.1}Chatbot Evaluation Metrics (RAG Framework)}{87}{subsubsection.8.2.1}%
-\contentsline {subsubsection}{\numberline {8.2.2}Semantic Search Evaluation Metrics}{87}{subsubsection.8.2.2}%
-\contentsline {subsection}{\numberline {8.3}Chatbot RAG Evaluation Results}{88}{subsection.8.3}%
-\contentsline {subsubsection}{\numberline {8.3.1}Test Dataset Setup}{88}{subsubsection.8.3.1}%
-\contentsline {subsubsection}{\numberline {8.3.2}Detailed Chatbot Evaluation Results Table}{88}{subsubsection.8.3.2}%
-\contentsline {subsubsection}{\numberline {8.3.3}Chatbot Evaluation Analysis}{88}{subsubsection.8.3.3}%
-\contentsline {subsection}{\numberline {8.4}Semantic Search Evaluation Results}{88}{subsection.8.4}%
-\contentsline {subsubsection}{\numberline {8.4.1}Test Dataset Setup}{88}{subsubsection.8.4.1}%
-\contentsline {subsubsection}{\numberline {8.4.2}Overall Performance Metrics}{89}{subsubsection.8.4.2}%
-\contentsline {subsubsection}{\numberline {8.4.3}Detailed Search Evaluation Results Table}{89}{subsubsection.8.4.3}%
-\contentsline {subsubsection}{\numberline {8.4.4}Search Performance Analysis}{89}{subsubsection.8.4.4}%
-\contentsline {section}{\numberline {9}Summary and Future Work}{90}{section.9}%
-\contentsline {subsection}{\numberline {9.1}Achieved Results}{90}{subsection.9.1}%
-\contentsline {subsection}{\numberline {9.2}Remarks and Evaluation}{90}{subsection.9.2}%
-\contentsline {subsection}{\numberline {9.3}Future Work}{90}{subsection.9.3}%
-\contentsline {section}{\numberline {10}References}{91}{section.10}%
-\contentsline {section}{\numberline {11}Appendix}{92}{section.11}%
+\contentsline {section}{\numberline {6}Implementation}{66}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Technology Stack and Architectural Infrastructure}{66}{subsection.6.1}%
+\contentsline {subsubsection}{\numberline {6.1.1}Front-end Presentation Layer: React.js and Vite}{66}{subsubsection.6.1.1}%
+\contentsline {subsubsection}{\numberline {6.1.2}Back-end Core Server: Node.js and Express}{66}{subsubsection.6.1.2}%
+\contentsline {subsubsection}{\numberline {6.1.3}Dedicated AI Microservice: Python and FastAPI}{66}{subsubsection.6.1.3}%
+\contentsline {subsubsection}{\numberline {6.1.4}Data Modeling and ORM: Prisma}{67}{subsubsection.6.1.4}%
+\contentsline {subsubsection}{\numberline {6.1.5}Relational Database: PostgreSQL}{67}{subsubsection.6.1.5}%
+\contentsline {subsubsection}{\numberline {6.1.6}Vector Store and Embedding Infrastructure: ChromaDB and Multilingual Models}{67}{subsubsection.6.1.6}%
+\contentsline {subsubsection}{\numberline {6.1.7}Adaptive Hybrid Search Strategy}{68}{subsubsection.6.1.7}%
+\contentsline {subsubsection}{\numberline {6.1.8}Security, Authentication, and Role-Based Access Control}{68}{subsubsection.6.1.8}%
+\contentsline {subsubsection}{\numberline {6.1.9}External Integrations: Open Library, Google Books, and Nodemailer}{68}{subsubsection.6.1.9}%
+\contentsline {subsubsection}{\numberline {6.1.10}Background Task Processing: node-cron}{69}{subsubsection.6.1.10}%
+\contentsline {subsection}{\numberline {6.2}Authentication and Access Governance Module}{69}{subsection.6.2}%
+\contentsline {subsubsection}{\numberline {6.2.1}User Interface Implementation}{69}{subsubsection.6.2.1}%
+\contentsline {paragraph}{\numberline {6.2.1.1}Login Page}{69}{paragraph.6.2.1.1}%
+\contentsline {paragraph}{\numberline {6.2.1.2}Registration Page}{70}{paragraph.6.2.1.2}%
+\contentsline {paragraph}{\numberline {6.2.1.3}Password Reset Workflow (3-Step Modal)}{70}{paragraph.6.2.1.3}%
+\contentsline {subsubsection}{\numberline {6.2.2}Technical Implementation Highlights}{70}{subsubsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.3}Reader Module}{71}{subsection.6.3}%
+\contentsline {subsubsection}{\numberline {6.3.1}User Interface Implementation}{71}{subsubsection.6.3.1}%
+\contentsline {paragraph}{\numberline {6.3.1.1}Patron Homepage}{71}{paragraph.6.3.1.1}%
+\contentsline {paragraph}{\numberline {6.3.1.2}Catalog Search and Discovery}{72}{paragraph.6.3.1.2}%
+\contentsline {paragraph}{\numberline {6.3.1.3}Active Loans Management and Online Renewal}{72}{paragraph.6.3.1.3}%
+\contentsline {paragraph}{\numberline {6.3.1.4}Borrowing and Fine History}{73}{paragraph.6.3.1.4}%
+\contentsline {paragraph}{\numberline {6.3.1.5}Active Hold Reservations}{73}{paragraph.6.3.1.5}%
+\contentsline {paragraph}{\numberline {6.3.1.6}Virtual AI Assistant Widget}{74}{paragraph.6.3.1.6}%
+\contentsline {paragraph}{\numberline {6.3.1.7}Personal Profile and Notification Preferences}{74}{paragraph.6.3.1.7}%
+\contentsline {subsubsection}{\numberline {6.3.2}Technical Implementation Highlights}{75}{subsubsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.4}Librarian Module}{76}{subsection.6.4}%
+\contentsline {subsubsection}{\numberline {6.4.1}User Interface Implementation}{77}{subsubsection.6.4.1}%
+\contentsline {paragraph}{\numberline {6.4.1.1}Librarian Operational Dashboard}{77}{paragraph.6.4.1.1}%
+\contentsline {paragraph}{\numberline {6.4.1.2}Circulation Management Desk}{77}{paragraph.6.4.1.2}%
+\contentsline {paragraph}{\numberline {6.4.1.3}Catalog and Inventory Management}{78}{paragraph.6.4.1.3}%
+\contentsline {paragraph}{\numberline {6.4.1.4}Communications and Broadcast Management}{78}{paragraph.6.4.1.4}%
+\contentsline {paragraph}{\numberline {6.4.1.5}Circulation Reports and Analytics}{78}{paragraph.6.4.1.5}%
+\contentsline {paragraph}{\numberline {6.4.1.6}Librarian Profile and Settings}{79}{paragraph.6.4.1.6}%
+\contentsline {subsubsection}{\numberline {6.4.2}Technical Implementation Highlights}{79}{subsubsection.6.4.2}%
+\contentsline {subsection}{\numberline {6.5}Administrator Module}{82}{subsection.6.5}%
+\contentsline {subsubsection}{\numberline {6.5.1}User Interface Implementation}{82}{subsubsection.6.5.1}%
+\contentsline {paragraph}{\numberline {6.5.1.1}System Overview Dashboard}{82}{paragraph.6.5.1.1}%
+\contentsline {paragraph}{\numberline {6.5.1.2}User Account Management}{82}{paragraph.6.5.1.2}%
+\contentsline {paragraph}{\numberline {6.5.1.3}System Configuration Engine}{83}{paragraph.6.5.1.3}%
+\contentsline {paragraph}{\numberline {6.5.1.4}Branch Management}{83}{paragraph.6.5.1.4}%
+\contentsline {paragraph}{\numberline {6.5.1.5}Security Audit Logs}{84}{paragraph.6.5.1.5}%
+\contentsline {paragraph}{\numberline {6.5.1.6}Backup and Disaster Recovery}{84}{paragraph.6.5.1.6}%
+\contentsline {subsubsection}{\numberline {6.5.2}Technical Implementation Highlights}{85}{subsubsection.6.5.2}%
+\contentsline {subsection}{\numberline {6.6}Deployment Stage}{86}{subsection.6.6}%
+\contentsline {subsubsection}{\numberline {6.6.1}Frontend Deployment}{86}{subsubsection.6.6.1}%
+\contentsline {subsubsection}{\numberline {6.6.2}Backend Deployment}{86}{subsubsection.6.6.2}%
+\contentsline {subsubsection}{\numberline {6.6.3}AI Service Deployment}{87}{subsubsection.6.6.3}%
+\contentsline {subsubsection}{\numberline {6.6.4}System Integration}{87}{subsubsection.6.6.4}%
+\contentsline {section}{\numberline {7}System Testing}{88}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Test Objectives and Environment}{88}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Unit Testing}{88}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Integration Testing}{89}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}System Testing}{90}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}Code Quality Testing}{91}{subsection.7.5}%
+\contentsline {subsection}{\numberline {7.6}Test Summary}{92}{subsection.7.6}%
+\contentsline {section}{\numberline {8}AI Features Evaluation}{93}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Why Traditional Testing is Insufficient for AI}{93}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}AI-as-a-Judge Methodology}{93}{subsection.8.2}%
+\contentsline {subsubsection}{\numberline {8.2.1}Chatbot Evaluation Metrics (RAG Framework)}{93}{subsubsection.8.2.1}%
+\contentsline {subsubsection}{\numberline {8.2.2}Semantic Search Evaluation Metrics}{93}{subsubsection.8.2.2}%
+\contentsline {subsection}{\numberline {8.3}Chatbot RAG Evaluation Results}{94}{subsection.8.3}%
+\contentsline {subsubsection}{\numberline {8.3.1}Test Dataset Setup}{94}{subsubsection.8.3.1}%
+\contentsline {subsubsection}{\numberline {8.3.2}Detailed Chatbot Evaluation Results Table}{94}{subsubsection.8.3.2}%
+\contentsline {subsubsection}{\numberline {8.3.3}Chatbot Evaluation Analysis}{94}{subsubsection.8.3.3}%
+\contentsline {subsection}{\numberline {8.4}Semantic Search Evaluation Results}{94}{subsection.8.4}%
+\contentsline {subsubsection}{\numberline {8.4.1}Test Dataset Setup}{94}{subsubsection.8.4.1}%
+\contentsline {subsubsection}{\numberline {8.4.2}Detailed Search Evaluation Results Table}{95}{subsubsection.8.4.2}%
+\contentsline {subsubsection}{\numberline {8.4.3}Search Performance Metrics Analysis}{95}{subsubsection.8.4.3}%
+\contentsline {subsection}{\numberline {8.5}Failure Analysis and Lessons Learned}{95}{subsection.8.5}%
+\contentsline {subsubsection}{\numberline {8.5.1}Cause 1: Embedding Model Language Mismatch}{95}{subsubsection.8.5.1}%
+\contentsline {subsubsection}{\numberline {8.5.2}Cause 2: Vector Similarity Threshold Filtering}{95}{subsubsection.8.5.2}%
+\contentsline {section}{\numberline {9}Summary and Future Work}{96}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Achieved Results}{96}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Remarks and Evaluation}{96}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Future Work}{96}{subsection.9.3}%
+\contentsline {section}{\numberline {10}References}{97}{section.10}%
+\contentsline {section}{\numberline {11}Appendix}{98}{section.11}%

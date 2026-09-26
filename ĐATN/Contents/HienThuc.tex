@@ -2,108 +2,189 @@
 \fontencoding{T5}\selectfont
 \section{Implementation}
 
-This section details the implementation of the BkLib Online Library Management System. It first presents the technology stack and architectural components powering the platform, followed by a module-by-module breakdown of both the user interface components and core technical implementations (backend services, business logic, and code snippets).
+This chapter provides a comprehensive, technically rigorous examination of the implementation of the BkLib Online Library Management System. It articulates the layered system architecture, foundational technology stack, and engineering decisions powering the platform. Subsequently, it delivers a detailed module-by-module breakdown across four core operational subsystems: Authentication and Access Governance, Reader Self-Service, Librarian Circulation and Operational Administration, and Platform Governance and System Infrastructure. Each module is documented through both user interface interaction workflows and core technical implementations, supported by production code snippets, database schemas, and background job algorithms.
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.85\linewidth]{Images/kientruchethong.png}
+%     \vspace{15pt}
+%     \caption{BkLib Multi-Tier System Architecture and Service Integration}
+%     \label{fig:impl_system_architecture}
+% \end{figure}
+
+% \begin{mdframed}[backgroundcolor=gray!10, roundcorner=4pt, linecolor=gray!40]
+% \textbf{Note on User Interface Localization:}
+% To adhere to the domestic higher-education operating environment at Ho Chi Minh City University of Technology (HCMUT), all client-facing graphical user interfaces, modal dialogues, operational status badges, and system notifications are localized in Vietnamese (e.g., ``Bạn đọc / Sinh viên'', ``Cán bộ / Quản trị'', ``Sách đang mượn''). In contrast, the underlying architectural design, RESTful API specifications, database schemas, and technical implementation documentations are standardized in English.
+% \end{mdframed}
 
 % =========================================================================
-% SECTION 5.1: TECHNOLOGY STACK
+% SECTION 5.1: TECHNOLOGY STACK & ARCHITECTURAL FOUNDATION
 % =========================================================================
-\subsection{Technology Stack}
+\subsection{Technology Stack and Architectural Infrastructure}
 
-\subsubsection{Front-end: React.js and Vite}
-React.js handles the presentation layer of the online library, constructing interactive interfaces for book search, catalog browsing, and AI assistant chat interactions. Vite is employed as the build tool and dev server to provide fast startup, HMR support, and optimized production bundle compilation. On the client side, components handle rendering search results (incorporating keyword highlights and semantic matches), managing user state (caching, optimistic updates), and integrating the AI chat/assistant SDK (streaming responses, conversation state).
-\begin{figure}[htbp]
+The BkLib platform is architected as a decoupled, multi-tier system composed of three primary software tiers: a client Single-Page Application (SPA) built with React and Vite, a core API Gateway and Business Logic service implemented in Node.js/Express with Prisma ORM, and a dedicated AI Microservice powered by Python, FastAPI, Google Gemini, and ChromaDB.
+
+\subsubsection{Front-end Presentation Layer: React.js and Vite}
+The front-end user experience is implemented as a modern Single-Page Application (SPA) using React.js 18 paired with the Vite build toolchain. Vite delivers instantaneous Hot Module Replacement (HMR) and highly optimized ES module bundling for production deployment. The presentation layer employs declarative component hierarchies, React Router DOM for client-side role-guarded routing, and Axios interceptors for automated JWT injection and token refresh. On the client side, components manage optimistic UI updates, debounced catalog search inputs, multi-channel notification bells, real-time circulation status indicators, and an embedded floating AI assistant widget with streaming responses.
+
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.4\textwidth]{Images/react_vite.png}
+    \includegraphics[width=0.42\textwidth]{Images/react_vite.png}
+    \caption{Front-End Technology Foundation: React.js and Vite Build Engine}
+    \label{fig:tech_react_vite}
 \end{figure}
 
-\subsubsection{Back-end: Node.js and Express}
-Node.js + Express provides the core REST API for book catalog management, user accounts, and session administration. The server orchestrates request routing, authentication, RBAC authorization, PostgreSQL transactions via Prisma, and delegates AI workloads (embedding generation, summarization, RAG queries) to dedicated AI services. It exposes standardized endpoints for search, recommendations, and integration webhooks (e.g., metadata enrichment from Open Library).
-\begin{figure}[htbp]
+\subsubsection{Back-end Core Server: Node.js and Express}
+The core application server is constructed upon Node.js and the Express framework using TypeScript. It functions as the central API gateway and orchestrator for business logic, catalog management, circulation rules, user accounts, and session administration. The server enforces a modular, layered software architecture comprising Controllers, Services, Middlewares, and Background Cron Jobs. It delegates AI inference tasks (RAG context querying, document embedding generation, personalized recommendations) to the dedicated Python AI service via secure internal HTTP endpoints authenticated through shared secret tokens (\texttt{X-Internal-Key}).
+
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.4\textwidth]{Images/node_express.jpg}
+    \includegraphics[width=0.42\textwidth]{Images/node_express.jpg}
+    \vspace{15pt}
+    \caption{Back-End Application Gateway: Node.js and Express Framework}
+    \label{fig:tech_node_express}
 \end{figure}
 
 \subsubsection{Dedicated AI Microservice: Python and FastAPI}
-A decoupled microservice implemented in Python + FastAPI leverages NLP and Machine Learning frameworks (transformers, sentence-transformers, LLM provider client SDKs). Its primary responsibilities include embedding vector generation, document summarization, RAG-based question answering, and prompt engineering pipelines (chunking, reranking). FastAPI is ideal for low-latency concurrent endpoints and seamlessly scales based on workload demands.
-\begin{figure}[htbp]
+AI capabilities are isolated into a standalone microservice developed in Python 3.10+ using FastAPI and Pydantic v2. This service harnesses high-throughput asynchronous execution to deliver low-latency NLP endpoints. Its key responsibilities include generating vector embeddings via pre-trained Transformer models, executing semantic book search with cosine similarity, coordinating Retrieval-Augmented Generation (RAG) over library regulations and FAQ repositories, and driving function-calling tools that bridge patron inquiries with live database records.
+
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.4\textwidth]{Images/fastapi.png}
+    \includegraphics[width=0.42\textwidth]{Images/fastapi.png}
+    \caption{Dedicated AI Microservice Engine: Python and FastAPI}
+    \label{fig:tech_fastapi}
 \end{figure}
 
-\subsubsection{ORM: Prisma}
-Prisma (TypeScript) is used to define database schemas, generate type-safe query clients, and manage PostgreSQL migrations. Prisma maintains end-to-end type safety between the Node application and the database layer, simplifying queries related to loans, transaction logs, and catalog metadata while providing ACID transaction support for data consistency.
-\begin{figure}[htbp]
+\subsubsection{Data Modeling and ORM: Prisma}
+Prisma ORM is leveraged as the data abstraction and query engine within the Node.js service. Prisma provides end-to-end type safety across the application code and database layer, automatically generating TypeScript definitions from the declarative schema (\texttt{schema.prisma}). It manages automated schema migrations, relation modeling, and complex transactional queries across loans, fines, hold queues, and audit logs while guaranteeing ACID transaction semantics for critical operations like checkout and return.
+
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.4\textwidth]{Images/prisma.png}
+    \includegraphics[width=0.42\textwidth]{Images/prisma.png}
+    \vspace{15pt}
+    \caption{Object-Relational Mapping Engine: Prisma (TypeScript)}
+    \label{fig:tech_prisma}
 \end{figure}
 
 \subsubsection{Relational Database: PostgreSQL}
-PostgreSQL serves as the primary relational store for book records, user profiles, loan transactions, and system metadata. Key advantages include strict ACID compliance for loan-return workflows, advanced JSONB support for flexible metadata, full-text keyword indexing, and horizontal scalability via replication and partitioning.
-\begin{figure}[htbp]
+PostgreSQL serves as the primary relational data store for all persistent business entities, including patron identities, physical inventory items, circulation ledgers, system configurations, and security audit trails. PostgreSQL guarantees strict ACID compliance for loan and fine settlement transactions, leverages B-Tree indexes for rapid metadata queries, and utilizes JSONB columns to capture before-and-after audit diffs and dynamic system parameters without requiring table migrations.
+
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.4\textwidth]{Images/postgresql.jpg}
+    \includegraphics[width=0.42\textwidth]{Images/postgresql.jpg}
+    \caption{Relational Database Management System: PostgreSQL}
+    \label{fig:tech_postgresql}
 \end{figure}
 
-\subsubsection{Vector Store and Embeddings: pgvector}
-Text embeddings for book contents (full texts, summaries) are stored in `pgvector` (a vector extension for PostgreSQL) or a dedicated vector database. The vector store performs nearest-neighbor searches (cosine similarity) to power semantic search, contextual retrieval for RAG pipelines, and "similar books" recommendation features, mapping vector outputs directly to source document IDs.
+\subsubsection{Vector Store and Embedding Infrastructure: ChromaDB and Multilingual Models}
+Text embedding representations for library documents, summaries, and FAQ knowledge bases are managed through a dual-vector architecture:
+\begin{itemize}
+    \item \textbf{In-Memory Vector Database (ChromaDB):} Serves as the high-speed vector retrieval engine for the library's official rules and FAQ documentation. The FAQ corpus is partitioned into overlapping chunks (400 characters, 60-character overlap) and indexed into ChromaDB collections during application startup.
+    \item \textbf{High-Dimensional Embeddings:} Generated via \texttt{SentenceTransformer} utilizing the \texttt{paraphrase-multilingual-MiniLM-L12-v2} model (384-dimensional dense vectors) or Google Gemini's \texttt{models/text-embedding-004} (768-dimensional dense vectors). This enables bilingual semantic matching across Vietnamese and English bibliographic records.
+\end{itemize}
 
-\subsubsection{AI / LLM Capabilities: Embeddings, RAG, Summarization, and Chatbot}
-The system integrates Large Language Models (LLMs) across multiple modules: embedding generation for semantic search, Retrieval-Augmented Generation (RAG) for Q\&A based on library documents, automatic chapter/abstract summarization for previews, and interactive chatbot assistants. The architecture incorporates controlled prompt templates, embedding caching, and attribution mechanisms for source citation.
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{Images/EmbeddingsAPI.png}
+    \includegraphics[width=0.52\textwidth]{Images/EmbeddingsAPI.png}
+    \caption{Vector Embedding and Retrieval Pipeline Architecture}
+    \label{fig:tech_ai_embeddings}
 \end{figure}
 
-\subsubsection{Hybrid Search Strategy}
-A hybrid search strategy combines: 1) full-text keyword search on PostgreSQL for exact metadata matching; and 2) vector similarity search via pgvector for semantic retrieval and contextual matching. Results are merged and reranked (based on relevance scores, popularity, and user context) before returning to the client interface.
+\subsubsection{Adaptive Hybrid Search Strategy}
+To overcome the limitations of pure keyword search (which fails on synonyms and conceptual phrasing) and pure vector search (which can miss exact ISBNs, call numbers, or proper nouns), BkLib implements an \textbf{Adaptive Hybrid Search Engine}. The engine computes a unified composite score:
+\begin{equation}
+    S_{\text{hybrid}} = w_{\text{semantic}} \cdot S_{\text{cosine}} + w_{\text{keyword}} \cdot S_{\text{overlap}}
+\end{equation}
+The weights $w_{\text{semantic}}$ and $w_{\text{keyword}}$ dynamically adjust according to query token count:
+\begin{itemize}
+    \item \textbf{Short Queries ($<3$ tokens):} $w_{\text{semantic}} = 0.40, w_{\text{keyword}} = 0.60$ (prioritizing exact title/author matching).
+    \item \textbf{Medium Queries ($3-5$ tokens):} $w_{\text{semantic}} = 0.65, w_{\text{keyword}} = 0.35$ (balanced conceptual and keyword weighting).
+    \item \textbf{Long Queries ($>5$ tokens):} $w_{\text{semantic}} = 0.80, w_{\text{keyword}} = 0.20$ (heavily favoring semantic intent).
+\end{itemize}
 
-\subsubsection{Security and Authentication: JWT, RBAC, and OTP}
-The system utilizes JSON Web Tokens (JWT) for session management and refresh tokens for secure persistence. Role-Based Access Control (RBAC) enforces granular permissions (Admin, Librarian, Reader) verified at API gateways and endpoints. One-Time Passwords (OTP via email/SMS) secure multi-factor authentication for sensitive operations. Additional measures include HTTPS/TLS encryption, rate limiting, and comprehensive audit logging.
+\subsubsection{Security, Authentication, and Role-Based Access Control}
+System security is established on four pillars:
+\begin{itemize}
+    \item \textbf{Stateless JWT Sessions:} Access tokens are signed using HMAC-SHA256 with short lifespans (15 minutes), supplemented by refresh tokens stored in HTTP-only cookies or secure headers for session persistence.
+    \item \textbf{Bcrypt Hashing:} Passwords undergo salted Bcrypt hashing with configurable rounds (\texttt{BCRYPT\_ROUNDS = 10}).
+    \item \textbf{Brute-Force Account Lockout:} Accounts incurring five consecutive failed authentication attempts are automatically locked for fifteen minutes (\texttt{lockedUntil}).
+    \item \textbf{Granular RBAC:} Enforces role barriers across three hierarchical roles: \texttt{READER}, \texttt{LIBRARIAN}, and \texttt{ADMIN}.
+\end{itemize}
 
 \subsubsection{External Integrations: Open Library, Google Books, and Nodemailer}
-The Open Library and Google Books APIs automate metadata, cover image, and publishing data fetching via ISBN lookup. An automated ETL pipeline periodically syncs catalog data. `Nodemailer` handles transactional notifications (loan due reminders, password resets, system alerts) with dynamic HTML templates and delivery logging.
-\begin{figure}[htbp]
+\begin{itemize}
+    \item \textbf{Bibliographic APIs (Google Books, Open Library, IT Bookstore):} Automated fallback cascade that enriches catalog records with cover images, publishers, publication years, and descriptions upon ISBN entry.
+    \item \textbf{Transactional Messaging (Nodemailer):} SMTP integration delivering HTML emails for 6-digit OTP verification, loan approvals, pickup readiness notices, and due date alerts.
+\end{itemize}
+
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.3\textwidth]{Images/Google-play-book-icon.png}
+    \includegraphics[width=0.32\textwidth]{Images/Google-play-book-icon.png}
+    \vspace{15pt}
+    \caption{External Bibliographic Integration via Google Books and Open Library}
+    \label{fig:tech_google_books}
 \end{figure}
+
+\subsubsection{Background Task Processing: node-cron}
+Automated platform maintenance is governed by scheduled cron jobs via \texttt{node-cron}. Specifically, a daily sweep executed at 01:00 AM evaluates all reservations in \texttt{READY\_FOR\_PICKUP} status whose three-day grace period has lapsed, automatically marking them as \texttt{EXPIRED}, freeing physical copies, and advancing the queue to the next waiting patron.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Comprehensive Technology Stack Summary of the BkLib Platform}
+\label{tab:tech_stack_summary}
+\begin{tabularx}{\linewidth}{|l|l|X|}
+\hline
+\textbf{Layer / Component} & \textbf{Technology / Library} & \textbf{Key Responsibilities and Functionalities} \\ \hline
+\textbf{Client Framework} & React.js 18.2, Vite & Single-Page Application, virtual DOM, HMR dev server. \\ \hline
+\textbf{Routing \& UI State} & React Router DOM, TailwindCSS & Declarative role routing, responsive layout, modal dialogs. \\ \hline
+\textbf{Core Server Engine} & Node.js 20 LTS, Express 4.x & RESTful API endpoints, circulation logic, RBAC middleware. \\ \hline
+\textbf{Database \& ORM} & PostgreSQL 15, Prisma 5.x & Relational data store, ACID transactions, type-safe queries. \\ \hline
+\textbf{AI Microservice} & Python 3.10+, FastAPI & Low-latency async NLP APIs, RAG pipelines, LLM tools. \\ \hline
+\textbf{Large Language Model} & Google Gemini 3.1 Flash & Natural language reasoning, summarization, query intent extraction. \\ \hline
+\textbf{Vector Store \& Embeddings} & ChromaDB, SentenceTransformers & In-memory FAQ chunk vector indexing, multilingual embeddings. \\ \hline
+\textbf{Email Delivery} & Nodemailer 6.x & Transactional HTML emails for OTP and circulation reminders. \\ \hline
+\textbf{Background Automation} & node-cron 3.x & Daily batch sweep for reservation expiry and queue promotion. \\ \hline
+\end{tabularx}
+\end{table}
 
 % =========================================================================
 % SECTION 5.2: AUTHENTICATION MODULE
 % =========================================================================
-\subsection{Authentication Module}
+\subsection{Authentication and Access Governance Module}
 
-The Authentication Module serves as the primary gateway for system access across all user roles in the BkLib system. It enforces secure identity verification, role-based entry routing, self-service user onboarding, multi-step password recovery, and JSON Web Token (JWT) authorization middleware.
+The Authentication Module manages identity verification, role-based ingress routing, patron onboarding, and multi-factor password recovery.
 
 \subsubsection{User Interface Implementation}
 
 \paragraph{Login Page}
-Primary entry portal providing unified authentication with role-switching tabs.
+The primary entry portal provides unified authentication with role-switching tabs.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Auth_DangNhap.png}
-    \vspace{10pt}
-    \caption{BkLib Login Interface}
+    \includegraphics[width=0.92\linewidth]{Images/Auth_DangNhap.png}
+    \vspace{15pt}
+    \caption{BkLib Login Interface with Dual-Role Selector Tabs}
     \label{fig:auth_login}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Features a split-screen layout with branding artwork on the left and a clean authentication card on the right. Includes a role selector tab ("Bạn đọc / Sinh viên" vs. "Cán bộ / Quản trị"), credentials input fields (email or username, password with visibility toggle), a "Ghi nhớ đăng nhập" (Remember Me) checkbox, and direct triggers for password recovery ("Quên mật khẩu?") and account registration. Upon validation, users are automatically routed to their designated workspace.
+\textbf{Layout \& Functionality:} Features a split-screen layout with university branding artwork on the left and an authentication card on the right. Includes a role selector tab (``Bạn đọc / Sinh viên'' for patron self-service vs. ``Cán bộ / Quản trị'' for staff operations), identifier inputs (email, username, or student ID), password field with visibility toggle, a ``Ghi nhớ đăng nhập'' (Remember Me) checkbox, and navigation triggers for password recovery and account registration. Upon successful validation, patrons are redirected to their reader dashboard while librarians and administrators access their operational consoles.
 
 \paragraph{Registration Page}
-Self-service onboarding page for new library members to register accounts with branch selection.
+Self-service onboarding form for new library members.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Auth_DangKy.png}
-    \vspace{10pt}
+    \includegraphics[width=0.92\linewidth]{Images/Auth_DangKy.png}
+    \vspace{15pt}
     \caption{BkLib Account Registration Interface}
     \label{fig:auth_register}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Structured form capturing essential user profile details, including Full Name, Email, Phone Number (optional), Student ID ("Mã số SV" - optional), and Branch Selection ("Chi nhánh đăng ký"). It mandates password creation with confirmation matching and terms of service consent ("Điều khoản dịch vụ" and "Chính sách bảo mật") prior to submitting the registration request.
+\textbf{Layout \& Functionality:} Captures mandatory user profile attributes: Full Name, Email, Phone Number, Student ID (``Mã số SV''), and Branch Affiliation (``Chi nhánh đăng ký''). It enforces password validation rules with confirmation matching and terms-of-service consent checkboxes prior to submission. Upon submission, an account is created in \texttt{PENDING\_VERIFICATION} status, and an automated 6-digit OTP is dispatched to the user's email.
 
 \paragraph{Password Reset Workflow (3-Step Modal)}
-Modal-based self-service credential recovery mechanism utilizing 6-digit Email OTP verification.
+Modal-based credential recovery mechanism utilizing 6-digit Email OTP verification.
 
 \begin{figure}[H]
     \centering
@@ -127,28 +208,28 @@ Modal-based self-service credential recovery mechanism utilizing 6-digit Email O
         \caption{Step 3: Password Reset}
         \label{fig:auth_reset_step3}
     \end{subfigure}
-    \vspace{10pt}
-    \caption{Three-step Modal Workflow for Password Recovery}
+    \vspace{15pt}
+    \caption{Three-Stage Modal Workflow for Self-Service Password Recovery}
     \label{fig:auth_forgot_password_flow}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Executes within an overlay modal dialog spanning three sequential stages:
+\textbf{Layout \& Functionality:} Operates within a focused modal dialog spanning three stages:
 \begin{itemize}
-    \item \textbf{Step 1 (Request OTP):} Users enter their registered email address to dispatch a 6-digit verification code.
-    \item \textbf{Step 2 (OTP Verification):} Prompts input of the 6-digit code received via email, featuring validation feedback and back-navigation controls.
-    \item \textbf{Step 3 (Password Update):} Prompts creation and confirmation of a new password (minimum 8 characters) with eye icons for masked text toggling.
+    \item \textbf{Step 1 (Request OTP):} Users supply their registered email address. The backend validates account existence and generates a 6-digit OTP code valid for 10 minutes.
+    \item \textbf{Step 2 (OTP Verification):} Prompts input of the 6-digit code received via email, featuring real-time input masking, validation feedback, and countdown expiration timers.
+    \item \textbf{Step 3 (Password Update):} Prompts creation and confirmation of a new password (minimum 8 characters), verifying password parity before updating the database.
 \end{itemize}
 
 \subsubsection{Technical Implementation Highlights}
 
-Security and endpoint protection are enforced through middleware leveraging JSON Web Tokens (JWT) and a higher-order role authorization function.
+Authentication middleware validates bearer tokens and enforces role restrictions across protected routes.
 
 \begin{lstlisting}[caption={JWT Authentication and Authorization Middleware (backend-express/src/middlewares/auth.middleware.ts)}, label={lst:auth_middleware}]
 // Middleware verifying JWT access token from Authorization header
 export const authenticate = (req: Request, res: Response, next: NextFunction): void => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    res.status(401).json({ success: false, message: 'No authorization token provided' });
+    res.status(401).json({ success: false, message: 'Khong co token xac thuc' });
     return;
   }
   const token = authHeader.split(' ')[1];
@@ -157,19 +238,51 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
     req.user = decoded;
     next();
   } catch (err) {
-    res.status(401).json({ success: false, message: 'Invalid or expired token' });
+    if (err instanceof jwt.TokenExpiredError) {
+      res.status(401).json({ success: false, message: 'Token da het han' });
+    } else {
+      res.status(401).json({ success: false, message: 'Token khong hop le' });
+    }
   }
 };
 
-// Middleware factory restricting access to specified roles
+// Middleware factory restricting endpoint access to specified roles
 export const authorize = (...roles: Role[]) => {
   return (req: Request, res: Response, next: NextFunction): void => {
-    if (!req.user || !roles.includes(req.user.role)) {
-      res.status(403).json({ success: false, message: 'Access denied' });
+    if (!req.user) {
+      res.status(401).json({ success: false, message: 'Chua xac thuc' });
+      return;
+    }
+    if (!roles.includes(req.user.role)) {
+      res.status(403).json({ success: false, message: 'Khong co quyen truy cap' });
       return;
     }
     next();
   };
+};
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Secure Password Recovery OTP Generation (backend-express/src/modules/auth/auth.service.ts)}, label={lst:auth_otp_service}]
+export const forgotPassword = async (email: string) => {
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) throw createError('Email khong ton tai trong he thong', 404);
+
+  // Invalidate any existing unused reset tokens for this user
+  await prisma.otpToken.updateMany({
+    where: { userId: user.id, type: 'RESET_PASSWORD', usedAt: null },
+    data: { usedAt: new Date() },
+  });
+
+  // Generate 6-digit random numeric token
+  const otpToken = Math.floor(100000 + Math.random() * 900000).toString();
+  const expiresAt = new Date(Date.now() + OTP_EXPIRES_MINUTES * 60 * 1000);
+
+  await prisma.otpToken.create({
+    data: { userId: user.id, token: otpToken, type: 'RESET_PASSWORD', expiresAt },
+  });
+
+  await sendResetPasswordEmail(email, otpToken, OTP_EXPIRES_MINUTES);
+  return { message: 'Ma OTP da duoc gui den email cua ban' };
 };
 \end{lstlisting}
 
@@ -178,111 +291,129 @@ export const authorize = (...roles: Role[]) => {
 % =========================================================================
 \subsection{Reader Module}
 
-The Reader Module provides self-service capabilities for library patrons. It enables authenticated readers to browse the catalog, execute semantic AI-powered resource searches, track and renew active loans, monitor hold queue statuses, view historical borrowing transactions, and interact with a virtual assistant widget.
+The Reader Module provides self-service capabilities for library patrons. It enables students and faculty to explore the library catalog, access physical and digital assets, renew loans, place hold reservations, audit personal loan histories, and consult an AI assistant.
 
 \subsubsection{User Interface Implementation}
 
-\paragraph{Homepage}
-Personalized central dashboard rendered upon reader authentication, serving as the operational hub for patron activities.
+\paragraph{Patron Homepage}
+Personalized operational hub rendered upon reader login.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Reader_TrangChu.png}
-    \vspace{10pt}
-    \caption{Reader Module Homepage Interface}
+    \includegraphics[width=0.92\linewidth]{Images/Reader_TrangChu.png}
+    \vspace{15pt}
+    \caption{Reader Module Central Dashboard}
     \label{fig:reader_homepage}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Includes a responsive left navigation sidebar, top notification center, key metric summary cards (active loans, overdue items, active holds, fine balances), and quick-access cards for currently borrowed books with real-time due date indicators.
+\textbf{Layout \& Functionality:} Organizes patron metrics into top-level summary cards (Active Loans, Overdue Items, Active Holds, and Outstanding Fine Balances). It displays currently borrowed items with visual due date countdown badges (e.g., green for safe periods, red for overdue or imminent deadlines) and provides one-click renewal actions.
 
-\paragraph{Catalog Search Page}
-Interface for discovery, multi-criteria filtering, and digital resource catalog browsing.
+\paragraph{Catalog Search and Discovery}
+Multi-criteria discovery interface for library resources.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Reader_TraCuu.png}
-    \vspace{10pt}
-    \caption{Catalog Search Interface}
+    \includegraphics[width=0.92\linewidth]{Images/Reader_TraCuu.png}
+    \vspace{15pt}
+    \caption{Reader Catalog Search and Filtering Interface}
     \label{fig:reader_search}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Integrates an advanced keyword search bar with category and branch availability filters. Readers can view cover imagery, metadata (author, publisher, ISBN), real-time availability status, and initiate physical hold reservations directly from search result cards.
+\textbf{Layout \& Functionality:} Combines an instant search bar with category tree filtering, author filters, and branch availability selectors. Each search card renders book cover art, bibliographic metadata, dynamic copy availability counters, and quick triggers for online reservations.
 
-\paragraph{Active Loans Management Page}
-Dedicated view allowing readers to monitor loan lifecycles and trigger online loan renewals.
+\paragraph{Active Loans Management and Online Renewal}
+Circulation management view tracking active borrowed items.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Reader_SachDangMuon.png}
-    \vspace{10pt}
-    \caption{Active Loans Management Interface}
+    \includegraphics[width=0.92\linewidth]{Images/Reader_SachDangMuon.png}
+    \vspace{15pt}
+    \caption{Active Loans Management and Online Renewal Interface}
     \label{fig:reader_borrowing}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Displays loan summary statistics alongside detailed item cards indicating checkout dates, mandatory due dates, and renewal attempt limits. Readers can execute inline renewals, which dynamically query circulation rules to recalculate due dates or flag renewal constraints (e.g., existing holds or maximum extension limits).
+\textbf{Layout \& Functionality:} Displays full details for each borrowed item (barcode, checkout date, mandatory due date, remaining extension attempts). Patrons can trigger online loan renewals, which dynamically evaluate system limits (\texttt{max\_renew\_count = 2}) and verify that no other patrons have reserved the document.
 
-\paragraph{Loan History Page}
-Historical ledger recording past transactions, returned items, and financial interactions.
+\paragraph{Borrowing and Fine History}
+Audit ledger tracking past transactions and financial records.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Reader_LichSu.png}
-    \vspace{10pt}
-    \caption{Loan History Interface}
+    \includegraphics[width=0.92\linewidth]{Images/Reader_LichSu.png}
+    \vspace{15pt}
+    \caption{Borrowing History and Fine Audit Ledger}
     \label{fig:reader_history}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Structured table containing book titles, checkout dates, actual return timestamps, fulfillment status badges, and assessed fine records. Features client-side column sorting and date-range filter triggers for personal record auditing.
+\textbf{Layout \& Functionality:} Tabular view presenting historical loans, return dates, overdue day counts, and fine settlement statuses (Pending, Paid, Waived). Features date filtering and sorting to support personal loan auditing.
 
-\paragraph{Active Holds Page}
-Monitors reservation queue positions and availability notices for out-of-stock items.
+\paragraph{Active Hold Reservations}
+Queue tracking interface for reserved items.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Reader_DatCho.png}
-    \vspace{10pt}
-    \caption{Active Holds Interface}
+    \includegraphics[width=0.92\linewidth]{Images/Reader_DatCho.png}
+    \vspace{15pt}
+    \caption{Active Hold Reservations and Queue Status Interface}
     \label{fig:reader_reservation}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Lists active reservations with queue ordering, expiration windows for ready-for-pickup notifications, cancel hold triggers, and an informational panel detailing library reservation rules and pickup deadlines.
+\textbf{Layout \& Functionality:} Lists placed reservations with queue priority positions (\texttt{queuePosition}), current status (``Đang chờ'' vs. ``Sẵn sàng lấy sách''), pickup deadlines (3-day countdown upon arrival), and cancellation triggers.
 
-\paragraph{Virtual Assistant Chat Window}
-Interactive AI assistant widget facilitating natural language interaction, QA, and semantic recommendation.
+% \paragraph{Digital Resource Exploitation: E-books, Audiobooks, and Video Lectures}
+% Access portal for electronic library assets.
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.88\linewidth]{Images/truycapvakhaithactainguyen.png}
+%     \vspace{15pt}
+%     \caption{Digital Resource Exploitation and Multimedia Access Interface}
+%     \label{fig:reader_digital_resources}
+% \end{figure}
+
+% \textbf{Layout \& Functionality:} Hosts integrated multimedia viewers:
+% \begin{itemize}
+%     \item \textbf{E-Books (PDF / EPUB):} Renders clean, formatted reading views generated from structured book metadata and descriptions.
+%     \item \textbf{Audiobooks:} Features streaming Librivox audiobooks and a browser-based Text-to-Speech (TTS) synthesizer driven by the Web Speech API (\texttt{SpeechSynthesisUtterance}), complete with play/pause controls and progress scrubbers.
+%     \item \textbf{Video Lectures:} Embeds educational lectures (e.g., MIT OpenCourseWare) directly aligned with university curriculum subjects.
+%     \item \textbf{Concurrency Guardrails:} Enforces concurrent session caps (\texttt{maxConcurrentUsers = 5}) and tracks session durations in \texttt{DigitalAccessLog}.
+% \end{itemize}
+
+\paragraph{Virtual AI Assistant Widget}
+Interactive chat interface facilitating natural language queries.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.45\linewidth]{Images/Reader_ChatbotAI.png}
-    \vspace{10pt}
+    \vspace{15pt}
     \caption{Virtual Assistant Chat Window Interface}
     \label{fig:reader_chatbot}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Floating chat interface utilizing a hybrid Retrieval-Augmented Generation (RAG) backend. Features prompt suggestions, streaming response bubble threads, and direct deep-links to catalog book details generated from semantic similarity queries.
+\textbf{Layout \& Functionality:} Floating chat window with prompt suggestion chips (``Sách tôi đang mượn'', ``Nội quy thư viện'', ``Quy định phạt quá hạn''). The chatbot dynamically selects between RAG-based regulation answering and Gemini Function Calling for live user loan/fine lookups.
 
-\paragraph{Personal Profile \& Settings Page}
-Patron account management, security credentials, and communication preferences.
+\paragraph{Personal Profile and Notification Preferences}
+Patron account preferences and communication channels.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Reader_HoSoCaiDat.png}
-    \vspace{10pt}
-    \caption{Personal Profile and Settings Interface}
+    \includegraphics[width=0.92\linewidth]{Images/Reader_HoSoCaiDat.png}
+    \vspace{15pt}
+    \caption{Personal Profile and Notification Settings Interface}
     \label{fig:reader_profile}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Contains editable personal contact forms, password modification tools, multi-channel notification toggles (Email, SMS, In-App), and a personalized recommendation grid driven by patron reading history.
+\textbf{Layout \& Functionality:} Allows updating contact details, altering account passwords, and toggling notification channels (In-App, Email, SMS) for due date reminders, hold readiness alerts, and announcements.
 
 \subsubsection{Technical Implementation Highlights}
 
-The Virtual Assistant utilizes vector embeddings generated via \texttt{SentenceTransformer} and stored in an in-memory \texttt{ChromaDB} collection to retrieve top context chunks for patron inquiries.
-
-\begin{lstlisting}[language=Python, caption={ChromaDB Vector Retrieval for RAG (ai-service/app/services/rag\_service.py)}, label={lst:rag_retrieval}]
+\begin{lstlisting}[language=Python, caption={ChromaDB Vector Retrieval for FAQ RAG (ai-service/app/services/rag\_service.py)}, label={lst:rag_retrieval}]
 def retrieve_context(query: str, top_k: int = 3) -> str:
     """
     Retrieve top-k relevant text chunks for a query from ChromaDB vector collection.
     Formats results with segment headers to feed into LLM prompt context.
     """
+    global _collection
     if _collection is None or _collection.count() == 0:
         return ""
 
@@ -297,7 +428,94 @@ def retrieve_context(query: str, top_k: int = 3) -> str:
     if not docs:
         return ""
 
-    return "\n\n---\n\n".join([f"[Chunk {i+1}]: {doc}" for i, doc in enumerate(docs)])
+    return "\n\n---\n\n".join([f"[Doan {i+1}]: {doc}" for i, doc in enumerate(docs)])
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, caption={Gemini Function Calling Dispatcher (ai-service/app/services/function\_tools.py)}, label={lst:ai_function_calling}]
+async def execute_tool(tool_name: str, args: dict[str, Any]) -> str:
+    """
+    Execute tool requested by Gemini by calling internal Node.js backend endpoints.
+    Returns textual result to inject back into the LLM context.
+    """
+    user_id = args.get("user_id", "")
+    headers = {"X-Internal-Key": settings.INTERNAL_API_KEY}
+
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        try:
+            if tool_name == "get_active_borrows":
+                res = await client.get(
+                    f"{settings.BACKEND_URL}/api/v1/ai/internal/user/{user_id}/borrows",
+                    headers=headers,
+                )
+                if res.status_code == 200:
+                    data = res.json().get("data", [])
+                    if not data:
+                        return "Nguoi dung hien khong co sach nao dang muon."
+                    lines = [f"- '{b['title']}' (Han tra: {b['dueDate']})" for b in data]
+                    return f"Dang muon {len(data)} cuon sach:\n" + "\n".join(lines)
+
+            elif tool_name == "get_user_fines":
+                res = await client.get(
+                    f"{settings.BACKEND_URL}/api/v1/ai/internal/user/{user_id}/fines",
+                    headers=headers,
+                )
+                if res.status_code == 200:
+                    data = res.json().get("data", {})
+                    total = data.get("totalFines", 0)
+                    return f"Tong tien phat chua thanh toan: {total:,}d."
+        except Exception as e:
+            print(f"[Function Tool Error] {tool_name}: {e}")
+    return "Khong the lay du lieu tu he thong luc nay."
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Self-Service Online Loan Renewal (backend-express/src/modules/circulation/circulation.service.ts)}, label={lst:reader_renew}]
+export const renewBorrowRecord = async (borrowRecordId: string, userId: string) => {
+  const borrowRecord = await prisma.borrowRecord.findUnique({
+    where: { id: borrowRecordId },
+    include: { physicalCopy: { include: { book: true } } },
+  });
+
+  if (!borrowRecord) throw createError('Khong tim thay phieu muon', 404);
+  if (borrowRecord.userId !== userId) throw createError('Khong co quyen gia han', 403);
+  if (borrowRecord.status !== BorrowStatus.ACTIVE) {
+    throw createError('Phieu muon khong con hieu luc', 422);
+  }
+
+  // Prevent online renewal if item is already overdue
+  const now = new Date();
+  if (now > borrowRecord.dueDate) {
+    throw createError('Sach da qua han, khong the gia han truc tuyen.', 422);
+  }
+
+  // Verify renewal attempt cap
+  const maxRenew = parseInt(await getConfig(CONFIG_KEYS.MAX_RENEW, '2'), 10);
+  if (borrowRecord.renewCount >= maxRenew) {
+    throw createError(`Da dat gioi han gia han toi da (${maxRenew} lan)`, 422);
+  }
+
+  // Block renewal if other patrons are waiting in queue
+  const hasReservation = await prisma.reservation.count({
+    where: {
+      bookId: borrowRecord.physicalCopy.bookId,
+      userId: { not: userId },
+      status: { in: [ReservationStatus.WAITING, ReservationStatus.READY_FOR_PICKUP] },
+    },
+  });
+  if (hasReservation > 0 && borrowRecord.physicalCopy.book.availableCopies === 0) {
+    throw createError('Tai lieu dang co nguoi dat giu cho. Vui long tra dung han.', 422);
+  }
+
+  const renewDays = parseInt(await getConfig(CONFIG_KEYS.RENEW_DURATION, '7'), 10);
+  const newDueDate = new Date(borrowRecord.dueDate);
+  newDueDate.setDate(newDueDate.getDate() + renewDays);
+
+  await prisma.borrowRecord.update({
+    where: { id: borrowRecordId },
+    data: { dueDate: newDueDate, renewCount: { increment: 1 } },
+  });
+
+  return { message: 'Gia han thanh cong', newDueDate, renewCount: borrowRecord.renewCount + 1 };
+};
 \end{lstlisting}
 
 % =========================================================================
@@ -305,103 +523,99 @@ def retrieve_context(query: str, top_k: int = 3) -> str:
 % =========================================================================
 \subsection{Librarian Module}
 
-The Librarian Module empowers library staff to manage daily counter operations, oversee item circulation, maintain catalog metadata, calculate fine penalties, communicate system announcements, and analyze branch performance analytics.
+The Librarian Module delivers operational capabilities for library staff, supporting counter circulation, catalog management, fine settlement, multi-channel announcements, and operational analytics.
 
 \subsubsection{User Interface Implementation}
 
-\paragraph{Homepage}
-Operational control panel highlighting daily tasks, branch status indicators, and urgent action queues.
+\paragraph{Librarian Operational Dashboard}
+Central operational workspace summarizing daily circulation loads.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Librarian_TrangChu.png}
-    \vspace{10pt}
-    \caption{Librarian Module Homepage Interface}
+    \includegraphics[width=0.92\linewidth]{Images/Librarian_TrangChu.png}
+    \vspace{15pt}
+    \caption{Librarian Operational Dashboard and Quick Actions}
     \label{fig:librarian_homepage}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Features quick-action navigation shortcuts (Circulation, Cataloging, Announcements, Reports), real-time counter performance metrics, pending reservation queues awaiting processing, and an activity log feed tracking recent loan activities.
+\textbf{Layout \& Functionality:} Renders vital circulation statistics (Today's checkouts, Today's returns, Overdue alerts, Pending reservations), accompanied by quick navigation shortcuts to the Circulation Desk, Cataloging, Communications, and Reports.
 
-\paragraph{Circulation Management Page}
-Counter processing interface engineered for high-throughput checkouts, returns, and fine settlement.
+\paragraph{Circulation Management Desk}
+Counter processing interface designed for barcode-driven checkouts and returns.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Librarian_QuanLyLuuThong.png}
-    \vspace{10pt}
-    \caption{Circulation Management Interface}
+    \includegraphics[width=0.92\linewidth]{Images/Librarian_QuanLyLuuThong.png}
+    \vspace{15pt}
+    \caption{High-Throughput Circulation Desk Interface}
     \label{fig:librarian_circulation}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Dual-pane interface: Patron ID/barcode lookup pane on the left, and rapid barcode scanning input area with active transaction summary and item return validation on the right. Instantly verifies patron account status, overdue holds, and automatic fine calculation upon scanning.
+\textbf{Layout \& Functionality:} Built as a dual-pane layout:
+\begin{itemize}
+    \item \textbf{Patron Verification Pane (Left):} Card lookup by Student ID or barcode, displaying active loans, overdue flags, and fine status.
+    \item \textbf{Item Processing Pane (Right):} Barcode input field with scanner auto-submit. It displays live transactions, calculates overdue penalties, and collects fine payments.
+\end{itemize}
 
-\paragraph{Catalog Management Page}
-Administrative workspace for book metadata management, inventory tracking, and physical copy labeling.
+\paragraph{Catalog and Inventory Management}
+Collection management workspace for physical and digital bibliographic records.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Librarian_QuanLyDanhMuc.png}
-    \vspace{10pt}
-    \caption{Catalog Management Interface}
+    \includegraphics[width=0.92\linewidth]{Images/Librarian_QuanLyDanhMuc.png}
+    \vspace{15pt}
+    \caption{Catalog and Physical Inventory Management Interface}
     \label{fig:librarian_catalog}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Search control bar with ISBN auto-fetching integration, batch CSV/Excel import tools, item modal creation form, and a paginated inventory table providing inline record editing, status toggling, and copy barcode generation.
+\textbf{Layout \& Functionality:} Supports book creation and editing with automated ISBN enrichment (fetching from Google Books and Open Library), batch Excel file importing, and physical copy management (generating unique barcodes, setting shelf locations, and tracking physical condition: GOOD, FAIR, POOR).
 
-\paragraph{Communication Management Page}
-Broadcast dispatch portal for library announcements and target reader notification campaigns.
+\paragraph{Communications and Broadcast Management}
+Multi-channel notification portal for reader announcements.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Librarian_TruyenThong.png}
-    \vspace{10pt}
-    \caption{Communication Management Interface}
+    \includegraphics[width=0.92\linewidth]{Images/Librarian_TruyenThong.png}
+    \vspace{15pt}
+    \caption{Multi-Channel Communications Dispatcher Interface}
     \label{fig:librarian_notification}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Rich-text announcement composition editor with audience targeting options (All Readers, Overdue Borrowers, Specific Member Tiers), channel selection (In-App, Email), and a historical broadcast log detailing delivery success rates.
+\textbf{Layout \& Functionality:} Rich-text composition editor with audience targeting (All Active Users, Specific Roles), channel selectors (In-App, SMTP Email, SMS Gateway), and a transmission history log recording delivery metrics.
 
-\paragraph{Reports \& Analytics Page}
-Data visualization dashboard tracking circulation throughput, collection usage, and financial metrics.
+\paragraph{Circulation Reports and Analytics}
+Operational intelligence dashboard tracking collection usage and financial returns.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Librarian_BaoCao.png}
-    \vspace{10pt}
-    \caption{Librarian Reports and Analytics Interface}
+    \includegraphics[width=0.92\linewidth]{Images/Librarian_BaoCao.png}
+    \vspace{15pt}
+    \caption{Librarian Reports and Analytics Dashboard}
     \label{fig:librarian_report}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Interactive date-range controls, export triggers (PDF, Excel, CSV), circulation trend charts, top-borrowed book rankings, and fine collection breakdowns to assist inventory planning.
+\textbf{Layout \& Functionality:} Interactive date-range filters, loan vs. return trend graphs (\texttt{buildTrendSeries}), top borrowed book leaderboards, overdue loan lists, fine revenue breakdowns, and export triggers for CSV, Excel, and PDF formats.
 
-\paragraph{Personal Profile \& Settings Page}
-Staff account management workspace for updating staff profile attributes, security credentials, and system notification preferences.
+\paragraph{Librarian Profile and Settings}
+Staff credentials and operational branch management.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Librarian_HoSoCaiDat.png}
-    \vspace{10pt}
-    \caption{Librarian Personal Profile and Settings Interface}
+    \includegraphics[width=0.92\linewidth]{Images/Librarian_HoSoCaiDat.png}
+    \vspace{15pt}
+    \caption{Librarian Staff Profile and Operating Scope Interface}
     \label{fig:librarian_profile}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Organized into a multi-card dashboard layout:
-\begin{itemize}
-    \item \textbf{Basic Information Pane ("Thông tin cơ bản"):} Editable profile fields including full name, login email, contact phone number, student/staff ID, assigned operating branch selector (e.g., CS1 - Lý Thường Kiệt), and profile avatar update controls.
-    \item \textbf{Security \& Password Modification ("Bảo mật \& Đổi mật khẩu"):} Password management utility requiring current password verification followed by new password entry and confirmation matching.
-    \item \textbf{Notification Preferences ("Cài đặt thông báo"):} Granular toggle switches for key automated alerts, including document return reminders, hold availability notifications, and system-wide announcements.
-    \item \textbf{Staff Role Summary Panel ("Vai trò cán bộ"):} Informational context card detailing current authorization privileges, assigned operational branch scope, and a direct navigation link to the administrative dashboard.
-\end{itemize}
+\textbf{Layout \& Functionality:} Multi-card dashboard covering personal contact details, secure password change, notification preferences, and assigned branch counter scope (e.g., CS1 - Lý Thường Kiệt vs. CS2 - Dĩ An).
 
 \subsubsection{Technical Implementation Highlights}
-
-Circulation logic dynamically calculates overdue days by iterating through loan return intervals while excluding official library holiday dates configured in system settings.
 
 \begin{lstlisting}[caption={Holiday-Aware Overdue Day Calculation (backend-express/src/modules/circulation/circulation.service.ts)}, label={lst:calc_overdue}]
 const calcOverdueDays = async (dueDate: Date, returnDate: Date): Promise<number> => {
   if (returnDate <= dueDate) return 0;
 
-  // Retrieve holiday array from system configuration
+  // Retrieve official holiday array configured in system settings
   const holidayConfig = await getConfig(CONFIG_KEYS.HOLIDAY_DATES, '[]');
   const holidays: string[] = JSON.parse(holidayConfig);
 
@@ -409,9 +623,13 @@ const calcOverdueDays = async (dueDate: Date, returnDate: Date): Promise<number>
   const cursor = new Date(dueDate);
   cursor.setDate(cursor.getDate() + 1);
 
-  // Iterate day-by-day excluding scheduled holidays
+  // Day-by-day iteration excluding official calendar holidays
   while (cursor <= returnDate) {
-    const dateStr = cursor.toISOString().split('T')[0];
+    const year = cursor.getFullYear();
+    const month = String(cursor.getMonth() + 1).padStart(2, '0');
+    const day = String(cursor.getDate()).padStart(2, '0');
+    const dateStr = `${year}-${month}-${day}`;
+
     if (!holidays.includes(dateStr)) {
       overdueDays++;
     }
@@ -421,114 +639,307 @@ const calcOverdueDays = async (dueDate: Date, returnDate: Date): Promise<number>
 };
 \end{lstlisting}
 
+\begin{lstlisting}[caption={Check-In and Automatic Hold Queue Reallocation (backend-express/src/modules/circulation/circulation.service.ts)}, label={lst:return_reallocation}]
+// Step 5: Check if book has a waiting reservation queue
+const nextReservation = await prisma.reservation.findFirst({
+  where: { bookId: physicalCopy.bookId, status: ReservationStatus.WAITING },
+  orderBy: { queuePosition: 'asc' },
+});
+
+if (nextReservation) {
+  // Retain physical copy as RESERVED and allocate to next waiting user
+  await prisma.physicalCopy.update({
+    where: { id: physicalCopy.id },
+    data: { status: CopyStatus.RESERVED },
+  });
+
+  await prisma.reservation.update({
+    where: { id: nextReservation.id },
+    data: {
+      status: ReservationStatus.READY_FOR_PICKUP,
+      notifiedAt: new Date(),
+      expiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3-day window
+      physicalCopyId: physicalCopy.id,
+    },
+  });
+
+  // Notify next patron via In-App and Email
+  await notifyReservationReady(nextReservation.userId, physicalCopy.book.title, physicalCopy.bookId);
+} else {
+  // No waiting queue: return physical copy to available pool
+  await prisma.physicalCopy.update({
+    where: { id: physicalCopy.id },
+    data: { status: CopyStatus.AVAILABLE },
+  });
+  await prisma.book.update({
+    where: { id: physicalCopy.bookId },
+    data: { availableCopies: { increment: 1 } },
+  });
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Automated ISBN Metadata Lookup Cascade (backend-express/src/modules/books/books.utils.ts)}, label={lst:isbn_enrichment}]
+export const fetchBookInfoByIsbn = async (isbn: string): Promise<ExternalBookInfo | null> => {
+  const cleanIsbn = isbn.replace(/[-\s]/g, '');
+
+  // 1. Query Google Books API
+  try {
+    const response = await axios.get('https://www.googleapis.com/books/v1/volumes', {
+      params: { q: `isbn:${cleanIsbn}` },
+      timeout: 5000,
+    });
+    if (response.data.totalItems > 0) {
+      const info = response.data.items[0].volumeInfo;
+      return {
+        title: info.title,
+        authorNames: info.authors || [],
+        publisher: info.publisher,
+        publishYear: info.publishedDate ? parseInt(info.publishedDate.substring(0, 4)) : undefined,
+        language: info.language,
+        description: info.description,
+        coverImageUrl: info.imageLinks?.thumbnail?.replace(/^http:/, 'https:'),
+        isbn: cleanIsbn,
+      };
+    }
+  } catch (error) { /* Fallback to Open Library on error or rate-limit */ }
+
+  // 2. Fallback to Open Library API
+  try {
+    const olRes = await axios.get(
+      `https://openlibrary.org/api/books?bibkeys=ISBN:${cleanIsbn}&format=json&jscmd=data`,
+      { timeout: 5000 }
+    );
+    const olData = olRes.data[`ISBN:${cleanIsbn}`];
+    if (olData) {
+      return {
+        title: olData.title,
+        authorNames: olData.authors?.map((a: any) => a.name) || [],
+        publisher: olData.publishers?.map((p: any) => p.name).join(', '),
+        publishYear: olData.publish_date ? parseInt(olData.publish_date.match(/\d{4}/)?.[0]) : undefined,
+        description: olData.notes,
+        coverImageUrl: olData.cover?.medium || olData.cover?.large,
+        isbn: cleanIsbn,
+      };
+    }
+  } catch (error) { /* End of cascade */ }
+  return null;
+};
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Scheduled Background Task for Expired Reservation Cleanup (backend-express/src/jobs/reservationExpiry.job.ts)}, label={lst:cron_reservation_expiry}]
+export const startReservationExpiryJob = () => {
+  // Execute daily at 01:00 AM
+  cron.schedule('0 1 * * *', async () => {
+    const now = new Date();
+    const expired = await prisma.reservation.findMany({
+      where: {
+        status: ReservationStatus.READY_FOR_PICKUP,
+        expiresAt: { lt: now },
+      },
+      include: { book: true },
+    });
+
+    for (const reservation of expired) {
+      // 1. Mark reservation as EXPIRED
+      await prisma.reservation.update({
+        where: { id: reservation.id },
+        data: { status: ReservationStatus.EXPIRED },
+      });
+
+      // 2. Re-assign physical copy to next waiting patron or return to AVAILABLE
+      const nextInQueue = await prisma.reservation.findFirst({
+        where: { bookId: reservation.bookId, status: ReservationStatus.WAITING },
+        orderBy: { queuePosition: 'asc' },
+      });
+
+      if (nextInQueue) {
+        await prisma.reservation.update({
+          where: { id: nextInQueue.id },
+          data: {
+            status: ReservationStatus.READY_FOR_PICKUP,
+            expiresAt: new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000),
+          },
+        });
+      } else {
+        await prisma.physicalCopy.updateMany({
+          where: { bookId: reservation.bookId, status: CopyStatus.RESERVED },
+          data: { status: CopyStatus.AVAILABLE },
+        });
+        await prisma.book.update({
+          where: { id: reservation.bookId },
+          data: { availableCopies: { increment: 1 } },
+        });
+      }
+    }
+  });
+};
+\end{lstlisting}
+
 % =========================================================================
 % SECTION 5.5: ADMINISTRATOR MODULE
 % =========================================================================
 \subsection{Administrator Module}
 
-The Administrator Module provides top-level governance for platform management. It enables system administrators to manage Role-Based Access Control (RBAC), configure system settings, manage branch networks, audit system logs, monitor infrastructure health, and execute database backup and disaster recovery operations.
+The Administrator Module delivers platform governance, encompassing user account lifecycles, dynamic system configurations, branch topology management, immutable security audit trails, and database disaster recovery.
 
 \subsubsection{User Interface Implementation}
 
 \paragraph{System Overview Dashboard}
-High-level system health dashboard monitoring infrastructure resources, server loads, and usage statistics.
+High-level operational health dashboard monitoring platform metrics.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Admin_Dashboard.png}
-    \vspace{10pt}
+    \includegraphics[width=0.92\linewidth]{Images/Admin_Dashboard.png}
+    \vspace{15pt}
     \caption{Administrator System Overview Dashboard}
     \label{fig:admin_dashboard}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Displays system metrics cards (Total Active Accounts, Catalog Size, Active Sessions), cloud database storage indicators, API traffic throughput graphs, and real-time system security alerts.
+\textbf{Layout \& Functionality:} Displays high-level platform health indicators: Total Registered Users, Catalog Titles, Total Physical Inventory, System Error Frequencies, Cloud Storage Consumption, and Recent Security Audit Events.
 
-\paragraph{User Account Management Page}
-Centralized administration workspace for user identity lifecycle, role assignments, and permission management.
+\paragraph{User Account Management}
+Centralized identity governance interface.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Admin_QuanLyTaiKhoan.png}
-    \vspace{10pt}
-    \caption{User Account Management Interface}
+    \includegraphics[width=0.92\linewidth]{Images/Admin_QuanLyTaiKhoan.png}
+    \vspace{15pt}
+    \caption{User Account and Role Governance Interface}
     \label{fig:admin_user_management}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Paginated user directory with role-based filtering (Reader, Librarian, Admin), account creation modal trigger, RBAC permission assignment controls, and emergency account lock/unlock toggles.
+\textbf{Layout \& Functionality:} Paginated directory with role filtering (Reader, Librarian, Admin) and status toggles. Administrators can create administrative accounts, modify user roles, and trigger emergency account suspensions.
 
-\paragraph{System Configuration Page}
-Centralized administrative interface for defining operational system parameters, circulation rules, and fine structures.
+\paragraph{System Configuration Engine}
+Centralized console for editing circulation policies and parameters without code redeployment.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Admin_CauHinhHeThong.png}
-    \vspace{10pt}
-    \caption{System Configuration Interface}
+    \includegraphics[width=0.92\linewidth]{Images/Admin_CauHinhHeThong.png}
+    \vspace{15pt}
+    \caption{System Dynamic Configuration Management Console}
     \label{fig:admin_system_config}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Structured configuration panel providing interactive inputs for global system environment variables, including:
+\textbf{Layout \& Functionality:} Direct configuration of system variables:
 \begin{itemize}
-    \item \textbf{Circulation Rules:} Default borrowing duration in days (\texttt{borrow\_duration\_days}), max borrowing limit for faculty members (\texttt{max\_borrow\_limit\_faculty}), and general reader borrowing cap (\texttt{max\_borrow\_limit\_reader}).
-    \item \textbf{Renewal Policies:} Maximum allowable renewals per item (\texttt{max\_renew\_count}) and duration granted per renewal cycle (\texttt{renew\_duration\_days}).
-    \item \textbf{Financial \& Calendar Settings:} Daily overdue fine rate calculation in VNĐ (\texttt{fine\_rate\_per\_day}) and an array-formatted holiday exclusion list (\texttt{holiday\_dates}) in ISO format to suspend fine accruals during non-working days.
+    \item \textbf{Circulation Rules:} Default loan duration in days (\texttt{borrow\_duration\_days = 14}), faculty borrowing limit (\texttt{max\_borrow\_limit\_faculty = 10}), and reader limit (\texttt{max\_borrow\_limit\_reader = 5}).
+    \item \textbf{Renewal Policies:} Maximum extensions allowed (\texttt{max\_renew\_count = 2}) and extension duration (\texttt{renew\_duration\_days = 7}).
+    \item \textbf{Financial \& Calendar Rules:} Overdue fine rate per day (\texttt{fine\_rate\_per\_day = 2000}) and the ISO holiday schedule array (\texttt{holiday\_dates}).
 \end{itemize}
 
-\paragraph{Branch Management Page}
-Network topology configuration page for physical library branches and inter-branch policies.
+\paragraph{Branch Management}
+Library network configuration for campus locations.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Admin_QuanLyChiNhanh.png}
-    \vspace{10pt}
-    \caption{Branch Management Interface}
+    \includegraphics[width=0.92\linewidth]{Images/Admin_QuanLyChiNhanh.png}
+    \vspace{15pt}
+    \caption{Campus Branch Network Management Interface}
     \label{fig:admin_branch_management}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Grid of branch profile cards displaying branch addresses, contact details, assigned head librarians, operating hours, and synchronization status with the central database.
+\textbf{Layout \& Functionality:} Card grid detailing branch titles, street addresses, direct phone lines, appointed head librarians, and operational statuses.
 
-\paragraph{Audit Logs Page}
-Compliance and security audit trail viewer logging critical system actions and data state mutations.
+\paragraph{Security Audit Logs}
+Compliance viewer recording data mutations and user actions.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Admin_NhatKyKiemToan.png}
-    \vspace{10pt}
-    \caption{System Audit Logs Interface}
+    \includegraphics[width=0.92\linewidth]{Images/Admin_NhatKyKiemToan.png}
+    \vspace{15pt}
+    \caption{Security Audit Trail and Mutation Log Viewer}
     \label{fig:admin_audit_log}
 \end{figure}
 
-\textbf{Layout \& Functionality:} High-density audit event table detailing action timestamps, actor identities and IP addresses, API endpoint paths, before/after JSON payload diffs, and severity badges for anomaly tracking.
+\textbf{Layout \& Functionality:} High-density audit event table detailing action timestamps, actor identities, IP addresses, target resources, severity badges (INFO, WARNING, CRITICAL), and JSON diff views showing previous and updated values.
 
-\paragraph{Backup \& Disaster Recovery Page}
-Database snapshot management and disaster recovery administration tool.
+\paragraph{Backup and Disaster Recovery}
+Database snapshot administration and point-in-time recovery tool.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{Images/Admin_SaoLuuPhucHoi.png}
-    \vspace{10pt}
-    \caption{Backup and Disaster Recovery Interface}
+    \includegraphics[width=0.92\linewidth]{Images/Admin_SaoLuuPhucHoi.png}
+    \vspace{15pt}
+    \caption{Database Backup and Disaster Recovery Interface}
     \label{fig:admin_backup}
 \end{figure}
 
-\textbf{Layout \& Functionality:} Displays automated backup scheduling configurations, snapshot storage usage, manual immediate backup trigger controls, historical snapshot logs, and point-in-time database restoration controls.
+\textbf{Layout \& Functionality:} Renders backup storage analytics, snapshot generation timestamps, one-click manual backup triggers, backup file downloads, and point-in-time transactional database restorations.
 
 \subsubsection{Technical Implementation Highlights}
 
-System administrative mutations (such as system configuration adjustments, database backups, or account updates) automatically log immutable audit trail records containing actor metadata and action parameters.
-
-\begin{lstlisting}[caption={Audit Logging Execution (backend-express/src/modules/admin/admin.service.ts)}, label={lst:audit_log}]
-await prisma.auditLog.create({
-  data: {
-    actorId: processedById,
-    action: AuditAction.SYSTEM_CONFIG_UPDATE,
-    targetResource: 'SystemConfig',
-    details: { key, oldValue, newValue },
-    ipAddress,
-  },
-});
+\begin{lstlisting}[caption={Security Audit Trail Logging (backend-express/src/modules/admin/admin.service.ts)}, label={lst:audit_log}]
+export const logAuditEvent = async (data: {
+  userId: string;
+  action: AuditAction;
+  entityType: string;
+  entityId: string;
+  oldData?: any;
+  newData?: any;
+  ipAddress?: string;
+  riskLevel?: 'INFO' | 'WARNING' | 'CRITICAL';
+}) => {
+  await prisma.auditLog.create({
+    data: {
+      userId: data.userId,
+      action: data.action,
+      entityType: data.entityType,
+      entityId: data.entityId,
+      oldData: data.oldData ? JSON.stringify(data.oldData) : null,
+      newData: data.newData ? JSON.stringify(data.newData) : null,
+      ipAddress: data.ipAddress,
+      riskLevel: data.riskLevel || 'INFO',
+    },
+  });
+};
 \end{lstlisting}
 
+\begin{lstlisting}[caption={Transactional Database Restoration from Snapshot (backend-express/src/modules/admin/admin.service.ts)}, label={lst:admin_backup_restore}]
+export const restoreBackup = async (filename: string, userId: string) => {
+  const filePath = getBackupFilePath(filename);
+  if (!fs.existsSync(filePath)) throw createError('File sao luu khong ton tai', 404);
+
+  const snapshot = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  const systemConfigs = snapshot.systemConfigs ?? [];
+  const branches = snapshot.branches ?? [];
+
+  // Execute restore within an atomic ACID transaction
+  await prisma.$transaction(async (tx) => {
+    for (const config of systemConfigs) {
+      await tx.systemConfig.upsert({
+        where: { key: config.key },
+        create: { key: config.key, value: config.value, description: config.description },
+        update: { value: config.value, description: config.description },
+      });
+    }
+
+    for (const branch of branches) {
+      await tx.branch.upsert({
+        where: { id: branch.id },
+        create: {
+          id: branch.id, name: branch.name, address: branch.address,
+          phone: branch.phone, managerId: branch.managerId, isActive: branch.isActive,
+        },
+        update: {
+          name: branch.name, address: branch.address,
+          phone: branch.phone, managerId: branch.managerId, isActive: branch.isActive,
+        },
+      });
+    }
+  });
+
+  // Record audit trail entry for critical restore operation
+  await prisma.auditLog.create({
+    data: {
+      userId, action: AuditAction.CONFIG_CHANGE,
+      entityType: 'Restore', entityId: filename, riskLevel: 'CRITICAL',
+    },
+  });
+
+  return { message: 'Da phuc hoi cau hinh va chi nhanh thanh cong' };
+};
+\end{lstlisting}
 % =========================================================================
 % SECTION 5.6: DEPLOYMENT STAGE
 % =========================================================================
