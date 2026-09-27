@@ -247,7 +247,7 @@
     4. If Add/Edit: System renders item form (Title, Author, ISBN, Category, Copies...).\newline
     \textit{** Extension Points:**}\newline
     - \textbf{[Extend]} Librarian can execute \textit{"Automated Cataloging via ISBN"} (UC-CAT-03) to auto-fill form.\newline
-    - \textbf{[Extend]} Librarian can execute \textit{"Automated Document Summarization"} (UC-CAT-04) if description is missing.\newline
+
     5. Librarian reviews form fields and clicks "Save".\newline
     6. System validates fields, persists to DB, and displays success alert. \\
     \hline
@@ -323,36 +323,7 @@
     \caption{Use-case Specification: Automated Cataloging via ISBN}
 \end{longtable}
 
-\newpage
-% --- UC: AUTOMATED DOCUMENT SUMMARIZATION (AI) ---
-\begin{longtable}{|p{3.5cm}|p{11.5cm}|}
-    \hline
-    \textbf{Use-case Name} & \textbf{Automated Document Summarization} \\
-    \hline
-    \textbf{Use-case ID} & UC-CAT-04 \\
-    \hline
-    \textbf{Overview} & Uses Large Language Models (LLMs) to automatically generate concise abstract summaries (150-300 words) for catalog items lacking publisher descriptions. \\
-    \hline
-    \textbf{Actor} & Librarian \\
-    \hline
-    \textbf{Pre-conditions} & Executing "Add / Edit / Delete Catalog Record" flow. Title and Author fields populated. \\
-    \hline
-    \textbf{Trigger Condition} & Librarian clicks "Generate AI Summary" in Description field. \\
-    \hline
-    \textbf{Flow of Events} & 
-    1. System collects existing item fields (Title, Author, Category).\newline
-    2. System formats prompt payload and sends to AI Engine (e.g., Gemini API).\newline
-    3. AI Engine processes payload and returns summary text.\newline
-    4. System populates text into Description field, automatically tagging "(AI-generated summary)".\newline
-    5. Librarian reviews, edits, or requests regeneration. \\
-    \hline
-    \textbf{Post-conditions} & Item receives concise abstract summary, aiding reader discovery. \\
-    \hline
-    \textbf{Exceptions} & 
-    Ex1: Insufficient metadata input causing inaccurate AI synthesis $\rightarrow$ Generic output returned; librarian discards and clears output. \\
-    \hline
-    \caption{Use-case Specification: Automated Document Summarization}
-\end{longtable}
+
 
 % ======================================================================================
 % 4.3 CIRCULATION MANAGEMENT
