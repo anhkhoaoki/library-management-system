@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1790507551.49432 "f:/NEW/KHOA/HK252/DATN/demo/ĐATN/main.tex" "main.pdf" "main" 1790507572.30946 0
+["pdflatex"] 1790507612.05538 "f:/NEW/KHOA/HK252/DATN/demo/ĐATN/main.tex" "main.pdf" "main" 1790507632.7065 0
   "C:/Users/Admin/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1790327350.91835 89997 008b71c0c00a33f5fc03307b772025e5 ""
   "C:/Users/Admin/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/tcss0800.pk" 1788436991.77892 8608 659ab765809f8026d4415a8005aa72e8 ""
   "C:/Users/Admin/AppData/Local/MiKTeX/fonts/tfm/public/rsfs/rsfs10.tfm" 1779451932.33365 688 37338d6ab346c2f1466b29e195316aa4 ""
@@ -360,12 +360,12 @@
   "Intro/LoiCamOn.tex" 1790327420.94943 1549 36e02823ac6e00ccad48e6cb6e6a6ba4 ""
   "Intro/TomTat.tex" 1788410784 3569 3e52549039170d0619a315e81b4d660c ""
   "Outro/TaiLieuThamKhao.tex" 1788410784 1682 74921139f65c303e56c1ada865d41a19 ""
-  "f:/NEW/KHOA/HK252/DATN/demo/ĐATN/main.tex" 1790491623.19173 7788 8819f8fb2a3faf5692afb48530208a3d ""
-  "main.aux" 1790507571.28415 65112 f932e495922c922b83008a382b0b5782 "pdflatex"
-  "main.lof" 1790507571.30912 10579 b4031f8f332eac7d0e3aac77925c69af "pdflatex"
-  "main.lot" 1790507571.30912 4822 3862e4d5acad8bf44b82861d5739a95d "pdflatex"
-  "main.out" 1790507571.30072 33600 9e4d6b440919e4291eb0303272d04ad3 "pdflatex"
-  "main.toc" 1790507571.30912 19059 b17cadce8e6976f2ce85763eca233623 "pdflatex"
+  "f:/NEW/KHOA/HK252/DATN/demo/ĐATN/main.tex" 1790507589.72415 7788 8819f8fb2a3faf5692afb48530208a3d ""
+  "main.aux" 1790507631.93035 65112 f932e495922c922b83008a382b0b5782 "pdflatex"
+  "main.lof" 1790507631.95442 10579 b4031f8f332eac7d0e3aac77925c69af "pdflatex"
+  "main.lot" 1790507631.95442 4822 3862e4d5acad8bf44b82861d5739a95d "pdflatex"
+  "main.out" 1790507631.94539 33600 9e4d6b440919e4291eb0303272d04ad3 "pdflatex"
+  "main.toc" 1790507631.95442 19059 b17cadce8e6976f2ce85763eca233623 "pdflatex"
   (generated)
   "main.aux"
   "main.lof"
