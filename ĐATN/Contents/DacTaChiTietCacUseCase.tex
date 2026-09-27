@@ -33,30 +33,24 @@
     \textbf{Trigger Condition} & Guest clicks the "Register" button. \\
     \hline
     \textbf{Flow of Events} & 
-    1. System displays the registration form.\\ 
- & 
-    2. Guest inputs required fields (Full name, Email, Password, etc.).\\ 
- & 
-    3. System validates input data integrity.\\ 
- & 
-    4. \textbf{[Include]} System executes "Send Verification Email/SMS" containing an OTP or activation link to the registered contact info.\\ 
- & 
-    5. Guest inputs the verification code or clicks the activation link.\\ 
- & 
-    6. System verifies the token, creates a new account, and persists it to the database.\\ 
- & 
+    1. System displays the registration form.\newline
+    2. Guest inputs required fields (Full name, Email, Password, etc.).\newline
+    3. System validates input data integrity.\newline
+    4. \textbf{[Include]} System executes "Send Verification Email/SMS" containing an OTP or activation link to the registered contact info.\newline
+    5. Guest inputs the verification code or clicks the activation link.\newline
+    6. System verifies the token, creates a new account, and persists it to the database.\newline
     7. System displays a success message. \\
     \hline
     \textbf{Post-conditions} & Account is created successfully and status transitions to "Activated". \\
     \hline
     \textbf{Exceptions} & 
-    Ex1: Email/Phone number already exists $\rightarrow$ System reports an error and requests re-entry.\\ 
- & 
+    Ex1: Email/Phone number already exists $\rightarrow$ System reports an error and requests re-entry.\newline
     Ex2: Invalid verification code entered beyond maximum attempts $\rightarrow$ Cancel registration session. \\
     \hline
-    \caption{Use-case Specification: Account Registration} \\
+    \caption{Use-case Specification: Account Registration}
 \end{longtable}
 
+\newpage
 % --- UC: RESET PASSWORD ---
 \begin{longtable}{|p{3.5cm}|p{11.5cm}|}
     \hline
@@ -73,30 +67,22 @@
     \textbf{Trigger Condition} & User clicks "Forgot Password" on the login view. \\
     \hline
     \textbf{Flow of Events} & 
-    1. System prompts user for registered email.\\ 
- & 
-    2. User inputs email and submits.\\ 
- & 
-    3. System verifies email existence in the database.\\ 
- & 
-    4. \textbf{[Include]} System triggers "Send Recovery Link via Email" flow.\\ 
- & 
-    5. User accesses the reset link received in email.\\ 
- & 
-    6. System renders password reset screen.\\ 
- & 
-    7. User inputs new password and confirms.\\ 
- & 
+    1. System prompts user for registered email.\newline
+    2. User inputs email and submits.\newline
+    3. System verifies email existence in the database.\newline
+    4. \textbf{[Include]} System triggers "Send Recovery Link via Email" flow.\newline
+    5. User accesses the reset link received in email.\newline
+    6. System renders password reset screen.\newline
+    7. User inputs new password and confirms.\newline
     8. System hashes and updates new password, showing success alert. \\
     \hline
     \textbf{Post-conditions} & User password is updated successfully. \\
     \hline
     \textbf{Exceptions} & 
-    Ex1: Email does not exist $\rightarrow$ Display "No account found associated with this email".\\ 
- & 
+    Ex1: Email does not exist $\rightarrow$ Display "No account found associated with this email".\newline
     Ex2: Reset link expired $\rightarrow$ Prompt user to restart the reset process. \\
     \hline
-    \caption{Use-case Specification: Password Reset} \\
+    \caption{Use-case Specification: Password Reset}
 \end{longtable}
 
 % --- UC: USER LOGIN ---
@@ -115,28 +101,23 @@
     \textbf{Trigger Condition} & User accesses the login view and enters credentials. \\
     \hline
     \textbf{Flow of Events} & 
-    1. User submits identity credentials (Email/Username) and Password.\\ 
- & 
-    2. System validates input formats and matches credentials against DB.\\ 
- & 
-    3. \textbf{[Extend]} If Multi-Factor Authentication (MFA) is configured, system triggers "MFA Verification", requesting OTP from app/SMS.\\ 
- & 
-    4. Initializes user session (Session/JWT Token).\\ 
- & 
+    1. User submits identity credentials (Email/Username) and Password.\newline
+    2. System validates input formats and matches credentials against DB.\newline
+    3. \textbf{[Extend]} If Multi-Factor Authentication (MFA) is configured, system triggers "MFA Verification", requesting OTP from app/SMS.\newline
+    4. Initializes user session (Session/JWT Token).\newline
     5. Redirects user to the dashboard corresponding to their assigned Role. \\
     \hline
     \textbf{Post-conditions} & User logs in successfully; system records login timestamp audit. \\
     \hline
     \textbf{Exceptions} & 
-    Ex1: Incorrect credentials $\rightarrow$ Display "Incorrect account or password".\\ 
- & 
-    Ex2: Account suspended $\rightarrow$ Display "Your account is locked. Please contact Admin".\\ 
- & 
+    Ex1: Incorrect credentials $\rightarrow$ Display "Incorrect account or password".\newline
+    Ex2: Account suspended $\rightarrow$ Display "Your account is locked. Please contact Admin".\newline
     Ex3: MFA code failed > 3 attempts $\rightarrow$ Lock login session temporarily for 15 minutes. \\
     \hline
-    \caption{Use-case Specification: System Login} \\
+    \caption{Use-case Specification: System Login}
 \end{longtable}
 
+\newpage
 % --- UC: UPDATE PROFILE ---
 \begin{longtable}{|p{3.5cm}|p{11.5cm}|}
     \hline
@@ -153,14 +134,10 @@
     \textbf{Trigger Condition} & User accesses "Profile Settings" and selects "Edit". \\
     \hline
     \textbf{Flow of Events} & 
-    1. System populates form with current profile data.\\ 
- & 
-    2. User updates permissible fields (Phone, address, avatar image...).\\ 
- & 
-    3. User clicks "Save".\\ 
- & 
-    4. System validates field constraints.\\ 
- & 
+    1. System populates form with current profile data.\newline
+    2. User updates permissible fields (Phone, address, avatar image...).\newline
+    3. User clicks "Save".\newline
+    4. System validates field constraints.\newline
     5. Updates database record and displays success notification. \\
     \hline
     \textbf{Post-conditions} & User profile is updated. \\
@@ -168,7 +145,7 @@
     \textbf{Exceptions} & 
     Ex1: Invalid avatar format or file size exceeded $\rightarrow$ Warning alert and file rejection. \\
     \hline
-    \caption{Use-case Specification: Update User Profile} \\
+    \caption{Use-case Specification: Update User Profile}
 \end{longtable}
 
 % --- UC: VIEW BORROWING HISTORY ---
@@ -187,12 +164,9 @@
     \textbf{Trigger Condition} & User selects "Borrowing History" in personal dashboard. \\
     \hline
     \textbf{Flow of Events} & 
-    1. System receives user request.\\ 
- & 
-    2. Queries database for circulation records tied to user ID.\\ 
- & 
-    3. Renders loan list (Item title, borrow date, due date, return date, status, fines).\\ 
- & 
+    1. System receives user request.\newline
+    2. Queries database for circulation records tied to user ID.\newline
+    3. Renders loan list (Item title, borrow date, due date, return date, status, fines).\newline
     4. User can filter results by date range or status. \\
     \hline
     \textbf{Post-conditions} & System state remains unchanged. \\
@@ -200,9 +174,10 @@
     \textbf{Exceptions} & 
     Ex1: No loan records found $\rightarrow$ Display "You have no borrowing history". \\
     \hline
-    \caption{Use-case Specification: View Loan/Return History} \\
+    \caption{Use-case Specification: View Loan/Return History}
 \end{longtable}
 
+\newpage
 % --- UC: USER ACCOUNT MANAGEMENT (ADMIN) ---
 \begin{longtable}{|p{3.5cm}|p{11.5cm}|}
     \hline
@@ -219,16 +194,11 @@
     \textbf{Trigger Condition} & Admin navigates to "User Management" menu. \\
     \hline
     \textbf{Flow of Events} & 
-    1. System displays table of all user accounts.\\ 
- & 
-    2. Admin filters or searches accounts by role or account status.\\ 
- & 
-    3. Admin selects a specific user to perform actions (Lock/Unlock, Reset Password, Change Role).\\ 
- & 
-    4. Admin confirms the administrative operation.\\ 
- & 
-    5. System persists changes to DB and writes audit log.\\ 
- & 
+    1. System displays table of all user accounts.\newline
+    2. Admin filters or searches accounts by role or account status.\newline
+    3. Admin selects a specific user to perform actions (Lock/Unlock, Reset Password, Change Role).\newline
+    4. Admin confirms the administrative operation.\newline
+    5. System persists changes to DB and writes audit log.\newline
     6. System displays success confirmation. \\
     \hline
     \textbf{Post-conditions} & Target account status or permission set is updated. \\
@@ -236,7 +206,7 @@
     \textbf{Exceptions} & 
     Ex1: Admin attempts to lock their own account $\rightarrow$ System rejects action and raises logic violation error. \\
     \hline
-    \caption{Use-case Specification: User Account Management} \\
+    \caption{Use-case Specification: User Account Management}
 \end{longtable}
 
 % ======================================================================================
@@ -271,7 +241,6 @@
     \textbf{Trigger Condition} & Librarian navigates to "Catalog Management". \\
     \hline
     \textbf{Flow of Events} & 
-<<<<<<< HEAD
     1. System displays list of current catalog items.\newline
     2. Librarian selects action: Add New, Edit, or Delete.\newline
     3. If Delete: Librarian confirms deletion, system checks active loan constraints and executes Soft Delete.\newline
@@ -280,36 +249,18 @@
     - \textbf{[Extend]} Librarian can execute \textit{"Automated Cataloging via ISBN"} (UC-CAT-03) to auto-fill form.\newline
 
     5. Librarian reviews form fields and clicks "Save".\newline
-=======
-    1. System displays list of current catalog items.\\ 
- & 
-    2. Librarian selects action: Add New, Edit, or Delete.\\ 
- & 
-    3. If Delete: Librarian confirms deletion, system checks active loan constraints and executes Soft Delete.\\ 
- & 
-    4. If Add/Edit: System renders item form (Title, Author, ISBN, Category, Copies...).\\ 
- & 
-    \textit{** Extension Points:**}\\ 
- & 
-    - \textbf{[Extend]} Librarian can execute \textit{"Automated Cataloging via ISBN"} (UC-CAT-03) to auto-fill form.\\ 
- & 
-    - \textbf{[Extend]} Librarian can execute \textit{"Automated Document Summarization"} (UC-CAT-04) if description is missing.\\ 
- & 
-    5. Librarian reviews form fields and clicks "Save".\\ 
- & 
->>>>>>> origin/latex_fix
     6. System validates fields, persists to DB, and displays success alert. \\
     \hline
     \textbf{Post-conditions} & Catalog record is updated successfully. \\
     \hline
     \textbf{Exceptions} & 
-    Ex1: Required fields missing $\rightarrow$ System highlights missing inputs and requests completion.\\ 
- & 
+    Ex1: Required fields missing $\rightarrow$ System highlights missing inputs and requests completion.\newline
     Ex2: Duplicate ISBN code $\rightarrow$ Display "ISBN already exists in catalog". \\
     \hline
-    \caption{Use-case Specification: Add / Edit / Delete Catalog Record} \\
+    \caption{Use-case Specification: Add / Edit / Delete Catalog Record}
 \end{longtable}
 
+\newpage
 % --- UC: BATCH CATALOG INGESTION ---
 \begin{longtable}{|p{3.5cm}|p{11.5cm}|}
     \hline
@@ -326,24 +277,19 @@
     \textbf{Trigger Condition} & Librarian clicks "Batch Import" in catalog management. \\
     \hline
     \textbf{Flow of Events} & 
-    1. System presents upload interface and sample template file.\\ 
- & 
-    2. Librarian uploads catalog dataset file.\\ 
- & 
-    3. System parses file and displays preview table distinguishing valid vs invalid records.\\ 
- & 
-    4. Librarian confirms import operation.\\ 
- & 
+    1. System presents upload interface and sample template file.\newline
+    2. Librarian uploads catalog dataset file.\newline
+    3. System parses file and displays preview table distinguishing valid vs invalid records.\newline
+    4. Librarian confirms import operation.\newline
     5. System writes valid rows to DB and generates execution report (success vs error row counts). \\
     \hline
     \textbf{Post-conditions} & Multiple catalog records added to system. \\
     \hline
     \textbf{Exceptions} & 
-    Ex1: Unsupported file format $\rightarrow$ System rejects upload: "Unsupported file format".\\ 
- & 
+    Ex1: Unsupported file format $\rightarrow$ System rejects upload: "Unsupported file format".\newline
     Ex2: File contains duplicate ISBNs $\rightarrow$ System skips duplicate lines, logs errors, and imports remaining valid records. \\
     \hline
-    \caption{Use-case Specification: Batch Catalog Data Ingestion} \\
+    \caption{Use-case Specification: Batch Catalog Data Ingestion}
 \end{longtable}
 
 % --- UC: AUTOMATED CATALOGING VIA ISBN (AI) ---
@@ -362,63 +308,22 @@
     \textbf{Trigger Condition} & Librarian enters ISBN and clicks "Auto-Fetch Metadata". \\
     \hline
     \textbf{Flow of Events} & 
-    1. Librarian enters ISBN into corresponding input field.\\ 
- & 
-    2. System dispatches API request to open catalog endpoints (Google Books, Open Library).\\ 
- & 
-    3. System receives JSON response, parsing entity attributes.\\ 
- & 
-    4. System auto-populates form fields with parsed attributes.\\ 
- & 
+    1. Librarian enters ISBN into corresponding input field.\newline
+    2. System dispatches API request to open catalog endpoints (Google Books, Open Library).\newline
+    3. System receives JSON response, parsing entity attributes.\newline
+    4. System auto-populates form fields with parsed attributes.\newline
     5. Librarian reviews, edits if needed, and proceeds with base cataloging flow. \\
     \hline
     \textbf{Post-conditions} & Catalog form is auto-filled, reducing manual entry time for librarians. \\
     \hline
     \textbf{Exceptions} & 
-    Ex1: ISBN not found in external databases $\rightarrow$ System alerts "No metadata found, please enter manually".\\ 
- & 
+    Ex1: ISBN not found in external databases $\rightarrow$ System alerts "No metadata found, please enter manually".\newline
     Ex2: Third-party API timeout $\rightarrow$ System alerts timeout error and asks librarian to retry. \\
     \hline
-    \caption{Use-case Specification: Automated Cataloging via ISBN} \\
+    \caption{Use-case Specification: Automated Cataloging via ISBN}
 \end{longtable}
 
-<<<<<<< HEAD
 
-=======
-% --- UC: AUTOMATED DOCUMENT SUMMARIZATION (AI) ---
-\begin{longtable}{|p{3.5cm}|p{11.5cm}|}
-    \hline
-    \textbf{Use-case Name} & \textbf{Automated Document Summarization} \\
-    \hline
-    \textbf{Use-case ID} & UC-CAT-04 \\
-    \hline
-    \textbf{Overview} & Uses Large Language Models (LLMs) to automatically generate concise abstract summaries (150-300 words) for catalog items lacking publisher descriptions. \\
-    \hline
-    \textbf{Actor} & Librarian \\
-    \hline
-    \textbf{Pre-conditions} & Executing "Add / Edit / Delete Catalog Record" flow. Title and Author fields populated. \\
-    \hline
-    \textbf{Trigger Condition} & Librarian clicks "Generate AI Summary" in Description field. \\
-    \hline
-    \textbf{Flow of Events} & 
-    1. System collects existing item fields (Title, Author, Category).\\ 
- & 
-    2. System formats prompt payload and sends to AI Engine (e.g., Gemini API).\\ 
- & 
-    3. AI Engine processes payload and returns summary text.\\ 
- & 
-    4. System populates text into Description field, automatically tagging "(AI-generated summary)".\\ 
- & 
-    5. Librarian reviews, edits, or requests regeneration. \\
-    \hline
-    \textbf{Post-conditions} & Item receives concise abstract summary, aiding reader discovery. \\
-    \hline
-    \textbf{Exceptions} & 
-    Ex1: Insufficient metadata input causing inaccurate AI synthesis $\rightarrow$ Generic output returned; librarian discards and clears output. \\
-    \hline
-    \caption{Use-case Specification: Automated Document Summarization} \\
-\end{longtable}
->>>>>>> origin/latex_fix
 
 % ======================================================================================
 % 4.3 CIRCULATION MANAGEMENT
@@ -452,32 +357,25 @@
     \textbf{Trigger Condition} & Reader presents items and membership card at circulation desk. \\
     \hline
     \textbf{Flow of Events} & 
-    1. \textbf{[Include]} Librarian logs into circulation module.\\ 
- & 
-    2. Librarian scans Reader membership barcode/ID.\\ 
- & 
-    3. System loads Reader profile, checking borrowing eligibility and fine status.\\ 
- & 
-    4. Librarian scans barcode on each checkout item.\\ 
- & 
-    5. System checks active loan limits against role allowance.\\ 
- & 
-    6. System creates loan record, calculating due dates based on item policy rules.\\ 
- & 
-    7. System updates copy status in inventory to "Checked Out" and decrements available count.\\ 
- & 
+    1. \textbf{[Include]} Librarian logs into circulation module.\newline
+    2. Librarian scans Reader membership barcode/ID.\newline
+    3. System loads Reader profile, checking borrowing eligibility and fine status.\newline
+    4. Librarian scans barcode on each checkout item.\newline
+    5. System checks active loan limits against role allowance.\newline
+    6. System creates loan record, calculating due dates based on item policy rules.\newline
+    7. System updates copy status in inventory to "Checked Out" and decrements available count.\newline
     8. Librarian hands items to Reader; transaction completes. \\
     \hline
     \textbf{Post-conditions} & Loan record created in system; transaction logged. \\
     \hline
     \textbf{Exceptions} & 
-    Ex1: Reader reached maximum borrowing limit $\rightarrow$ Error alert "Loan limit exceeded"; reader must return existing items first.\\ 
- & 
+    Ex1: Reader reached maximum borrowing limit $\rightarrow$ Error alert "Loan limit exceeded"; reader must return existing items first.\newline
     Ex2: Item scanned is on hold for another patron $\rightarrow$ Warning alert; librarian retains item for hold queue. \\
     \hline
-    \caption{Use-case Specification: Physical Material Checkout} \\
+    \caption{Use-case Specification: Physical Material Checkout}
 \end{longtable}
 
+\newpage
 % --- UC: RETURN MATERIAL ---
 \begin{longtable}{|p{3.5cm}|p{11.5cm}|}
     \hline
@@ -494,24 +392,15 @@
     \textbf{Trigger Condition} & Reader returns items at circulation desk. \\
     \hline
     \textbf{Flow of Events} & 
-    1. \textbf{[Include]} Librarian logs into circulation module.\\ 
- & 
-    2. Librarian scans item barcode.\\ 
- & 
-    3. System retrieves associated active loan record.\\ 
- & 
-    4. System compares return date against scheduled due date.\\ 
- & 
-    \textit{** Extension Points:**}\\ 
- & 
-    - \textbf{[Extend]} If return date exceeds due date, system triggers "Calculate and Assess Overdue Fines" (UC-CIR-03).\\ 
- & 
-    5. Updates loan status to "Completed".\\ 
- & 
-    6. System verifies hold queue status for returned item:\\ 
- & 
-    - If hold exists: Set status to "Awaiting Pickup" and send notification to next patron.\\ 
- & 
+    1. \textbf{[Include]} Librarian logs into circulation module.\newline
+    2. Librarian scans item barcode.\newline
+    3. System retrieves associated active loan record.\newline
+    4. System compares return date against scheduled due date.\newline
+    \textit{** Extension Points:**}\newline
+    - \textbf{[Extend]} If return date exceeds due date, system triggers "Calculate and Assess Overdue Fines" (UC-CIR-03).\newline
+    5. Updates loan status to "Completed".\newline
+    6. System verifies hold queue status for returned item:\newline
+    - If hold exists: Set status to "Awaiting Pickup" and send notification to next patron.\newline
     - If no hold: Set status to "Available" and increment copy inventory count. \\
     \hline
     \textbf{Post-conditions} & Loan record closed. Item marked available for next transaction. \\
@@ -519,7 +408,7 @@
     \textbf{Exceptions} & 
     Ex1: Barcode damaged/unreadable $\rightarrow$ Librarian performs manual lookup by title and borrower ID. \\
     \hline
-    \caption{Use-case Specification: Material Return} \\
+    \caption{Use-case Specification: Material Return}
 \end{longtable}
 
 % --- UC: CALCULATE OVERDUE FINES ---
@@ -538,14 +427,10 @@
     \textbf{Trigger Condition} & Return Date > Due Date in loan record. \\
     \hline
     \textbf{Flow of Events} & 
-    1. System computes overdue days: (Actual Return Date - Due Date).\\ 
- & 
-    2. Fetches daily fine rate applicable to material type (configured by Admin).\\ 
- & 
-    3. Calculates total fine amount (Overdue Days $\times$ Daily Rate).\\ 
- & 
-    4. Displays fine calculation on librarian view.\\ 
- & 
+    1. System computes overdue days: (Actual Return Date - Due Date).\newline
+    2. Fetches daily fine rate applicable to material type (configured by Admin).\newline
+    3. Calculates total fine amount (Overdue Days $\times$ Daily Rate).\newline
+    4. Displays fine calculation on librarian view.\newline
     5. Librarian notifies reader. If reader pays immediately, receipt is generated; otherwise fine is posted to reader ledger. \\
     \hline
     \textbf{Post-conditions} & Fine record updated on reader profile or marked as paid. \\
@@ -553,9 +438,10 @@
     \textbf{Exceptions} & 
     Ex1: Official holidays fall within overdue range $\rightarrow$ System automatically excludes official library holidays from overdue day count. \\
     \hline
-    \caption{Use-case Specification: Calculate and Assess Overdue Fines} \\
+    \caption{Use-case Specification: Calculate and Assess Overdue Fines}
 \end{longtable}
 
+\newpage
 % --- UC: ONLINE LOAN RENEWAL ---
 \begin{longtable}{|p{3.5cm}|p{11.5cm}|}
     \hline
@@ -572,18 +458,12 @@
     \textbf{Trigger Condition} & Reader clicks "Renew" in active loans dashboard. \\
     \hline
     \textbf{Flow of Events} & 
-    1. \textbf{[Include]} Reader logs into system portal.\\ 
- & 
-    2. System verifies renewal eligibility:\\ 
- & 
-    - Has maximum renewal limit been reached for item?\\ 
- & 
-    - Does an active hold request exist from another user?\\ 
- & 
-    3. If eligible, system extends due date by configured extension period.\\ 
- & 
-    4. System updates loan record and increments renewal counter.\\ 
- & 
+    1. \textbf{[Include]} Reader logs into system portal.\newline
+    2. System verifies renewal eligibility:\newline
+    - Has maximum renewal limit been reached for item?\newline
+    - Does an active hold request exist from another user?\newline
+    3. If eligible, system extends due date by configured extension period.\newline
+    4. System updates loan record and increments renewal counter.\newline
     5. Displays "Renewal Successful" along with new due date. \\
     \hline
     \textbf{Post-conditions} & Item due date is extended. \\
@@ -591,7 +471,7 @@
     \textbf{Exceptions} & 
     Ex1: Item has active hold request $\rightarrow$ System rejects renewal: "Item requested by another user, please return on time". \\
     \hline
-    \caption{Use-case Specification: Online Loan Renewal} \\
+    \caption{Use-case Specification: Online Loan Renewal}
 \end{longtable}
 
 % --- UC: PLACE ITEM HOLD ---
@@ -610,14 +490,10 @@
     \textbf{Trigger Condition} & Reader clicks "Place Hold" on item detail view. \\
     \hline
     \textbf{Flow of Events} & 
-    1. \textbf{[Include]} Reader logs into system portal.\\ 
- & 
-    2. System verifies Reader does not currently hold an active loan for same title.\\ 
- & 
-    3. System appends Reader ID to item reservation queue.\\ 
- & 
-    4. Interface displays "Hold Placed Successfully" showing queue position.\\ 
- & 
+    1. \textbf{[Include]} Reader logs into system portal.\newline
+    2. System verifies Reader does not currently hold an active loan for same title.\newline
+    3. System appends Reader ID to item reservation queue.\newline
+    4. Interface displays "Hold Placed Successfully" showing queue position.\newline
     5. Upon item return, system holds copy and alerts queue position \#1 patron. \\
     \hline
     \textbf{Post-conditions} & Reservation saved; renewal blocked for current borrower. \\
@@ -625,9 +501,10 @@
     \textbf{Exceptions} & 
     Ex1: Reader has unpaid fines or card suspension $\rightarrow$ System rejects hold request. \\
     \hline
-    \caption{Use-case Specification: Place Item Hold} \\
+    \caption{Use-case Specification: Place Item Hold}
 \end{longtable}
 
+\newpage
 % --- UC: INTER-BRANCH LOAN REQUEST ---
 \begin{longtable}{|p{3.5cm}|p{11.5cm}|}
     \hline
@@ -644,16 +521,11 @@
     \textbf{Trigger Condition} & Reader clicks "Request Inter-Branch Transfer" on book detail page. \\
     \hline
     \textbf{Flow of Events} & 
-    1. \textbf{[Include]} Reader logs into system portal.\\ 
- & 
-    2. System prompts Reader to select preferred pickup branch.\\ 
- & 
-    3. Reader confirms request.\\ 
- & 
-    4. System creates inter-branch transfer ticket sent to holding branch.\\ 
- & 
-    5. Holding librarian packages item; status changes to "In Transit".\\ 
- & 
+    1. \textbf{[Include]} Reader logs into system portal.\newline
+    2. System prompts Reader to select preferred pickup branch.\newline
+    3. Reader confirms request.\newline
+    4. System creates inter-branch transfer ticket sent to holding branch.\newline
+    5. Holding librarian packages item; status changes to "In Transit".\newline
     6. Upon arrival at destination branch, automated notification alerts Reader for pickup. \\
     \hline
     \textbf{Post-conditions} & Physical transfer logged and inventory updated across branches. \\
@@ -661,7 +533,7 @@
     \textbf{Exceptions} & 
     Ex1: Last available copy borrowed before request processing $\rightarrow$ Cancel request and suggest standard hold queue. \\
     \hline
-    \caption{Use-case Specification: Inter-Branch Loan Request} \\
+    \caption{Use-case Specification: Inter-Branch Loan Request}
 \end{longtable}
 
 % ======================================================================================
@@ -696,14 +568,10 @@
     \textbf{Trigger Condition} & Reader inputs query string and submits search. \\
     \hline
     \textbf{Flow of Events} & 
-    1. Reader selects search filter scope (All, Title, Author...) and enters query.\\ 
- & 
-    2. System queries catalog database indexes.\\ 
- & 
-    3. System returns paginated match results.\\ 
- & 
-    4. Renders item cards (Cover image, Title, Author, Year, Availability Status).\\ 
- & 
+    1. Reader selects search filter scope (All, Title, Author...) and enters query.\newline
+    2. System queries catalog database indexes.\newline
+    3. System returns paginated match results.\newline
+    4. Renders item cards (Cover image, Title, Author, Year, Availability Status).\newline
     5. Reader clicks item card to open detail view. \\
     \hline
     \textbf{Post-conditions} & System state remains unchanged. \\
@@ -711,10 +579,11 @@
     \textbf{Exceptions} & 
     Ex1: No items match query $\rightarrow$ Display "No results found" with spelling/keyword suggestions. \\
     \hline
-    \caption{Use-case Specification: Document Catalog Search} \\
+    \caption{Use-case Specification: Document Catalog Search}
 \end{longtable}
 
-% % % --- UC: ACCESS DIGITAL RESOURCES (chưa triển khai) ---
+% \newpage
+% % --- UC: ACCESS DIGITAL RESOURCES (chưa triển khai) ---
 % \begin{longtable}{|p{3.5cm}|p{11.5cm}|}
 %     \hline
 %     \textbf{Use-case Name} & \textbf{Access Digital Resources} \\\
@@ -730,14 +599,10 @@
 %     \textbf{Trigger Condition} & Reader clicks ``Read Online'' on item page. \\\
 %     \hline
 %     \textbf{Flow of Events} &
-%     1. \textbf{[Include]} System checks authentication, prompting login if needed.\\ 
-% & 
-%     2. System verifies Reader digital access privileges.\\ 
-% & 
-%     3. System checks concurrent license access limits (e.g., max 5 concurrent readers).\\ 
-% & 
-%     4. If approved, opens embedded web PDF/ePUB viewer.\\ 
-% & 
+%     1. \textbf{[Include]} System checks authentication, prompting login if needed.\newline
+%     2. System verifies Reader digital access privileges.\newline
+%     3. System checks concurrent license access limits (e.g., max 5 concurrent readers).\newline
+%     4. If approved, opens embedded web PDF/ePUB viewer.\newline
 %     5. Logs digital reading session. \\\
 %     \hline
 %     \textbf{Post-conditions} & Digital reading session established. \\\
@@ -764,28 +629,21 @@
     \textbf{Trigger Condition} & Reader clicks "Write a Review" on book page. \\
     \hline
     \textbf{Flow of Events} & 
-    1. \textbf{[Include]} System verifies login status.\\ 
- & 
-    2. System verifies loan history against target item.\\ 
- & 
-    3. Renders rating selector (1-5 stars) and review text area.\\ 
- & 
-    4. Reader submits rating and optional review.\\ 
- & 
-    5. System checks content moderation filters.\\ 
- & 
-    6. Saves rating, updates item average rating score.\\ 
- & 
+    1. \textbf{[Include]} System verifies login status.\newline
+    2. System verifies loan history against target item.\newline
+    3. Renders rating selector (1-5 stars) and review text area.\newline
+    4. Reader submits rating and optional review.\newline
+    5. System checks content moderation filters.\newline
+    6. Saves rating, updates item average rating score.\newline
     7. Displays success alert and refreshes view. \\
     \hline
     \textbf{Post-conditions} & Review saved; average item score updated. \\
     \hline
     \textbf{Exceptions} & 
-    Ex1: Reader has not borrowed item $\rightarrow$ Hide review button or display "You must borrow this item before submitting a review".\\ 
- & 
+    Ex1: Reader has not borrowed item $\rightarrow$ Hide review button or display "You must borrow this item before submitting a review".\newline
     Ex2: Review contains profanity $\rightarrow$ Block submission with moderation warning. \\
     \hline
-    \caption{Use-case Specification: Rate and Review Materials} \\
+    \caption{Use-case Specification: Rate and Review Materials}
 \end{longtable}
 
 % ======================================================================================
@@ -820,26 +678,22 @@
     \textbf{Trigger Condition} & Reader inputs phrase into Smart Search bar and submits. \\
     \hline
     \textbf{Flow of Events} & 
-    1. Reader enters natural language query.\\ 
- & 
-    2. NLP module processes query via Intent Analysis \& Entity Extraction (genre, topic, target level).\\ 
- & 
-    3. System converts entities into vector embeddings or metadata filter trees.\\ 
- & 
-    4. Executes vector similarity search (pgvector) and semantic ranking.\\ 
- & 
+    1. Reader enters natural language query.\newline
+    2. NLP module processes query via Intent Analysis \& Entity Extraction (genre, topic, target level).\newline
+    3. System converts entities into vector embeddings or metadata filter trees.\newline
+    4. Executes vector similarity search (pgvector) and semantic ranking.\newline
     5. Renders ranked search results sorted by semantic relevance scores. \\
     \hline
     \textbf{Post-conditions} & Semantic search results rendered with related topic tags. \\
     \hline
     \textbf{Exceptions} & 
-    Ex1: Irrelevant or meaningless phrase $\rightarrow$ AI assistant prompts "No matching documents found. Try phrases like...".\\ 
- & 
+    Ex1: Irrelevant or meaningless phrase $\rightarrow$ AI assistant prompts "No matching documents found. Try phrases like...".\newline
     Ex2: AI service offline $\rightarrow$ System falls back to full-text keyword search and alerts "Smart search temporarily under maintenance". \\
     \hline
-    \caption{Use-case Specification: Natural Language Search} \\
+    \caption{Use-case Specification: Natural Language Search}
 \end{longtable}
 
+\newpage
 % --- UC: CHATBOT VIRTUAL ASSISTANT ---
 \begin{longtable}{|p{3.5cm}|p{11.5cm}|}
     \hline
@@ -856,18 +710,12 @@
     \textbf{Trigger Condition} & Reader opens Chatbot widget window. \\
     \hline
     \textbf{Flow of Events} & 
-    1. \textbf{[Include]} System prompts login if unauthenticated for personalized responses.\\ 
- & 
-    2. Chatbot interface displays welcome message and quick action buttons (FAQ, My Loans, Book Suggestions).\\ 
- & 
-    3. Reader types message or selects quick prompt.\\ 
- & 
-    4. Chatbot (LLM) analyzes context:\\ 
- & 
-    - General FAQ: Retrieves answer from RAG knowledge base.\\ 
- & 
-    - Account query (e.g., "What books do I owe?"): Chatbot queries backend API using Reader ID and synthesizes response.\\ 
- & 
+    1. \textbf{[Include]} System prompts login if unauthenticated for personalized responses.\newline
+    2. Chatbot interface displays welcome message and quick action buttons (FAQ, My Loans, Book Suggestions).\newline
+    3. Reader types message or selects quick prompt.\newline
+    4. Chatbot (LLM) analyzes context:\newline
+    - General FAQ: Retrieves answer from RAG knowledge base.\newline
+    - Account query (e.g., "What books do I owe?"): Chatbot queries backend API using Reader ID and synthesizes response.\newline
     5. Renders conversational response in chat widget. \\
     \hline
     \textbf{Post-conditions} & Chat transcript saved for audit logging and AI refinement. \\
@@ -875,48 +723,10 @@
     \textbf{Exceptions} & 
     Ex1: Query out of scope $\rightarrow$ Response: "I am a library assistant. Please contact staff at hotline for special inquiries." \\
     \hline
-    \caption{Use-case Specification: Chatbot Virtual Assistant Interaction} \\
+    \caption{Use-case Specification: Chatbot Virtual Assistant Interaction}
 \end{longtable}
 
-<<<<<<< HEAD
 
-=======
-% --- UC: PERSONALIZED RECOMMENDATIONS ---
-\begin{longtable}{|p{3.5cm}|p{11.5cm}|}
-    \hline
-    \textbf{Use-case Name} & \textbf{View Personalized Recommendations} \\
-    \hline
-    \textbf{Use-case ID} & UC-AI-03 \\
-    \hline
-    \textbf{Overview} & Provides readers with tailored book recommendations generated from loan history, search logs, and collaborative user behavior. \\
-    \hline
-    \textbf{Actor} & Reader \\
-    \hline
-    \textbf{Pre-conditions} & AI Recommendation engine online. \\
-    \hline
-    \textbf{Trigger Condition} & Reader opens homepage dashboard or "Recommended For You" view. \\
-    \hline
-    \textbf{Flow of Events} & 
-    1. \textbf{[Include]} Reader logs into system.\\ 
- & 
-    2. System aggregates user signals: loan history, recent searches, ratings.\\ 
- & 
-    3. System sends telemetry to Recommendation Engine.\\ 
- & 
-    4. Engine executes Collaborative Filtering and Content-Based Filtering models.\\ 
- & 
-    5. Filters out items currently checked out or held by user.\\ 
- & 
-    6. Displays "Recommended For You" grid with brief rationale tags (e.g., "Because you read Title X..."). \\
-    \hline
-    \textbf{Post-conditions} & Interface presents personalized recommendations. \\
-    \hline
-    \textbf{Exceptions} & 
-    Ex1: New account with no history (Cold Start) $\rightarrow$ Display "Trending Titles" or "New Arrivals" fallback. \\
-    \hline
-    \caption{Use-case Specification: View Personalized Recommendations} \\
-\end{longtable}
->>>>>>> origin/latex_fix
 
 % ======================================================================================
 % 4.6 NOTIFICATIONS AND COMMUNICATION
@@ -950,16 +760,11 @@
     \textbf{Trigger Condition} & Reader opens "Notification Settings" in profile view. \\
     \hline
     \textbf{Flow of Events} & 
-    1. \textbf{[Include]} System prompts login verification.\\ 
- & 
-    2. System loads and renders current notification configuration toggles.\\ 
- & 
-    3. Reader toggles preferences for channels and event categories.\\ 
- & 
-    4. Reader clicks "Save Settings".\\ 
- & 
-    5. System validates and persists configuration to DB.\\ 
- & 
+    1. \textbf{[Include]} System prompts login verification.\newline
+    2. System loads and renders current notification configuration toggles.\newline
+    3. Reader toggles preferences for channels and event categories.\newline
+    4. Reader clicks "Save Settings".\newline
+    5. System validates and persists configuration to DB.\newline
     6. Displays "Notification preferences saved successfully". \\
     \hline
     \textbf{Post-conditions} & System dispatches notifications strictly per user preferences. \\
@@ -967,9 +772,10 @@
     \textbf{Exceptions} & 
     Ex1: SMS toggled on without phone number in profile $\rightarrow$ Warning alert requesting phone number update first. \\
     \hline
-    \caption{Use-case Specification: Configure Notification Preferences} \\
+    \caption{Use-case Specification: Configure Notification Preferences}
 \end{longtable}
 
+\newpage
 % --- UC: VIEW SYSTEM NOTIFICATIONS ---
 \begin{longtable}{|p{3.5cm}|p{11.5cm}|}
     \hline
@@ -986,14 +792,10 @@
     \textbf{Trigger Condition} & User clicks "Bell" icon (Notification Center) on top navbar. \\
     \hline
     \textbf{Flow of Events} & 
-    1. \textbf{[Include]} System verifies user login.\\ 
- & 
-    2. Queries notification table by User ID sorted by timestamp desc.\\ 
- & 
-    3. Renders notification panel distinguishing read vs unread items.\\ 
- & 
-    4. User clicks notification item to view details.\\ 
- & 
+    1. \textbf{[Include]} System verifies user login.\newline
+    2. Queries notification table by User ID sorted by timestamp desc.\newline
+    3. Renders notification panel distinguishing read vs unread items.\newline
+    4. User clicks notification item to view details.\newline
     5. System marks notification as "Read" and decrements unread badge count. \\
     \hline
     \textbf{Post-conditions} & Notification status updated to "Read". \\
@@ -1001,7 +803,7 @@
     \textbf{Exceptions} & 
     Ex1: Notification panel empty $\rightarrow$ Display "You have no new notifications". \\
     \hline
-    \caption{Use-case Specification: View System Notifications} \\
+    \caption{Use-case Specification: View System Notifications}
 \end{longtable}
 
 % --- UC: BROADCAST MASS NOTIFICATIONS ---
@@ -1020,18 +822,12 @@
     \textbf{Trigger Condition} & Librarian accesses "Communication Management" tool in admin portal. \\
     \hline
     \textbf{Flow of Events} & 
-    1. \textbf{[Include]} System verifies Librarian session and privileges.\\ 
- & 
-    2. Renders broadcast creation form.\\ 
- & 
-    3. Librarian inputs: Title, Content, Channel (In-app, Email), Target Group (All, Students, Faculty).\\ 
- & 
-    4. Librarian clicks "Send Broadcast".\\ 
- & 
-    5. System prompts confirmation dialog.\\ 
- & 
-    6. System enqueues notification payload in Message Queue for dispatch.\\ 
- & 
+    1. \textbf{[Include]} System verifies Librarian session and privileges.\newline
+    2. Renders broadcast creation form.\newline
+    3. Librarian inputs: Title, Content, Channel (In-app, Email), Target Group (All, Students, Faculty).\newline
+    4. Librarian clicks "Send Broadcast".\newline
+    5. System prompts confirmation dialog.\newline
+    6. System enqueues notification payload in Message Queue for dispatch.\newline
     7. Displays success confirmation and logs administrative action. \\
     \hline
     \textbf{Post-conditions} & Broadcast logged and dispatched to target users. \\
@@ -1039,7 +835,7 @@
     \textbf{Exceptions} & 
     Ex1: Empty title or body $\rightarrow$ Disable send button and alert "Please enter complete broadcast content". \\
     \hline
-    \caption{Use-case Specification: Broadcast Mass Notifications} \\
+    \caption{Use-case Specification: Broadcast Mass Notifications}
 \end{longtable}
 
 % ======================================================================================
@@ -1074,10 +870,8 @@
     \textbf{Trigger Condition} & User opens administrative homepage. \\
     \hline
     \textbf{Flow of Events} & 
-    1. System receives request.\\ 
- & 
-    2. Queries DB aggregating real-time daily/weekly metrics.\\ 
- & 
+    1. System receives request.\newline
+    2. Queries DB aggregating real-time daily/weekly metrics.\newline
     3. Renders charts and metric summary cards. \\
     \hline
     \textbf{Post-conditions} & System data state remains unchanged. \\
@@ -1085,9 +879,10 @@
     \textbf{Exceptions} & 
     Ex1: DB load high $\rightarrow$ Display cached dashboard data with refresh timestamp notice. \\
     \hline
-    \caption{Use-case Specification: View Operational Dashboard} \\
+    \caption{Use-case Specification: View Operational Dashboard}
 \end{longtable}
 
+\newpage
 % --- UC: EXPORT PERIODIC REPORTS ---
 \begin{longtable}{|p{3.5cm}|p{11.5cm}|}
     \hline
@@ -1104,14 +899,10 @@
     \textbf{Trigger Condition} & User opens "Statistical Reports" and selects "Export Data". \\
     \hline
     \textbf{Flow of Events} & 
-    1. System renders export configuration modal.\\ 
- & 
-    2. User selects report type (Top Borrowed, Fine Income, Overdues), date range, and export format.\\ 
- & 
-    3. User clicks "Export".\\ 
- & 
-    4. System compiles dataset and generates file artifact.\\ 
- & 
+    1. System renders export configuration modal.\newline
+    2. User selects report type (Top Borrowed, Fine Income, Overdues), date range, and export format.\newline
+    3. User clicks "Export".\newline
+    4. System compiles dataset and generates file artifact.\newline
     5. File download triggers automatically on client browser. \\
     \hline
     \textbf{Post-conditions} & Report artifact generated and downloaded. \\
@@ -1119,7 +910,7 @@
     \textbf{Exceptions} & 
     Ex1: No records match date range $\rightarrow$ Warning alert "No data available for selected period". \\
     \hline
-    \caption{Use-case Specification: Export Periodic Statistical Reports} \\
+    \caption{Use-case Specification: Export Periodic Statistical Reports}
 \end{longtable}
 
 % --- UC: CONFIGURE SYSTEM PARAMETERS ---
@@ -1138,14 +929,10 @@
     \textbf{Trigger Condition} & Admin opens "System Settings". \\
     \hline
     \textbf{Flow of Events} & 
-    1. System displays current global system settings.\\ 
- & 
-    2. Admin modifies values (e.g., fine rate adjustment).\\ 
- & 
-    3. Admin clicks "Save Configuration".\\ 
- & 
-    4. System validates parameters.\\ 
- & 
+    1. System displays current global system settings.\newline
+    2. Admin modifies values (e.g., fine rate adjustment).\newline
+    3. Admin clicks "Save Configuration".\newline
+    4. System validates parameters.\newline
     5. Updates DB and records entry in Audit Log. \\
     \hline
     \textbf{Post-conditions} & System calculations immediately apply updated configuration settings. \\
@@ -1153,7 +940,7 @@
     \textbf{Exceptions} & 
     Ex1: Invalid parameter input (negative values) $\rightarrow$ Reject save and display validation error. \\
     \hline
-    \caption{Use-case Specification: Configure System Parameters} \\
+    \caption{Use-case Specification: Configure System Parameters}
 \end{longtable}
 
 % --- UC: MANAGE BRANCHES ---
@@ -1172,14 +959,10 @@
     \textbf{Trigger Condition} & Admin selects "Branch Management". \\
     \hline
     \textbf{Flow of Events} & 
-    1. System renders active branch list.\\ 
- & 
-    2. Admin selects Add New, Edit, or Remove.\\ 
- & 
-    3. Admin enters branch attributes (Name, Address, Contact, Manager).\\ 
- & 
-    4. Admin clicks "Save".\\ 
- & 
+    1. System renders active branch list.\newline
+    2. Admin selects Add New, Edit, or Remove.\newline
+    3. Admin enters branch attributes (Name, Address, Contact, Manager).\newline
+    4. Admin clicks "Save".\newline
     5. System updates records and displays success alert. \\
     \hline
     \textbf{Post-conditions} & Branch directory updated. \\
@@ -1187,9 +970,10 @@
     \textbf{Exceptions} & 
     Ex1: Attempting to delete branch with active inventory or staff $\rightarrow$ System prevents deletion to maintain referential integrity. \\
     \hline
-    \caption{Use-case Specification: Manage Branch Libraries} \\
+    \caption{Use-case Specification: Manage Branch Libraries}
 \end{longtable}
 
+\newpage
 % --- UC: VIEW AUDIT LOGS ---
 \begin{longtable}{|p{3.5cm}|p{11.5cm}|}
     \hline
@@ -1206,19 +990,16 @@
     \textbf{Trigger Condition} & Admin accesses "Audit Logs" menu. \\
     \hline
     \textbf{Flow of Events} & 
-    1. System retrieves records from Audit Log table.\\ 
- & 
-    2. Renders event stream sorted by timestamp desc.\\ 
- & 
-    3. Admin filters log stream by actor, date range, or risk severity (Info, Warning, Critical).\\ 
- & 
+    1. System retrieves records from Audit Log table.\newline
+    2. Renders event stream sorted by timestamp desc.\newline
+    3. Admin filters log stream by actor, date range, or risk severity (Info, Warning, Critical).\newline
     4. Admin views detailed payload diffs (Old Data vs New Data). \\
     \hline
     \textbf{Post-conditions} & Read-only view; system state remains unchanged. \\
     \hline
     \textbf{Exceptions} & No major exceptions. \\
     \hline
-    \caption{Use-case Specification: View Audit Logs} \\
+    \caption{Use-case Specification: View Audit Logs}
 \end{longtable}
 
 % --- UC: SAO LƯU VÀ PHỤC HỒI DỮ LIỆU ---
@@ -1237,14 +1018,10 @@
 %     \textbf{Điều kiện kích hoạt} & Admin truy cập mục "Quản trị dữ liệu". \\
 %     \hline
 %     \textbf{Các bước} & 
-%     1. Màn hình hiển thị danh sách các bản sao lưu đã có và nút chức năng.\\ 
-% & 
-%     2. Nếu chọn Sao lưu (Backup): Admin nhấn nút, hệ thống nén dữ liệu hiện tại và lưu trữ lên Server/Cloud.\\ 
-% & 
-%     3. Nếu chọn Phục hồi (Restore): Admin chọn một bản sao lưu cũ, nhập mật khẩu cấp cao để xác nhận.\\ 
-% & 
-%     4. Hệ thống tiến hành ghi đè dữ liệu hiện tại bằng dữ liệu từ bản sao lưu.\\ 
-% & 
+%     1. Màn hình hiển thị danh sách các bản sao lưu đã có và nút chức năng.\newline
+%     2. Nếu chọn Sao lưu (Backup): Admin nhấn nút, hệ thống nén dữ liệu hiện tại và lưu trữ lên Server/Cloud.\newline
+%     3. Nếu chọn Phục hồi (Restore): Admin chọn một bản sao lưu cũ, nhập mật khẩu cấp cao để xác nhận.\newline
+%     4. Hệ thống tiến hành ghi đè dữ liệu hiện tại bằng dữ liệu từ bản sao lưu.\newline
 %     5. Hệ thống khởi động lại dịch vụ và thông báo quá trình hoàn tất. \\
 %     \hline
 %     \textbf{Hậu điều kiện} & Dữ liệu được lưu trữ an toàn hoặc hệ thống được hoàn nguyên về trạng thái cũ. \\
