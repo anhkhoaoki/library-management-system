@@ -361,6 +361,9 @@ INPUT C:\Users\Admin\AppData\Roaming\MiKTeX\tex\latex\psnfss\ot1ptm.fd
 INPUT C:\Users\Admin\AppData\Roaming\MiKTeX\tex\latex\psnfss\ot1ptm.fd
 INPUT C:\Users\Admin\AppData\Roaming\MiKTeX\tex\latex\psnfss\ot1ptm.fd
 INPUT F:\MkTex\fonts\tfm\adobe\times\ptmr7t.tfm
+INPUT .\main.aux
+INPUT .\main.aux
+INPUT main.aux
 OUTPUT main.aux
 INPUT C:\Users\Admin\AppData\Roaming\MiKTeX\tex\latex\vntex\t5cmr.fd
 INPUT C:\Users\Admin\AppData\Roaming\MiKTeX\tex\latex\vntex\t5cmr.fd
