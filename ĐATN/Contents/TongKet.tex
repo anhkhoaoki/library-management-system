@@ -4,7 +4,7 @@
 The graduation project has successfully designed and implemented an AI-integrated Online Library Management System. The main achievements include:
 \begin{itemize}
     \item \textbf{Modern Full-Stack Development:} Built a stable system comprising a Frontend (React.js, Vite), Backend (Node.js, Express, Prisma, PostgreSQL), and an AI Microservice (Python, FastAPI). The system is successfully deployed on cloud environments (Vercel, Google Cloud Run).
-    \item \textbf{Effective AI Integration:} Successfully implemented Hybrid Semantic Search, an AI Virtual Assistant (Chatbot) utilizing RAG to answer library regulations, a personalized book recommendation system, and automated ISBN cataloging.
+    \item \textbf{Effective AI Integration:} Successfully implemented Hybrid Semantic Search, an AI Virtual Assistant (Chatbot) utilizing RAG to answer library regulations.
     \item \textbf{Comprehensive Library Digitization:} Completed core operational workflows including catalog management, physical copy inventory, borrow/return processes, renewals, reservations, inter-branch transfers, and multi-channel notification systems.
     \item \textbf{Optimization and Security:} Addressed fundamental security vulnerabilities such as IDOR, SQL Injection (via ORM), configured CORS, implemented Rate Limiting, and optimized database query performance (e.g., N+1 queries).
 \end{itemize}
@@ -20,7 +20,7 @@ The graduation project has successfully designed and implemented an AI-integrate
 \textbf{Limitations:}
 \begin{itemize}
     \item Due to deployment on Free Tier infrastructure (Vercel and Google Cloud Run), the system occasionally experiences "Cold Starts" on initial requests or faces execution timeouts for complex AI tasks.
-    \item The personalized recommendation algorithm has not yet reached its full potential due to the limited amount of historical borrowing and rating data in the testing environment (the Cold-Start problem for Recommender Systems).
+
     \item Some advanced features, such as automated book summarization, were developed but temporarily disabled due to API cost constraints and LLM rate limits.
 \end{itemize}
 
@@ -29,6 +29,6 @@ Based on the current limitations and expansion potential, the project proposes t
 \begin{itemize}
     \item \textbf{Infrastructure Upgrade:} Migrate to dedicated paid cloud infrastructure (e.g., AWS or Google Cloud Platform) to eliminate Cold Starts, increase bandwidth, and support a larger concurrent user base.
     \item \textbf{AI Optimization and Expansion:} Research and fine-tune lightweight open-source LLMs (e.g., Llama 3 or Mistral) deployed internally to reduce reliance on third-party APIs (Gemini), thereby lowering costs and improving response times. Restore and upgrade the Function Calling capabilities of the Chatbot to allow users to query personal account information.
-    \item \textbf{Enhanced Recommendation System:} Integrate advanced machine learning signals (e.g., Deep Learning-based recommender systems) and collect additional user behavior data (such as page view duration and click-through rates) to provide more accurate recommendations.
+
     \item \textbf{Mobile Application Development:} Build a cross-platform Mobile App using React Native or Flutter, integrating barcode/QR code scanning to assist librarians in inventory management and provide readers with faster on-the-go interactions.
 \end{itemize}

@@ -35,7 +35,7 @@ The front-end user experience is implemented as a modern Single-Page Application
 \end{figure}
 
 \subsubsection{Back-end Core Server: Node.js and Express}
-The core application server is constructed upon Node.js and the Express framework using TypeScript. It functions as the central API gateway and orchestrator for business logic, catalog management, circulation rules, user accounts, and session administration. The server enforces a modular, layered software architecture comprising Controllers, Services, Middlewares, and Background Cron Jobs. It delegates AI inference tasks (RAG context querying, document embedding generation, personalized recommendations) to the dedicated Python AI service via secure internal HTTP endpoints authenticated through shared secret tokens (\texttt{X-Internal-Key}).
+The core application server is constructed upon Node.js and the Express framework using TypeScript. It functions as the central API gateway and orchestrator for business logic, catalog management, circulation rules, user accounts, and session administration. The server enforces a modular, layered software architecture comprising Controllers, Services, Middlewares, and Background Cron Jobs. It delegates AI inference tasks (RAG context querying, document embedding generation) to the dedicated Python AI service via secure internal HTTP endpoints authenticated through shared secret tokens (\texttt{X-Internal-Key}).
 
 \begin{figure}[H]
     \centering
@@ -255,7 +255,7 @@ Personalized operational hub rendered upon reader login.
     \label{fig:reader_homepage}
 \end{figure}
 
-\textbf{Layout \& Functionality:} The dashboard greets the signed-in reader and provides a direct route to catalog discovery. Four summary indicators show the number of active loans, overdue records, active reservations, and unpaid fines. A recent-loan area presents up to five current loans with title, author, cover, and due-date status, with links to the book record and the complete loan list. A separate recommendation strip loads independently from the summary data so that a slow recommendation response does not block the dashboard. Recommendation cards show the reason label, availability, and rating when these values exist; readers without borrowing history receive popular-title recommendations, while an empty or unavailable recommendation response produces a prompt to explore the catalog.
+\textbf{Layout \& Functionality:} The dashboard greets the signed-in reader and provides a direct route to catalog discovery. Four summary indicators show the number of active loans, overdue records, active reservations, and unpaid fines. A recent-loan area presents up to five current loans with title, author, cover, and due-date status, with links to the book record and the complete loan list.
 
 \paragraph{Catalog Search and Discovery}
 Multi-criteria discovery interface for library resources.
