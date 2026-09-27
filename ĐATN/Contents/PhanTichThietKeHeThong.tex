@@ -5,7 +5,7 @@ To visualize data flows and the separation of concerns across technology compone
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.6\linewidth]{Images/kientruchethong.png}
+	\includegraphics[width=0.95\linewidth]{Images/kientruchethong.png}
 	\vspace{10pt}
 	\caption{Overall System Architecture Diagram of the Online Library Management System}
 	\label{fig:system_architecture}
@@ -94,13 +94,13 @@ The data storage layer provides persistent, secure, and ACID-compliant storage f
 
 \subsubsection{Enhanced Entity-Relationship Diagram (EERD)}
 
-\begin{figure}[H]
+\begin{sidewaysfigure}[htbp]
 	\centering
-	\includegraphics[width=\linewidth]{Images/ERD.png}
+	\includegraphics[width=\linewidth,height=\textheight,keepaspectratio]{Images/ERD.png}
 	\vspace{10pt}
 	\caption{EERD Diagram of the Online Library Management System}
 	\label{fig:erd_account}
-\end{figure}
+\end{sidewaysfigure}
 
 Based on the Enhanced Entity-Relationship Diagram (EERD), the system operational workflows are partitioned across three primary user roles:
 
@@ -153,7 +153,7 @@ Remaining tables map directly to the entity definitions and EERD relationships d
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.6\linewidth]{Images/quanlytruycapvataikhoan.png}
+	\includegraphics[width=0.95\linewidth]{Images/quanlytruycapvataikhoan.png}
 	\vspace{10pt}
 	\caption{Class Diagram for Account and Access Management}
 	\label{fig:class_account}
@@ -171,7 +171,7 @@ Architecturally, \texttt{AuthController} relies on \texttt{AuthService} (\texttt
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.6\linewidth]{Images/quanlydanhmuc.png}
+	\includegraphics[width=0.95\linewidth]{Images/quanlydanhmuc.png}
 	\vspace{10pt}
 	\caption{Class Diagram for Book Catalog Management}
 	\label{fig:class_catalog}
@@ -187,7 +187,7 @@ Core data structures include \texttt{Category}, \texttt{Book}, and \texttt{Physi
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.6\linewidth]{Images/quanlyluuthong.png}
+	\includegraphics[width=0.95\linewidth]{Images/quanlyluuthong.png}
 	\vspace{10pt}
 	\caption{Class Diagram for Document Circulation Management}
 	\label{fig:class_circulation}
@@ -201,7 +201,7 @@ The central entity \texttt{BorrowRecord} (\texttt{borrowedAt}, \texttt{dueDate},
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.6\linewidth]{Images/truycapvakhaithactainguyen.png}
+	\includegraphics[width=0.95\linewidth]{Images/truycapvakhaithactainguyen.png}
 	\vspace{10pt}
 	\caption{Class Diagram for Resource Search and Exploitation}
 	\label{fig:class_exploration}
@@ -217,7 +217,7 @@ The central entity \texttt{BorrowRecord} (\texttt{borrowedAt}, \texttt{dueDate},
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.6\linewidth]{Images/AI.png}
+	\includegraphics[width=0.95\linewidth]{Images/AI.png}
 	\vspace{10pt}
 	\caption{Class Diagram for AI Virtual Assistant and Recommendations}
 	\label{fig:class_ai}
@@ -233,7 +233,7 @@ The central entity \texttt{BorrowRecord} (\texttt{borrowedAt}, \texttt{dueDate},
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.6\linewidth]{Images/thongbao.png}
+	\includegraphics[width=0.95\linewidth]{Images/thongbao.png}
 	\vspace{10pt}
 	\caption{Class Diagram for Notifications and Communication}
 	\label{fig:class_notification}
@@ -247,7 +247,7 @@ Entities comprise \texttt{Notification} (\texttt{isRead}, \texttt{NotificationTy
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.6\linewidth]{Images/baocaovaquantri.png}
+	\includegraphics[width=0.95\linewidth]{Images/baocaovaquantri.png}
 	\vspace{10pt}
 	\caption{Class Diagram for System Administration}
 	\label{fig:class_admin}
