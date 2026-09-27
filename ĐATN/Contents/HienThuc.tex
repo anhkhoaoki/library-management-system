@@ -268,7 +268,15 @@ Multi-criteria discovery interface for library resources.
     \label{fig:reader_search}
 \end{figure}
 
-\textbf{Layout \& Functionality:} The catalog offers two distinct discovery modes. Standard search accepts title, author, or ISBN text, refreshes results after a short input debounce, and supports category filtering and server-backed pagination. The result cards show a cover, title, author, availability status, and a link to the full record. The optional AI mode submits a natural-language request explicitly when the reader presses Enter or the search button; category filtering is disabled in this mode. AI results may display a match score, a short relevance explanation, the search mode and confidence level, and suggested alternative queries when confidence is low. If the AI service is unavailable, the backend falls back to basic database keyword matching and returns a fallback indicator. Search state is retained in session storage while the reader navigates within the current browser session.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\linewidth]{Images/Reader_TraCuu_AI.png}
+    \vspace{15pt}
+    \caption{AI Semantic Search Interface}
+    \label{fig:reader_search_ai}
+\end{figure}
+
+\textbf{Layout \& Functionality:} The catalog offers two distinct discovery modes. Standard search accepts title, author, or ISBN text, refreshes results after a short input debounce, and supports category filtering and server-backed pagination. The result cards show a cover, title, author, availability status, and a link to the full record. The optional AI mode (Figure \ref{fig:reader_search_ai}) submits a natural-language request explicitly when the reader presses Enter or the search button; category filtering is disabled in this mode. AI results display a match score (percentage), a short relevance explanation, the search mode, and confidence level. If the AI service is unavailable, the backend falls back to basic database keyword matching and returns a fallback indicator. Search state is retained in session storage while the reader navigates within the current browser session.
 
 \paragraph{Book Details, Availability, and Reviews}
 Detailed view combining bibliographic metadata, copy-level physical location, availability tracking, and reader interaction features.
