@@ -113,12 +113,14 @@ CB-16 & Out-of-Scope & Huong dan giai bai tap mon Giai tich 1? & 4 & 4 & 4 \\
 \end{tabularx}
 \end{table}
 
-\subsubsection{Chatbot Evaluation Analysis}
+\subsubsection{Chatbot Evaluation Analysis (Preliminary)}
+
+\textit{Note: Due to the limited size of the test dataset (16 test cases), these results represent a preliminary analysis of the system's behavior rather than an absolute measure of its performance in a large-scale production environment.}
 
 \begin{itemize}
-    \item \textbf{Average Faithfulness (4.94/5):} Near-perfect score. Thanks to the strict context-limiting RAG mechanism, the Chatbot did not hallucinate information in any business-domain questions.
-    \item \textbf{Average Answer Relevancy (4.88/5):} Responses were focused directly on the patron's question, providing concise answers with clear action guidance.
-    \item \textbf{Average Correctness (4.88/5):} Comparison against Ground Truth answers confirmed that the Chatbot accurately conveyed regulations on borrowing limits, fine rates, and reservation procedures.
+    \item \textbf{Average Faithfulness (4.94/5):} The initial results suggest that the strict context-limiting RAG mechanism helps the Chatbot rely heavily on the provided context, showing minimal signs of hallucination within this specific test scope.
+    \item \textbf{Average Answer Relevancy (4.88/5):} For the tested queries, responses generally stayed focused on the patron's question, offering concise and direct guidance.
+    \item \textbf{Average Correctness (4.88/5):} When compared against the established Ground Truth for this small dataset, the Chatbot demonstrated a promising ability to accurately convey basic library regulations, such as borrowing limits and reservation procedures.
 \end{itemize}
 
 \subsection{Semantic Search Evaluation Results}
@@ -208,12 +210,14 @@ N03 & toi muon dat do an online & 0 & 22.6 & --- & --- & --- & 5 & 5 \\
 
 \noindent \textit{N = number of results returned; Top\% = top cosine similarity score; Rel. / Rank. = LLM Judge Relevance / Ranking scores (scale 1--5); noise query rows excluded from averages.}
 
-\subsubsection{Search Performance Analysis}
+\subsubsection{Search Performance Analysis (Preliminary)}
+
+\textit{Note: As the corpus currently contains only 72 indexed books and the test set comprises 15 queries, these metrics provide an early indication of the system's semantic retrieval capabilities and should be interpreted as preliminary findings.}
 
 \begin{itemize}
-    \item \textbf{NDCG@5 = 0.9288:} Near-optimal ranking quality. Relevant books are consistently placed at the top of the result list across all 12 semantic queries.
-    \item \textbf{MRR = 0.8750:} In 10 out of 12 semantic queries, the most relevant result appeared at Rank 1, confirming strong first-hit accuracy.
-    \item \textbf{Precision@3 = 0.5556:} Slightly below the 0.60 target, mainly due to queries S03 (UI/UX) and S11 (SQL/Database) where the corpus lacks sufficiently specialized titles, causing the top-3 to include loosely related books from the Computer Science category.
-    \item \textbf{Noise Rejection = 100.0\%:} Perfect noise suppression achieved. Thanks to the high-quality multilingual embedding model, cosine scores show clear polarization between valid queries ($> 0.55$) and noise ($< 0.35$). By adjusting the similarity filter to $\text{threshold} = 0.40$, the system now cleanly rejects all out-of-scope queries (returning 0 results) without compromising the recall of valid search requests.
+    \item \textbf{NDCG@5 = 0.9288:} Within the small test corpus, the ranking quality appears positive, with relevant books frequently appearing near the top of the search results for the evaluated queries.
+    \item \textbf{MRR = 0.8750:} In most of the valid semantic queries (10 out of 12), a relevant result was successfully retrieved at Rank 1, indicating good initial accuracy for exact or closely related matches.
+    \item \textbf{Precision@3 = 0.5556:} The precision metric highlights a current limitation of the small dataset. For specific queries like S03 (UI/UX) and S11 (SQL/Database), the lack of highly specialized titles in the corpus led the system to return loosely related Computer Science books in the top-3, lowering the overall precision ratio.
+    \item \textbf{Noise Rejection = 100.0\%:} In this limited trial, the system successfully filtered out all 3 off-topic noise queries. The multilingual embedding model showed a distinguishable gap in cosine similarity scores between valid queries and noise, allowing a threshold (0.40) to effectively reject out-of-scope inputs. However, a larger dataset and more diverse query logs would be required to verify the robustness of this threshold in a real-world setting.
 \end{itemize}
 
