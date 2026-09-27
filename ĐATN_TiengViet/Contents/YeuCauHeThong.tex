@@ -1,0 +1,93 @@
+\section{Yêu cầu Hệ thống}
+\subsection{Yêu cầu Chức năng}
+\subsubsection{Quản lý Tài khoản Người dùng}
+- Hệ thống phải cho phép người dùng mới (độc giả) đăng ký tài khoản bằng cách cung cấp họ tên, địa chỉ email, mã số sinh viên/mã nhân viên và mật khẩu. \\
+- Hệ thống phải xác thực người dùng qua tên đăng nhập/email và mật khẩu. Hỗ trợ tùy chọn Xác thực Nhiều yếu tố (MFA) cho các tài khoản quản trị viên. \\
+- Hệ thống phải hỗ trợ ít nhất ba vai trò người dùng: Độc giả, Thủ thư và Quản trị viên, mỗi vai trò được gán các quyền hạn riêng biệt.\\
+- Người dùng phải có khả năng xem và cập nhật thông tin hồ sơ cá nhân, bao gồm chi tiết liên hệ và tùy chọn thông báo.\\
+- Hệ thống phải cho phép người dùng đặt lại mật khẩu thông qua các liên kết xác thực gửi đến địa chỉ email đã đăng ký.\\
+- Quản trị viên phải có quyền kích hoạt, vô hiệu hóa hoặc tạm khóa bất kỳ tài khoản người dùng nào.\\
+- Hệ thống phải ghi lại lịch sử mượn trả của từng độc giả, cho phép độc giả đó và các thủ thư có thẩm quyền truy cập xem.\\
+
+\subsubsection{Quản lý Danh mục Tài nguyên}
+- Hệ thống phải duy trì danh mục tất cả tài sản thư viện, bao gồm sách in và ấn phẩm định kỳ.\\
+- Mỗi bản ghi danh mục phải lưu trữ: tên sách, tác giả, ISBN/ISSN, nhà xuất bản, năm xuất bản, lần xuất bản, thể loại/chủ đề, ngôn ngữ, vị trí vật lý (mã kệ/phân loại), tổng số bản sao và số bản sao khả dụng.\\
+- Thủ thư phải có khả năng thêm, sửa, xóa các bản ghi danh mục thông qua giao diện quản trị.\\
+- Hệ thống phải hỗ trợ nhập dữ liệu danh mục hàng loạt qua các định dạng tệp CSV hoặc MARC21.\\
+- Hệ thống phải cung cấp khả năng tìm kiếm toàn văn trên các trường tên sách, tác giả, ISBN, chủ đề và từ khóa.\\
+- Kết quả tìm kiếm phải hỗ trợ lọc theo thể loại, ngôn ngữ, trạng thái khả dụng, khoảng năm xuất bản và định dạng tư liệu.\\
+- Hệ thống phải hiển thị tình trạng khả dụng thực tế của từng mục theo thời gian thực, bao gồm số lượng khả dụng, đang mượn và đang đặt giữ chỗ.\\
+
+\subsubsection{Quản lý Lưu thông Tài liệu}
+- Hệ thống phải cho phép độc giả mượn tài liệu vật lý bằng cách quét mã vạch hoặc nhập thủ công tại bàn lưu thông, hoặc gửi yêu cầu đặt lấy sách trực tuyến.\\
+- Hệ thống phải áp dụng hạn mức mượn dựa trên vai trò người dùng (ví dụ: tối đa 5 tài liệu cho sinh viên, tối đa 15 tài liệu cho giảng viên).\\
+- Hệ thống phải gán hạn trả cho các tài liệu mượn dựa trên các quy tắc thời hạn mượn có thể cấu hình theo từng loại tư liệu.\\
+- Hệ thống phải cho phép độc giả gia hạn các tài liệu đang mượn trực tuyến lên đến số lần tối đa được cấu hình, với điều kiện không có yêu cầu đặt chỗ nào khác cho các tài liệu đó.\\
+- Hệ thống phải cho phép độc giả đặt mượn trước (hold) đối với các tài liệu hiện đang được mượn bởi người dùng khác.\\
+- Hệ thống phải tự động thông báo cho người dùng tiếp theo trong hàng chờ đặt chỗ khi tài liệu được trả về trạng thái khả dụng.\\
+- Hệ thống phải xử lý việc trả tài liệu và ngay lập tức cập nhật lại số lượng bản sao khả dụng trong danh mục.\\
+- Hệ thống phải tự động tính tiền phạt quá hạn dựa trên mức phí hằng ngày có thể cấu hình theo từng loại tài liệu.\\
+- Hệ thống phải cho phép độc giả xem các khoản mượn hiện tại, hạn trả, lượt đặt chỗ và tiền phạt chưa thanh toán từ bảng điều khiển cá nhân.\\
+- Hệ thống phải hỗ trợ mượn liên chi nhánh, cho phép độc giả yêu cầu tài liệu từ các thư viện chi nhánh khác trong cùng mạng lưới.\\
+
+\subsubsection{Động cơ Gợi ý Tài liệu bằng AI}
+- Hệ thống phải tạo các gợi ý sách và tài nguyên được cá nhân hóa cho độc giả dựa trên lịch sử mượn, nhật ký tìm kiếm và các mục được đánh giá.\\
+- Động cơ gợi ý phải kết hợp lọc cộng tác (phân tích sở thích của các người dùng tương tự) và lọc dựa trên nội dung (phân tích các thuộc tính dữ liệu tả của mục).\\
+
+\subsubsection{Tìm kiếm Ngôn ngữ Tự nhiên AI và Tương tác Thông minh}
+- Hệ thống phải cung cấp giao diện tìm kiếm bằng ngôn ngữ tự nhiên cho phép độc giả truy vấn danh mục bằng các diễn đạt dạng giao tiếp.\\
+- Mô-đun tìm kiếm ngôn ngữ tự nhiên phải phân tích ý định của người dùng, trích xuất các thuộc tính (thể loại, đối tượng hướng tới, chủ đề, độ dài) và ánh xạ chúng với dữ liệu tả danh mục.\\
+- Hệ thống phải hiển thị kết quả tìm kiếm ngôn ngữ tự nhiên được xếp hạng theo độ liên quan bên cạnh các kết quả tìm kiếm từ khóa tiêu chuẩn.\\
+- Hệ thống phải tích hợp Chatbot Trợ lý ảo để tương tác trực tiếp với người dùng, giải đáp các thắc mắc Q\&A về quy định thư viện, giờ mở cửa và quy trình mượn sách.\\
+
+\subsubsection{Biên mục và Tóm tắt Hỗ trợ bởi AI}
+- Tự động điền dữ liệu tả sách (Tên sách, Tác giả, Mô tả) khi thủ thư nhập mã ISBN.\\
+- AI tự động tạo bản tóm tắt ngắn gọn cho các sách mới được biên mục để độc giả xem trước.\\
+
+\subsubsection{Thông báo và Tương tác}
+- Hệ thống phải gửi các thông báo tự động qua email/SMS cho: nhắc nhở trước hạn 3 ngày, cảnh báo quá hạn, thông báo sách đặt chỗ đã sẵn sàng và cập nhật trạng thái tài khoản.\\
+- Độc giả phải có khả năng cấu hình kênh thông báo và tần suất nhận trong phần cài đặt hồ sơ.\\
+- Hệ thống phải cung cấp một trung tâm thông báo trong ứng dụng hiển thị các cảnh báo chưa đọc.\\
+- Thủ thư phải có khả năng phát các thông báo đại chúng (như thông báo đóng cửa thư viện) đến tất cả người dùng hoặc các nhóm đối tượng cụ thể.\\
+
+\subsubsection{Báo cáo và Phân tích}
+- Hệ thống phải tạo các báo cáo phân tích về: các mục được mượn nhiều nhất, tài liệu quá hạn, tổng hợp thu tiền phạt, đăng ký người dùng mới và chỉ số phát triển danh mục.\\
+- Hệ thống phải cung cấp bảng điều khiển theo thời gian thực cho thủ thư hiển thị các chỉ số vận hành chính: lượt mượn đang hoạt động, số lượng quá hạn, số lượng khả dụng và khối lượng giao dịch hằng ngày.\\
+- Báo cáo phải hỗ trợ xuất ra các định dạng PDF và Excel.\\
+
+\subsubsection{Quản trị và Cấu hình Hệ thống}
+- Quản trị viên phải có khả năng cấu hình các tham số toàn cục bao gồm thời hạn mượn, mức phí phạt, hạn mức mượn theo vai trò và ngưỡng hết hạn đặt chỗ.\\
+- Hệ thống phải hỗ trợ quản lý thư viện đa chi nhánh.\\
+- Hệ thống phải ghi nhật ký kiểm toán (audit log) đầy đủ cho các hành động quản trị (thay đổi cấu hình, chỉnh sửa tài khoản, nhập dữ liệu hàng loạt).\\
+
+\subsection{Yêu cầu Phi Chức năng}
+
+Để đảm bảo vận hành ổn định, bảo mật và trải nghiệm người dùng mượt mà, hệ thống tuân thủ các tiêu chuẩn phi chức năng sau:
+
+\begin{itemize}
+    \item \textbf{Thời gian Tải Trang:} Trang chủ, trang tìm kiếm tài liệu và trang chi tiết sách phải hoàn tất tải trong dưới 3 giây (tối ưu hóa đạt 1.5 giây) trên cả nền tảng máy tính và di động.
+    
+    \item \textbf{Thời gian Phản hồi API:} 
+    \begin{itemize}
+        \item Các API nghiệp vụ cơ bản (kiểm tra giỏ mượn, lịch sử mượn) phải phản hồi trong vòng 0.5 giây.
+        \item Các API xử lý thông minh (Trợ lý ảo AI, tóm tắt văn bản, tìm kiếm ngữ nghĩa) phải trả về kết quả trong vòng 3 giây.
+    \end{itemize}
+    
+    \item \textbf{Khả năng Chịu tải:} Hệ thống phải xử lý ổn định từ 1.000 đến 2.000 phiên làm việc của độc giả đồng thời mà không suy giảm hiệu năng máy chủ.
+    
+    \item \textbf{Tính Nhất quán UI/UX:} Kiểu chữ, bảng màu thương hiệu, bố cục điều hướng và các nút hành động (Gia hạn, Đặt chỗ, Xử lý) phải duy trì nhất quán trên tất cả các màn hình.
+    
+    \item \textbf{Bảo mật Dữ liệu \& Quyền Riêng tư:} 
+    \begin{itemize}
+        \item Mật khẩu tài khoản người dùng phải được băm bằng các thuật toán mạnh (bcrypt) trước khi lưu vào cơ sở dữ liệu; nghiêm cấm việc ghi nhật ký mật khẩu dạng văn bản thuần.
+        \item Truyền tải dữ liệu giữa máy khách và máy chủ phải được mã hóa qua các giao thức TLS/HTTPS.
+    \end{itemize}
+    
+    \item \textbf{Bảo mật Ứng dụng:} Mã nguồn phải áp dụng tham số hóa nghiêm ngặt để ngăn chặn các lỗ hổng web bao gồm SQL Injection và Cross-Site Scripting (XSS).
+    
+    \item \textbf{Thời gian Hoạt động (Uptime):} Hạ tầng máy chủ phải duy trì thời gian hoạt động tối thiểu 99.5\% mỗi năm, không tính các khoảng thời gian bảo trì được hạ tầng lên lịch trước.
+    
+    \item \textbf{Khôi phục Sau Sự cố:} Sao lưu cơ sở dữ liệu được thực hiện hằng ngày. Trong các sự cố hỏng hóc phần cứng, thời gian khôi phục về trạng thái sao lưu mới nhất phải diễn ra trong vòng 4 giờ.
+    
+    \item \textbf{Khả năng Tích hợp:} Kiến trúc mô-đun sử dụng các REST API tiêu chuẩn giúp dễ dàng tích hợp với các dịch vụ bên ngoài (cổng thông tin nhà trường, Google Books API).
+\end{itemize}
