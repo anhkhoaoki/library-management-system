@@ -1,0 +1,1749 @@
+PWD e:\DATN\library-management-system\DATN
+INPUT C:\Users\mrpartis\AppData\Local\MiKTeX\miktex\data\le\pdftex\pdflatex.fmt
+INPUT e:\DATN\library-management-system\DATN\main.tex
+OUTPUT main.log
+INPUT C:\Program Files\MiKTeX\tex\latex\base\article.cls
+INPUT C:\Program Files\MiKTeX\tex\latex\base\article.cls
+INPUT C:\Program Files\MiKTeX\tex\latex\base\size10.clo
+INPUT C:\Program Files\MiKTeX\tex\latex\base\size10.clo
+INPUT C:\Program Files\MiKTeX\tex\latex\base\size10.clo
+INPUT C:\Program Files\MiKTeX\tex\latex\base\fontenc.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\base\fontenc.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\vntex\t5enc.def
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\vntex\t5enc.def
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\vntex\t5enc.def
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\vntex\t5enc.dfu
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\vntex\t5enc.dfu
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\vntex\t5enc.dfu
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\mathptmx.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\mathptmx.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\a4wide\a4wide.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\a4wide\a4wide.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\ntgclass\a4.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\ntgclass\a4.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsfonts\amssymb.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsfonts\amssymb.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsfonts\amsfonts.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsfonts\amsfonts.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\epsfig.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\epsfig.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\graphicx.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\graphicx.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\keyval.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\keyval.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\graphics.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\graphics.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\trig.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\trig.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics-cfg\graphics.cfg
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics-cfg\graphics.cfg
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics-cfg\graphics.cfg
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics-def\pdftex.def
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics-def\pdftex.def
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics-def\pdftex.def
+INPUT C:\Program Files\MiKTeX\tex\latex\base\latexsym.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\base\latexsym.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\tools\array.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\tools\array.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\tools\hhline.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\tools\hhline.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\fancyhdr\fancyhdr.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\fancyhdr\fancyhdr.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\ulem\ulem.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\ulem\ulem.sty
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\latex-fonts\lasy6.tfm
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\cancel\cancel.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\cancel\cancel.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amsmath.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amsmath.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amsopn.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amstext.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amstext.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amsgen.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amsgen.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amsbsy.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amsbsy.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amsopn.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\amscls\amsthm.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\amscls\amsthm.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\tools\multicol.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\tools\multicol.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\tools\longtable.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\tools\longtable.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amscd.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amscd.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\diagbox\diagbox.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\diagbox\diagbox.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\pict2e\pict2e.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\pict2e\pict2e.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\pict2e\pict2e.cfg
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\pict2e\pict2e.cfg
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\pict2e\pict2e.cfg
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\pict2e\p2e-pdftex.def
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\pict2e\p2e-pdftex.def
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\pict2e\p2e-pdftex.def
+INPUT C:\Program Files\MiKTeX\tex\latex\tools\calc.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\tools\calc.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\booktabs\booktabs.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\booktabs\booktabs.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\base\alltt.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\base\alltt.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\mdframed\mdframed.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\mdframed\mdframed.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\kvoptions\kvoptions.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\kvoptions\kvoptions.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\ltxcmds\ltxcmds.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\ltxcmds\ltxcmds.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\kvsetkeys\kvsetkeys.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\kvsetkeys\kvsetkeys.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\l3packages\xparse\xparse.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\l3packages\xparse\xparse.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\l3kernel\expl3.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\l3kernel\expl3.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
+INPUT C:\Program Files\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
+INPUT C:\Program Files\MiKTeX\tex\latex\etoolbox\etoolbox.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\etoolbox\etoolbox.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\zref\zref-abspage.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\zref\zref-abspage.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\zref\zref-base.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\zref\zref-base.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\infwarerr\infwarerr.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\infwarerr\infwarerr.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\kvdefinekeys\kvdefinekeys.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\kvdefinekeys\kvdefinekeys.sty
+INPUT C:\Program Files\MiKTeX\tex\generic\pdftexcmds\pdftexcmds.sty
+INPUT C:\Program Files\MiKTeX\tex\generic\pdftexcmds\pdftexcmds.sty
+INPUT C:\Program Files\MiKTeX\tex\generic\iftex\iftex.sty
+INPUT C:\Program Files\MiKTeX\tex\generic\iftex\iftex.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\etexcmds\etexcmds.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\etexcmds\etexcmds.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\auxhook\auxhook.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\auxhook\auxhook.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\needspace\needspace.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\needspace\needspace.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\color.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\color.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics-cfg\color.cfg
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics-cfg\color.cfg
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics-cfg\color.cfg
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\mathcolor.ltx
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\mathcolor.ltx
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\mathcolor.ltx
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\frontendlayer\tikz.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\frontendlayer\tikz.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\frontendlayer\tikz.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\basiclayer\pgf.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\basiclayer\pgf.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\utilities\pgfrcs.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\utilities\pgfrcs.sty
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\utilities\pgfutil-common.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\utilities\pgfutil-common.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\utilities\pgfutil-common.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\utilities\pgfutil-latex.def
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\utilities\pgfutil-latex.def
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\utilities\pgfutil-latex.def
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\utilities\pgfrcs.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\utilities\pgfrcs.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\utilities\pgfrcs.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\pgf.revision.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\pgf.revision.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\pgf.revision.tex
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\basiclayer\pgfcore.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\basiclayer\pgfcore.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\systemlayer\pgfsys.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\systemlayer\pgfsys.sty
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\systemlayer\pgfsys.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\systemlayer\pgfsys.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\systemlayer\pgfsys.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\utilities\pgfkeys.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\utilities\pgfkeys.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\utilities\pgfkeys.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\utilities\pgfkeyslibraryfiltered.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\utilities\pgfkeyslibraryfiltered.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\utilities\pgfkeyslibraryfiltered.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\systemlayer\pgf.cfg
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\systemlayer\pgf.cfg
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\systemlayer\pgf.cfg
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\systemlayer\pgfsys-pdftex.def
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\systemlayer\pgfsys-pdftex.def
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\systemlayer\pgfsys-pdftex.def
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\systemlayer\pgfsys-common-pdf.def
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\systemlayer\pgfsys-common-pdf.def
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\systemlayer\pgfsys-common-pdf.def
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\systemlayer\pgfsyssoftpath.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\systemlayer\pgfsyssoftpath.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\systemlayer\pgfsyssoftpath.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\systemlayer\pgfsysprotocol.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\systemlayer\pgfsysprotocol.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\systemlayer\pgfsysprotocol.code.tex
+INPUT C:\Program Files\MiKTeX\tex\latex\xcolor\xcolor.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\xcolor\xcolor.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics-cfg\color.cfg
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\mathcolor.ltx
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcore.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcore.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcore.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmath.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmath.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmath.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathutil.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathutil.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathutil.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathparser.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathparser.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathparser.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.basic.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.basic.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.basic.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.trigonometric.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.trigonometric.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.trigonometric.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.random.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.random.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.random.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.comparison.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.comparison.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.comparison.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.base.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.base.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.base.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.round.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.round.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.round.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.misc.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.misc.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.misc.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.integerarithmetics.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.integerarithmetics.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.integerarithmetics.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathcalc.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathcalc.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathcalc.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfloat.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfloat.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmathfloat.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfint.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfint.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfint.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepoints.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepoints.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepoints.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepathconstruct.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepathconstruct.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepathconstruct.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepathusage.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepathusage.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepathusage.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorescopes.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorescopes.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorescopes.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoregraphicstate.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoregraphicstate.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoregraphicstate.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoretransformations.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoretransformations.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoretransformations.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorequick.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorequick.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorequick.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoreobjects.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoreobjects.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoreobjects.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepathprocessing.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepathprocessing.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepathprocessing.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorearrows.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorearrows.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorearrows.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoreshade.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoreshade.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoreshade.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoreimage.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoreimage.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoreimage.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoreexternal.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoreexternal.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoreexternal.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorelayers.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorelayers.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorelayers.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoretransparency.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoretransparency.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcoretransparency.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepatterns.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepatterns.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepatterns.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorerdf.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorerdf.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\basiclayer\pgfcorerdf.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\modules\pgfmoduleshapes.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\modules\pgfmoduleshapes.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\modules\pgfmoduleshapes.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\modules\pgfmoduleplot.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\modules\pgfmoduleplot.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\modules\pgfmoduleplot.code.tex
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\compatibility\pgfcomp-version-0-65.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\compatibility\pgfcomp-version-0-65.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\compatibility\pgfcomp-version-1-18.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\compatibility\pgfcomp-version-1-18.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\utilities\pgffor.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\utilities\pgffor.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\utilities\pgfkeys.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\utilities\pgfkeys.sty
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\utilities\pgfkeys.code.tex
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\math\pgfmath.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\pgf\math\pgfmath.sty
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\math\pgfmath.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\utilities\pgffor.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\utilities\pgffor.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\utilities\pgffor.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\tikz.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\tikz.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\tikz.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\libraries\pgflibraryplothandlers.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\libraries\pgflibraryplothandlers.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\libraries\pgflibraryplothandlers.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\modules\pgfmodulematrix.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\modules\pgfmodulematrix.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\modules\pgfmodulematrix.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarytopaths.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarytopaths.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarytopaths.code.tex
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\mdframed\md-frame-1.mdf
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\mdframed\md-frame-1.mdf
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\mdframed\md-frame-1.mdf
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\caption\caption.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\caption\caption.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\caption\caption3.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\caption\caption3.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\caption\ltcaption.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\caption\ltcaption.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\caption\subcaption.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\caption\subcaption.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\lastpage\lastpage.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\lastpage\lastpage.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\lastpage\lastpage2e.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\lastpage\lastpage2e.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\lastpage\lastpagemodern.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\lastpage\lastpagemodern.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\algorithm2e\algorithm2e.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\algorithm2e\algorithm2e.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\base\ifthen.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\base\ifthen.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\ifoddpage\ifoddpage.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\ifoddpage\ifoddpage.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\tools\xspace.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\tools\xspace.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\relsize\relsize.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\relsize\relsize.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\tools\enumerate.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\tools\enumerate.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\float\float.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\float\float.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\tools\tabularx.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\tools\tabularx.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\multirow\multirow.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\multirow\multirow.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\rotating.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\rotating.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\geometry\geometry.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\geometry\geometry.sty
+INPUT C:\Program Files\MiKTeX\tex\generic\iftex\ifvtex.sty
+INPUT C:\Program Files\MiKTeX\tex\generic\iftex\ifvtex.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\geometry\geometry.cfg
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\geometry\geometry.cfg
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\geometry\geometry.cfg
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\setspace\setspace.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\setspace\setspace.sty
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibraryarrows.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibraryarrows.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibraryarrows.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\libraries\pgflibraryarrows.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\libraries\pgflibraryarrows.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\libraries\pgflibraryarrows.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarysnakes.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarysnakes.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarysnakes.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarydecorations.pathmorphing.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarydecorations.pathmorphing.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarydecorations.pathmorphing.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarydecorations.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarydecorations.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarydecorations.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\modules\pgfmoduledecorations.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\modules\pgfmoduledecorations.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\modules\pgfmoduledecorations.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\libraries\decorations\pgflibrarydecorations.pathmorphing.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\libraries\decorations\pgflibrarydecorations.pathmorphing.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\libraries\decorations\pgflibrarydecorations.pathmorphing.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarydecorations.pathreplacing.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarydecorations.pathreplacing.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarydecorations.pathreplacing.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\libraries\decorations\pgflibrarydecorations.pathreplacing.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\libraries\decorations\pgflibrarydecorations.pathreplacing.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\libraries\decorations\pgflibrarydecorations.pathreplacing.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarydecorations.shapes.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarydecorations.shapes.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarydecorations.shapes.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\libraries\decorations\pgflibrarydecorations.shapes.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\libraries\decorations\pgflibrarydecorations.shapes.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\libraries\decorations\pgflibrarydecorations.shapes.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarybackgrounds.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarybackgrounds.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarybackgrounds.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarycalc.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarycalc.code.tex
+INPUT C:\Program Files\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarycalc.code.tex
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\hyperref.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\hyperref.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\pdfescape\pdfescape.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\pdfescape\pdfescape.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\hycolor\hycolor.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\hycolor\hycolor.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\nameref.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\nameref.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\refcount\refcount.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\refcount\refcount.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\gettitlestring\gettitlestring.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\gettitlestring\gettitlestring.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\stringenc\stringenc.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\stringenc\stringenc.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\pd1enc.def
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\pd1enc.def
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\pd1enc.def
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\intcalc\intcalc.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\intcalc\intcalc.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\puenc.def
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\puenc.def
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\puenc.def
+INPUT C:\Program Files\MiKTeX\tex\latex\url\url.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\url\url.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\bitset\bitset.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\bitset\bitset.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\bigintcalc\bigintcalc.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\bigintcalc\bigintcalc.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\hpdftex.def
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\hpdftex.def
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\hpdftex.def
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\rerunfilecheck\rerunfilecheck.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\rerunfilecheck\rerunfilecheck.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\uniquecounter\uniquecounter.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\generic\uniquecounter\uniquecounter.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\listings.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\listings.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\lstpatch.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\lstpatch.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\lstpatch.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\lstmisc.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\lstmisc.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\lstmisc.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\listings.cfg
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\listings.cfg
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\listings.cfg
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\lstlang1.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\lstlang1.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\lstlang1.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\lstlang2.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\lstlang2.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\lstlang2.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\lstlang3.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\lstlang3.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\listings\lstlang3.sty
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\ot1ptm.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\ot1ptm.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\ot1ptm.fd
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr7t.tfm
+INPUT .\main.aux
+INPUT .\main.aux
+INPUT main.aux
+OUTPUT main.aux
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\vntex\t5cmr.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\vntex\t5cmr.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\vntex\t5cmr.fd
+INPUT C:\Program Files\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
+INPUT C:\Program Files\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
+INPUT C:\Program Files\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
+INPUT C:\Program Files\MiKTeX\tex\latex\epstopdf-pkg\epstopdf-base.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\epstopdf-pkg\epstopdf-base.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\00miktex\epstopdf-sys.cfg
+INPUT C:\Program Files\MiKTeX\tex\latex\00miktex\epstopdf-sys.cfg
+INPUT C:\Program Files\MiKTeX\tex\latex\00miktex\epstopdf-sys.cfg
+INPUT .\main.out
+INPUT .\main.out
+INPUT main.out
+INPUT main.out
+OUTPUT main.pdf
+INPUT .\main.out
+INPUT .\main.out
+OUTPUT main.out
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb7t.tfm
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\ot1ztmcm.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\ot1ztmcm.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\ot1ztmcm.fd
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7t.tfm
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\omlztmcm.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\omlztmcm.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\omlztmcm.fd
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7m.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7m.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7m.tfm
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\omsztmcm.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\omsztmcm.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\omsztmcm.fd
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7y.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7y.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7y.tfm
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\omxztmcm.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\omxztmcm.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\omxztmcm.fd
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7v.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7v.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7v.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmri7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmri7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmri7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+INPUT C:\Program Files\MiKTeX\tex\latex\base\ulasy.fd
+INPUT C:\Program Files\MiKTeX\tex\latex\base\ulasy.fd
+INPUT C:\Program Files\MiKTeX\tex\latex\base\ulasy.fd
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\latex-fonts\lasy10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\latex-fonts\lasy7.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmb7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb8r.tfm
+INPUT C:\Users\mrpartis\AppData\Local\MiKTeX\fonts\map\pdftex\pdftex.map
+INPUT C:\Program Files\MiKTeX\fonts\enc\dvips\base\8r.enc
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmr7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmb7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb8r.tfm
+INPUT .\Intro\LoiCamOn.tex
+INPUT .\Intro\LoiCamOn.tex
+INPUT .\Intro\LoiCamOn.tex
+INPUT .\Intro\LoiCamOn.tex
+INPUT Intro\LoiCamOn.tex
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmr7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
+INPUT .\Intro\LoiCamDoan.tex
+INPUT .\Intro\LoiCamDoan.tex
+INPUT .\Intro\LoiCamDoan.tex
+INPUT .\Intro\LoiCamDoan.tex
+INPUT Intro\LoiCamDoan.tex
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmb7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb8r.tfm
+INPUT .\Intro\TomTat.tex
+INPUT .\Intro\TomTat.tex
+INPUT .\Intro\TomTat.tex
+INPUT .\Intro\TomTat.tex
+INPUT Intro\TomTat.tex
+INPUT .\main.toc
+INPUT .\main.toc
+INPUT main.toc
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmr7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
+OUTPUT main.toc
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\main.lof
+INPUT .\main.lof
+INPUT main.lof
+OUTPUT main.lof
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\main.lot
+INPUT .\main.lot
+INPUT main.lot
+OUTPUT main.lot
+INPUT .\Contents\GioiThieu.tex
+INPUT .\Contents\GioiThieu.tex
+INPUT .\Contents\GioiThieu.tex
+INPUT .\Contents\GioiThieu.tex
+INPUT Contents\GioiThieu.tex
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb7t.tfm
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmb7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb8r.tfm
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Contents\Hethonglienquan.tex
+INPUT .\Contents\Hethonglienquan.tex
+INPUT .\Contents\Hethonglienquan.tex
+INPUT .\Contents\Hethonglienquan.tex
+INPUT Contents\Hethonglienquan.tex
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmtt10.tfm
+INPUT .\Images\lib_hcmut_homepage.png
+INPUT .\Images\lib_hcmut_homepage.png
+INPUT .\Images\lib_hcmut_homepage.png
+INPUT .\Images\lib_hcmut_homepage.png
+INPUT .\Images\lib_hcmut_homepage.png
+INPUT .\Images\lib_hcmut_homepage.png
+INPUT .\Images\lib_hcmut_homepage.png
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmri7t.tfm
+INPUT .\Images\opac.lib.hcmut.edu.vn.png
+INPUT .\Images\opac.lib.hcmut.edu.vn.png
+INPUT .\Images\opac.lib.hcmut.edu.vn.png
+INPUT .\Images\opac.lib.hcmut.edu.vn.png
+INPUT .\Images\opac.lib.hcmut.edu.vn.png
+INPUT .\Images\opac.lib.hcmut.edu.vn.png
+INPUT .\Images\opac.lib.hcmut.edu.vn.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmb7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb8r.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmri7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmri8r.tfm
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\ts1ptm.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\ts1ptm.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\psnfss\ts1ptm.fd
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8c.tfm
+INPUT .\Images\london_online_library_homepage.png
+INPUT .\Images\london_online_library_homepage.png
+INPUT .\Images\london_online_library_homepage.png
+INPUT .\Images\london_online_library_homepage.png
+INPUT .\Images\london_online_library_homepage.png
+INPUT .\Images\london_online_library_homepage.png
+INPUT .\Images\london_online_library_homepage.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmr8c.vf
+INPUT .\Images\ud_library_homepage_chatbot.png
+INPUT .\Images\ud_library_homepage_chatbot.png
+INPUT .\Images\ud_library_homepage_chatbot.png
+INPUT .\Images\ud_library_homepage_chatbot.png
+INPUT .\Images\ud_library_homepage_chatbot.png
+INPUT .\Images\ud_library_homepage_chatbot.png
+INPUT .\Images\ud_library_homepage_chatbot.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\koha_staff_interface.png
+INPUT .\Images\koha_staff_interface.png
+INPUT .\Images\koha_staff_interface.png
+INPUT .\Images\koha_staff_interface.png
+INPUT .\Images\koha_staff_interface.png
+INPUT .\Images\koha_staff_interface.png
+INPUT .\Images\koha_staff_interface.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Contents\YeuCauHeThong.tex
+INPUT .\Contents\YeuCauHeThong.tex
+INPUT .\Contents\YeuCauHeThong.tex
+INPUT .\Contents\YeuCauHeThong.tex
+INPUT Contents\YeuCauHeThong.tex
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Contents\DacTaChiTietCacUseCase.tex
+INPUT .\Contents\DacTaChiTietCacUseCase.tex
+INPUT .\Contents\DacTaChiTietCacUseCase.tex
+INPUT .\Contents\DacTaChiTietCacUseCase.tex
+INPUT Contents\DacTaChiTietCacUseCase.tex
+INPUT .\Images\Quan_ly_tai_khoan_truy_cap.png
+INPUT .\Images\Quan_ly_tai_khoan_truy_cap.png
+INPUT .\Images\Quan_ly_tai_khoan_truy_cap.png
+INPUT .\Images\Quan_ly_tai_khoan_truy_cap.png
+INPUT .\Images\Quan_ly_tai_khoan_truy_cap.png
+INPUT .\Images\Quan_ly_tai_khoan_truy_cap.png
+INPUT .\Images\Quan_ly_tai_khoan_truy_cap.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\zptmcm7y.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\symbol\psyr.tfm
+INPUT C:\Users\mrpartis\AppData\Local\MiKTeX\fonts\tfm\public\rsfs\rsfs10.tfm
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Quan_ly_danh_muc_bien_muc_AI.png
+INPUT .\Images\Quan_ly_danh_muc_bien_muc_AI.png
+INPUT .\Images\Quan_ly_danh_muc_bien_muc_AI.png
+INPUT .\Images\Quan_ly_danh_muc_bien_muc_AI.png
+INPUT .\Images\Quan_ly_danh_muc_bien_muc_AI.png
+INPUT .\Images\Quan_ly_danh_muc_bien_muc_AI.png
+INPUT .\Images\Quan_ly_danh_muc_bien_muc_AI.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmri7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmri8r.tfm
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Quan_ly_luu_thong.png
+INPUT .\Images\Quan_ly_luu_thong.png
+INPUT .\Images\Quan_ly_luu_thong.png
+INPUT .\Images\Quan_ly_luu_thong.png
+INPUT .\Images\Quan_ly_luu_thong.png
+INPUT .\Images\Quan_ly_luu_thong.png
+INPUT .\Images\Quan_ly_luu_thong.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Truy_cap_khai_thac_tai_nguyen.png
+INPUT .\Images\Truy_cap_khai_thac_tai_nguyen.png
+INPUT .\Images\Truy_cap_khai_thac_tai_nguyen.png
+INPUT .\Images\Truy_cap_khai_thac_tai_nguyen.png
+INPUT .\Images\Truy_cap_khai_thac_tai_nguyen.png
+INPUT .\Images\Truy_cap_khai_thac_tai_nguyen.png
+INPUT .\Images\Truy_cap_khai_thac_tai_nguyen.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Tuong_tac_thong_minh_AI.png
+INPUT .\Images\Tuong_tac_thong_minh_AI.png
+INPUT .\Images\Tuong_tac_thong_minh_AI.png
+INPUT .\Images\Tuong_tac_thong_minh_AI.png
+INPUT .\Images\Tuong_tac_thong_minh_AI.png
+INPUT .\Images\Tuong_tac_thong_minh_AI.png
+INPUT .\Images\Tuong_tac_thong_minh_AI.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Thong_bao_truyen_thong.png
+INPUT .\Images\Thong_bao_truyen_thong.png
+INPUT .\Images\Thong_bao_truyen_thong.png
+INPUT .\Images\Thong_bao_truyen_thong.png
+INPUT .\Images\Thong_bao_truyen_thong.png
+INPUT .\Images\Thong_bao_truyen_thong.png
+INPUT .\Images\Thong_bao_truyen_thong.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Bao_cao_quan_tri.png
+INPUT .\Images\Bao_cao_quan_tri.png
+INPUT .\Images\Bao_cao_quan_tri.png
+INPUT .\Images\Bao_cao_quan_tri.png
+INPUT .\Images\Bao_cao_quan_tri.png
+INPUT .\Images\Bao_cao_quan_tri.png
+INPUT .\Images\Bao_cao_quan_tri.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Contents\PhanTichThietKeHeThong.tex
+INPUT .\Contents\PhanTichThietKeHeThong.tex
+INPUT .\Contents\PhanTichThietKeHeThong.tex
+INPUT .\Contents\PhanTichThietKeHeThong.tex
+INPUT Contents\PhanTichThietKeHeThong.tex
+INPUT .\Images\kientruchethong.png
+INPUT .\Images\kientruchethong.png
+INPUT .\Images\kientruchethong.png
+INPUT .\Images\kientruchethong.png
+INPUT .\Images\kientruchethong.png
+INPUT .\Images\kientruchethong.png
+INPUT .\Images\kientruchethong.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\ERD.png
+INPUT .\Images\ERD.png
+INPUT .\Images\ERD.png
+INPUT .\Images\ERD.png
+INPUT .\Images\ERD.png
+INPUT .\Images\ERD.png
+INPUT .\Images\ERD.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\db.jpg
+INPUT .\Images\db.jpg
+INPUT .\Images\db.jpg
+INPUT .\Images\db.jpg
+INPUT .\Images\db.jpg
+INPUT .\Images\db.jpg
+INPUT .\Images\db.jpg
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\quanlytruycapvataikhoan.png
+INPUT .\Images\quanlytruycapvataikhoan.png
+INPUT .\Images\quanlytruycapvataikhoan.png
+INPUT .\Images\quanlytruycapvataikhoan.png
+INPUT .\Images\quanlytruycapvataikhoan.png
+INPUT .\Images\quanlytruycapvataikhoan.png
+INPUT .\Images\quanlytruycapvataikhoan.png
+INPUT .\Images\quanlydanhmuc.png
+INPUT .\Images\quanlydanhmuc.png
+INPUT .\Images\quanlydanhmuc.png
+INPUT .\Images\quanlydanhmuc.png
+INPUT .\Images\quanlydanhmuc.png
+INPUT .\Images\quanlydanhmuc.png
+INPUT .\Images\quanlydanhmuc.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\zptmcm7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\zptmcm7m.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\psyro.tfm
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\quanlyluuthong.png
+INPUT .\Images\quanlyluuthong.png
+INPUT .\Images\quanlyluuthong.png
+INPUT .\Images\quanlyluuthong.png
+INPUT .\Images\quanlyluuthong.png
+INPUT .\Images\quanlyluuthong.png
+INPUT .\Images\quanlyluuthong.png
+INPUT .\Images\truycapvakhaithactainguyen.png
+INPUT .\Images\truycapvakhaithactainguyen.png
+INPUT .\Images\truycapvakhaithactainguyen.png
+INPUT .\Images\truycapvakhaithactainguyen.png
+INPUT .\Images\truycapvakhaithactainguyen.png
+INPUT .\Images\truycapvakhaithactainguyen.png
+INPUT .\Images\truycapvakhaithactainguyen.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\AI.png
+INPUT .\Images\AI.png
+INPUT .\Images\AI.png
+INPUT .\Images\AI.png
+INPUT .\Images\AI.png
+INPUT .\Images\AI.png
+INPUT .\Images\AI.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\thongbao.png
+INPUT .\Images\thongbao.png
+INPUT .\Images\thongbao.png
+INPUT .\Images\thongbao.png
+INPUT .\Images\thongbao.png
+INPUT .\Images\thongbao.png
+INPUT .\Images\thongbao.png
+INPUT .\Images\baocaovaquantri.png
+INPUT .\Images\baocaovaquantri.png
+INPUT .\Images\baocaovaquantri.png
+INPUT .\Images\baocaovaquantri.png
+INPUT .\Images\baocaovaquantri.png
+INPUT .\Images\baocaovaquantri.png
+INPUT .\Images\baocaovaquantri.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\dangki.png
+INPUT .\Images\dangki.png
+INPUT .\Images\dangki.png
+INPUT .\Images\dangki.png
+INPUT .\Images\dangki.png
+INPUT .\Images\dangki.png
+INPUT .\Images\dangki.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\dangnhap.png
+INPUT .\Images\dangnhap.png
+INPUT .\Images\dangnhap.png
+INPUT .\Images\dangnhap.png
+INPUT .\Images\dangnhap.png
+INPUT .\Images\dangnhap.png
+INPUT .\Images\dangnhap.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\datlai.png
+INPUT .\Images\datlai.png
+INPUT .\Images\datlai.png
+INPUT .\Images\datlai.png
+INPUT .\Images\datlai.png
+INPUT .\Images\datlai.png
+INPUT .\Images\datlai.png
+INPUT .\Images\xemlichsu.png
+INPUT .\Images\xemlichsu.png
+INPUT .\Images\xemlichsu.png
+INPUT .\Images\xemlichsu.png
+INPUT .\Images\xemlichsu.png
+INPUT .\Images\xemlichsu.png
+INPUT .\Images\xemlichsu.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\quanly.png
+INPUT .\Images\quanly.png
+INPUT .\Images\quanly.png
+INPUT .\Images\quanly.png
+INPUT .\Images\quanly.png
+INPUT .\Images\quanly.png
+INPUT .\Images\quanly.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\edit.png
+INPUT .\Images\edit.png
+INPUT .\Images\edit.png
+INPUT .\Images\edit.png
+INPUT .\Images\edit.png
+INPUT .\Images\edit.png
+INPUT .\Images\edit.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\nhap.png
+INPUT .\Images\nhap.png
+INPUT .\Images\nhap.png
+INPUT .\Images\nhap.png
+INPUT .\Images\nhap.png
+INPUT .\Images\nhap.png
+INPUT .\Images\nhap.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\bienmuc.png
+INPUT .\Images\bienmuc.png
+INPUT .\Images\bienmuc.png
+INPUT .\Images\bienmuc.png
+INPUT .\Images\bienmuc.png
+INPUT .\Images\bienmuc.png
+INPUT .\Images\bienmuc.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\muon.png
+INPUT .\Images\muon.png
+INPUT .\Images\muon.png
+INPUT .\Images\muon.png
+INPUT .\Images\muon.png
+INPUT .\Images\muon.png
+INPUT .\Images\muon.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\tra.png
+INPUT .\Images\tra.png
+INPUT .\Images\tra.png
+INPUT .\Images\tra.png
+INPUT .\Images\tra.png
+INPUT .\Images\tra.png
+INPUT .\Images\tra.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\phiphat.png
+INPUT .\Images\phiphat.png
+INPUT .\Images\phiphat.png
+INPUT .\Images\phiphat.png
+INPUT .\Images\phiphat.png
+INPUT .\Images\phiphat.png
+INPUT .\Images\phiphat.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\giahan.png
+INPUT .\Images\giahan.png
+INPUT .\Images\giahan.png
+INPUT .\Images\giahan.png
+INPUT .\Images\giahan.png
+INPUT .\Images\giahan.png
+INPUT .\Images\giahan.png
+INPUT .\Images\dat.png
+INPUT .\Images\dat.png
+INPUT .\Images\dat.png
+INPUT .\Images\dat.png
+INPUT .\Images\dat.png
+INPUT .\Images\dat.png
+INPUT .\Images\dat.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\tracuu.png
+INPUT .\Images\tracuu.png
+INPUT .\Images\tracuu.png
+INPUT .\Images\tracuu.png
+INPUT .\Images\tracuu.png
+INPUT .\Images\tracuu.png
+INPUT .\Images\tracuu.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Seq_Dang ky.png
+INPUT .\Images\Seq_Dang ky.png
+INPUT .\Images\Seq_Dang ky.png
+INPUT .\Images\Seq_Dang ky.png
+INPUT .\Images\Seq_Dang ky.png
+INPUT .\Images\Seq_Dang ky.png
+INPUT .\Images\Seq_Dang ky.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Seq_Dang nhap.png
+INPUT .\Images\Seq_Dang nhap.png
+INPUT .\Images\Seq_Dang nhap.png
+INPUT .\Images\Seq_Dang nhap.png
+INPUT .\Images\Seq_Dang nhap.png
+INPUT .\Images\Seq_Dang nhap.png
+INPUT .\Images\Seq_Dang nhap.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Seq_Reset mat khau.png
+INPUT .\Images\Seq_Reset mat khau.png
+INPUT .\Images\Seq_Reset mat khau.png
+INPUT .\Images\Seq_Reset mat khau.png
+INPUT .\Images\Seq_Reset mat khau.png
+INPUT .\Images\Seq_Reset mat khau.png
+INPUT .\Images\Seq_Reset mat khau.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Seq_Tim kiem.png
+INPUT .\Images\Seq_Tim kiem.png
+INPUT .\Images\Seq_Tim kiem.png
+INPUT .\Images\Seq_Tim kiem.png
+INPUT .\Images\Seq_Tim kiem.png
+INPUT .\Images\Seq_Tim kiem.png
+INPUT .\Images\Seq_Tim kiem.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Seq_Them tai lieu.png
+INPUT .\Images\Seq_Them tai lieu.png
+INPUT .\Images\Seq_Them tai lieu.png
+INPUT .\Images\Seq_Them tai lieu.png
+INPUT .\Images\Seq_Them tai lieu.png
+INPUT .\Images\Seq_Them tai lieu.png
+INPUT .\Images\Seq_Them tai lieu.png
+INPUT .\Images\Seq_Sua tai lieu.png
+INPUT .\Images\Seq_Sua tai lieu.png
+INPUT .\Images\Seq_Sua tai lieu.png
+INPUT .\Images\Seq_Sua tai lieu.png
+INPUT .\Images\Seq_Sua tai lieu.png
+INPUT .\Images\Seq_Sua tai lieu.png
+INPUT .\Images\Seq_Sua tai lieu.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Seq_Xoa tai lieu.png
+INPUT .\Images\Seq_Xoa tai lieu.png
+INPUT .\Images\Seq_Xoa tai lieu.png
+INPUT .\Images\Seq_Xoa tai lieu.png
+INPUT .\Images\Seq_Xoa tai lieu.png
+INPUT .\Images\Seq_Xoa tai lieu.png
+INPUT .\Images\Seq_Xoa tai lieu.png
+INPUT .\Images\Seq_Them hang loat.png
+INPUT .\Images\Seq_Them hang loat.png
+INPUT .\Images\Seq_Them hang loat.png
+INPUT .\Images\Seq_Them hang loat.png
+INPUT .\Images\Seq_Them hang loat.png
+INPUT .\Images\Seq_Them hang loat.png
+INPUT .\Images\Seq_Them hang loat.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Seq_Dat muon sach.png
+INPUT .\Images\Seq_Dat muon sach.png
+INPUT .\Images\Seq_Dat muon sach.png
+INPUT .\Images\Seq_Dat muon sach.png
+INPUT .\Images\Seq_Dat muon sach.png
+INPUT .\Images\Seq_Dat muon sach.png
+INPUT .\Images\Seq_Dat muon sach.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Seq_Tien phat.png
+INPUT .\Images\Seq_Tien phat.png
+INPUT .\Images\Seq_Tien phat.png
+INPUT .\Images\Seq_Tien phat.png
+INPUT .\Images\Seq_Tien phat.png
+INPUT .\Images\Seq_Tien phat.png
+INPUT .\Images\Seq_Tien phat.png
+INPUT .\Images\Seq_Muon sach.png
+INPUT .\Images\Seq_Muon sach.png
+INPUT .\Images\Seq_Muon sach.png
+INPUT .\Images\Seq_Muon sach.png
+INPUT .\Images\Seq_Muon sach.png
+INPUT .\Images\Seq_Muon sach.png
+INPUT .\Images\Seq_Muon sach.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Seq_Gia han.png
+INPUT .\Images\Seq_Gia han.png
+INPUT .\Images\Seq_Gia han.png
+INPUT .\Images\Seq_Gia han.png
+INPUT .\Images\Seq_Gia han.png
+INPUT .\Images\Seq_Gia han.png
+INPUT .\Images\Seq_Gia han.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Seq_Tra sach.png
+INPUT .\Images\Seq_Tra sach.png
+INPUT .\Images\Seq_Tra sach.png
+INPUT .\Images\Seq_Tra sach.png
+INPUT .\Images\Seq_Tra sach.png
+INPUT .\Images\Seq_Tra sach.png
+INPUT .\Images\Seq_Tra sach.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Contents\HienThuc.tex
+INPUT .\Contents\HienThuc.tex
+INPUT .\Contents\HienThuc.tex
+INPUT .\Contents\HienThuc.tex
+INPUT Contents\HienThuc.tex
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\vntex\t5ptm.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\vntex\t5ptm.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\vntex\t5ptm.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\fonts\tfm\vntex\urwvn\utmr8v.tfm
+INPUT .\Images\react_vite.png
+INPUT .\Images\react_vite.png
+INPUT .\Images\react_vite.png
+INPUT .\Images\react_vite.png
+INPUT .\Images\react_vite.png
+INPUT .\Images\react_vite.png
+INPUT .\Images\react_vite.png
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\vntex\t5cmtt.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\vntex\t5cmtt.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\tex\latex\vntex\t5cmtt.fd
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\fonts\tfm\vntex\vnr\vntt10.tfm
+INPUT .\Images\node_express.jpg
+INPUT .\Images\node_express.jpg
+INPUT .\Images\node_express.jpg
+INPUT .\Images\node_express.jpg
+INPUT .\Images\node_express.jpg
+INPUT .\Images\node_express.jpg
+INPUT .\Images\node_express.jpg
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\fonts\enc\dvips\vntex\t5.enc
+INPUT .\Images\fastapi.png
+INPUT .\Images\fastapi.png
+INPUT .\Images\fastapi.png
+INPUT .\Images\fastapi.png
+INPUT .\Images\fastapi.png
+INPUT .\Images\fastapi.png
+INPUT .\Images\fastapi.png
+INPUT .\Images\prisma.png
+INPUT .\Images\prisma.png
+INPUT .\Images\prisma.png
+INPUT .\Images\prisma.png
+INPUT .\Images\prisma.png
+INPUT .\Images\prisma.png
+INPUT .\Images\prisma.png
+INPUT .\Images\postgresql.jpg
+INPUT .\Images\postgresql.jpg
+INPUT .\Images\postgresql.jpg
+INPUT .\Images\postgresql.jpg
+INPUT .\Images\postgresql.jpg
+INPUT .\Images\postgresql.jpg
+INPUT .\Images\postgresql.jpg
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\fonts\tfm\vntex\urwvn\utmb8v.tfm
+INPUT .\Images\EmbeddingsAPI.png
+INPUT .\Images\EmbeddingsAPI.png
+INPUT .\Images\EmbeddingsAPI.png
+INPUT .\Images\EmbeddingsAPI.png
+INPUT .\Images\EmbeddingsAPI.png
+INPUT .\Images\EmbeddingsAPI.png
+INPUT .\Images\EmbeddingsAPI.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\fonts\tfm\vntex\urwvn\utmr8v.tfm
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\fonts\tfm\vntex\urwvn\utmr8v.tfm
+INPUT .\Images\Google-play-book-icon.png
+INPUT .\Images\Google-play-book-icon.png
+INPUT .\Images\Google-play-book-icon.png
+INPUT .\Images\Google-play-book-icon.png
+INPUT .\Images\Google-play-book-icon.png
+INPUT .\Images\Google-play-book-icon.png
+INPUT .\Images\Google-play-book-icon.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7m.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7m.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7m.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7y.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7y.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7y.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7v.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7v.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\zptmcm7v.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmri7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmri7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\latex-fonts\lasy9.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\latex-fonts\lasy5.tfm
+INPUT .\Images\Auth_DangNhap.png
+INPUT .\Images\Auth_DangNhap.png
+INPUT .\Images\Auth_DangNhap.png
+INPUT .\Images\Auth_DangNhap.png
+INPUT .\Images\Auth_DangNhap.png
+INPUT .\Images\Auth_DangNhap.png
+INPUT .\Images\Auth_DangNhap.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmr7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
+INPUT .\Images\Auth_DangKy.png
+INPUT .\Images\Auth_DangKy.png
+INPUT .\Images\Auth_DangKy.png
+INPUT .\Images\Auth_DangKy.png
+INPUT .\Images\Auth_DangKy.png
+INPUT .\Images\Auth_DangKy.png
+INPUT .\Images\Auth_DangKy.png
+INPUT .\Images\Auth_QuenMatKhau_B1.png
+INPUT .\Images\Auth_QuenMatKhau_B1.png
+INPUT .\Images\Auth_QuenMatKhau_B1.png
+INPUT .\Images\Auth_QuenMatKhau_B1.png
+INPUT .\Images\Auth_QuenMatKhau_B1.png
+INPUT .\Images\Auth_QuenMatKhau_B1.png
+INPUT .\Images\Auth_QuenMatKhau_B1.png
+INPUT .\Images\Auth_QuenMatKhau_B2.png
+INPUT .\Images\Auth_QuenMatKhau_B2.png
+INPUT .\Images\Auth_QuenMatKhau_B2.png
+INPUT .\Images\Auth_QuenMatKhau_B2.png
+INPUT .\Images\Auth_QuenMatKhau_B2.png
+INPUT .\Images\Auth_QuenMatKhau_B2.png
+INPUT .\Images\Auth_QuenMatKhau_B2.png
+INPUT .\Images\Auth_QuenMatKhau_B3.png
+INPUT .\Images\Auth_QuenMatKhau_B3.png
+INPUT .\Images\Auth_QuenMatKhau_B3.png
+INPUT .\Images\Auth_QuenMatKhau_B3.png
+INPUT .\Images\Auth_QuenMatKhau_B3.png
+INPUT .\Images\Auth_QuenMatKhau_B3.png
+INPUT .\Images\Auth_QuenMatKhau_B3.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Reader_TrangChu.png
+INPUT .\Images\Reader_TrangChu.png
+INPUT .\Images\Reader_TrangChu.png
+INPUT .\Images\Reader_TrangChu.png
+INPUT .\Images\Reader_TrangChu.png
+INPUT .\Images\Reader_TrangChu.png
+INPUT .\Images\Reader_TrangChu.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Reader_TraCuu.png
+INPUT .\Images\Reader_TraCuu.png
+INPUT .\Images\Reader_TraCuu.png
+INPUT .\Images\Reader_TraCuu.png
+INPUT .\Images\Reader_TraCuu.png
+INPUT .\Images\Reader_TraCuu.png
+INPUT .\Images\Reader_TraCuu.png
+INPUT .\Images\Reader_ChiTietSach.jpeg
+INPUT .\Images\Reader_ChiTietSach.jpeg
+INPUT .\Images\Reader_ChiTietSach.jpeg
+INPUT .\Images\Reader_ChiTietSach.jpeg
+INPUT .\Images\Reader_ChiTietSach.jpeg
+INPUT .\Images\Reader_ChiTietSach.jpeg
+INPUT .\Images\Reader_ChiTietSach.jpeg
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Reader_SachDangMuon.png
+INPUT .\Images\Reader_SachDangMuon.png
+INPUT .\Images\Reader_SachDangMuon.png
+INPUT .\Images\Reader_SachDangMuon.png
+INPUT .\Images\Reader_SachDangMuon.png
+INPUT .\Images\Reader_SachDangMuon.png
+INPUT .\Images\Reader_SachDangMuon.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Reader_LichSu.png
+INPUT .\Images\Reader_LichSu.png
+INPUT .\Images\Reader_LichSu.png
+INPUT .\Images\Reader_LichSu.png
+INPUT .\Images\Reader_LichSu.png
+INPUT .\Images\Reader_LichSu.png
+INPUT .\Images\Reader_LichSu.png
+INPUT .\Images\Reader_DatCho.png
+INPUT .\Images\Reader_DatCho.png
+INPUT .\Images\Reader_DatCho.png
+INPUT .\Images\Reader_DatCho.png
+INPUT .\Images\Reader_DatCho.png
+INPUT .\Images\Reader_DatCho.png
+INPUT .\Images\Reader_DatCho.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Reader_ChatbotAI.png
+INPUT .\Images\Reader_ChatbotAI.png
+INPUT .\Images\Reader_ChatbotAI.png
+INPUT .\Images\Reader_ChatbotAI.png
+INPUT .\Images\Reader_ChatbotAI.png
+INPUT .\Images\Reader_ChatbotAI.png
+INPUT .\Images\Reader_ChatbotAI.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Reader_HoSoCaiDat.png
+INPUT .\Images\Reader_HoSoCaiDat.png
+INPUT .\Images\Reader_HoSoCaiDat.png
+INPUT .\Images\Reader_HoSoCaiDat.png
+INPUT .\Images\Reader_HoSoCaiDat.png
+INPUT .\Images\Reader_HoSoCaiDat.png
+INPUT .\Images\Reader_HoSoCaiDat.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Librarian_TrangChu.png
+INPUT .\Images\Librarian_TrangChu.png
+INPUT .\Images\Librarian_TrangChu.png
+INPUT .\Images\Librarian_TrangChu.png
+INPUT .\Images\Librarian_TrangChu.png
+INPUT .\Images\Librarian_TrangChu.png
+INPUT .\Images\Librarian_TrangChu.png
+INPUT .\Images\Librarian_QuanLyLuuThong.png
+INPUT .\Images\Librarian_QuanLyLuuThong.png
+INPUT .\Images\Librarian_QuanLyLuuThong.png
+INPUT .\Images\Librarian_QuanLyLuuThong.png
+INPUT .\Images\Librarian_QuanLyLuuThong.png
+INPUT .\Images\Librarian_QuanLyLuuThong.png
+INPUT .\Images\Librarian_QuanLyLuuThong.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Librarian_QuanLyDanhMuc.png
+INPUT .\Images\Librarian_QuanLyDanhMuc.png
+INPUT .\Images\Librarian_QuanLyDanhMuc.png
+INPUT .\Images\Librarian_QuanLyDanhMuc.png
+INPUT .\Images\Librarian_QuanLyDanhMuc.png
+INPUT .\Images\Librarian_QuanLyDanhMuc.png
+INPUT .\Images\Librarian_QuanLyDanhMuc.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Librarian_TruyenThong.png
+INPUT .\Images\Librarian_TruyenThong.png
+INPUT .\Images\Librarian_TruyenThong.png
+INPUT .\Images\Librarian_TruyenThong.png
+INPUT .\Images\Librarian_TruyenThong.png
+INPUT .\Images\Librarian_TruyenThong.png
+INPUT .\Images\Librarian_TruyenThong.png
+INPUT .\Images\Librarian_BaoCao.png
+INPUT .\Images\Librarian_BaoCao.png
+INPUT .\Images\Librarian_BaoCao.png
+INPUT .\Images\Librarian_BaoCao.png
+INPUT .\Images\Librarian_BaoCao.png
+INPUT .\Images\Librarian_BaoCao.png
+INPUT .\Images\Librarian_BaoCao.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Librarian_HoSoCaiDat.png
+INPUT .\Images\Librarian_HoSoCaiDat.png
+INPUT .\Images\Librarian_HoSoCaiDat.png
+INPUT .\Images\Librarian_HoSoCaiDat.png
+INPUT .\Images\Librarian_HoSoCaiDat.png
+INPUT .\Images\Librarian_HoSoCaiDat.png
+INPUT .\Images\Librarian_HoSoCaiDat.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Admin_Dashboard.png
+INPUT .\Images\Admin_Dashboard.png
+INPUT .\Images\Admin_Dashboard.png
+INPUT .\Images\Admin_Dashboard.png
+INPUT .\Images\Admin_Dashboard.png
+INPUT .\Images\Admin_Dashboard.png
+INPUT .\Images\Admin_Dashboard.png
+INPUT .\Images\Admin_QuanLyTaiKhoan.png
+INPUT .\Images\Admin_QuanLyTaiKhoan.png
+INPUT .\Images\Admin_QuanLyTaiKhoan.png
+INPUT .\Images\Admin_QuanLyTaiKhoan.png
+INPUT .\Images\Admin_QuanLyTaiKhoan.png
+INPUT .\Images\Admin_QuanLyTaiKhoan.png
+INPUT .\Images\Admin_QuanLyTaiKhoan.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Admin_CauHinhHeThong.png
+INPUT .\Images\Admin_CauHinhHeThong.png
+INPUT .\Images\Admin_CauHinhHeThong.png
+INPUT .\Images\Admin_CauHinhHeThong.png
+INPUT .\Images\Admin_CauHinhHeThong.png
+INPUT .\Images\Admin_CauHinhHeThong.png
+INPUT .\Images\Admin_CauHinhHeThong.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\Admin_QuanLyChiNhanh.png
+INPUT .\Images\Admin_QuanLyChiNhanh.png
+INPUT .\Images\Admin_QuanLyChiNhanh.png
+INPUT .\Images\Admin_QuanLyChiNhanh.png
+INPUT .\Images\Admin_QuanLyChiNhanh.png
+INPUT .\Images\Admin_QuanLyChiNhanh.png
+INPUT .\Images\Admin_QuanLyChiNhanh.png
+INPUT .\Images\Admin_NhatKyKiemToan.png
+INPUT .\Images\Admin_NhatKyKiemToan.png
+INPUT .\Images\Admin_NhatKyKiemToan.png
+INPUT .\Images\Admin_NhatKyKiemToan.png
+INPUT .\Images\Admin_NhatKyKiemToan.png
+INPUT .\Images\Admin_NhatKyKiemToan.png
+INPUT .\Images\Admin_NhatKyKiemToan.png
+INPUT .\Images\Admin_SaoLuuPhucHoi.png
+INPUT .\Images\Admin_SaoLuuPhucHoi.png
+INPUT .\Images\Admin_SaoLuuPhucHoi.png
+INPUT .\Images\Admin_SaoLuuPhucHoi.png
+INPUT .\Images\Admin_SaoLuuPhucHoi.png
+INPUT .\Images\Admin_SaoLuuPhucHoi.png
+INPUT .\Images\Admin_SaoLuuPhucHoi.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Contents\KiemThuHeThong.tex
+INPUT .\Contents\KiemThuHeThong.tex
+INPUT .\Contents\KiemThuHeThong.tex
+INPUT .\Contents\KiemThuHeThong.tex
+INPUT Contents\KiemThuHeThong.tex
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmss8.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmtt8.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmmi8.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmsy8.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmss10.tfm
+INPUT .\Images\unit_test_result.png
+INPUT .\Images\unit_test_result.png
+INPUT .\Images\unit_test_result.png
+INPUT .\Images\unit_test_result.png
+INPUT .\Images\unit_test_result.png
+INPUT .\Images\unit_test_result.png
+INPUT .\Images\unit_test_result.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\integration_test_result.png
+INPUT .\Images\integration_test_result.png
+INPUT .\Images\integration_test_result.png
+INPUT .\Images\integration_test_result.png
+INPUT .\Images\integration_test_result.png
+INPUT .\Images\integration_test_result.png
+INPUT .\Images\integration_test_result.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\system_test_result.png
+INPUT .\Images\system_test_result.png
+INPUT .\Images\system_test_result.png
+INPUT .\Images\system_test_result.png
+INPUT .\Images\system_test_result.png
+INPUT .\Images\system_test_result.png
+INPUT .\Images\system_test_result.png
+INPUT .\Images\quality_test_result.png
+INPUT .\Images\quality_test_result.png
+INPUT .\Images\quality_test_result.png
+INPUT .\Images\quality_test_result.png
+INPUT .\Images\quality_test_result.png
+INPUT .\Images\quality_test_result.png
+INPUT .\Images\quality_test_result.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\summary_test_result.png
+INPUT .\Images\summary_test_result.png
+INPUT .\Images\summary_test_result.png
+INPUT .\Images\summary_test_result.png
+INPUT .\Images\summary_test_result.png
+INPUT .\Images\summary_test_result.png
+INPUT .\Images\summary_test_result.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Contents\DanhGiaAI.tex
+INPUT .\Contents\DanhGiaAI.tex
+INPUT .\Contents\DanhGiaAI.tex
+INPUT .\Contents\DanhGiaAI.tex
+INPUT Contents\DanhGiaAI.tex
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr7t.tfm
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\zptmcm7y.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmsy10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\symbol\psyr.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
+INPUT C:\Users\mrpartis\AppData\Local\MiKTeX\fonts\tfm\public\rsfs\rsfs10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\zptmcm7m.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\psyro.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmmi10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmri8r.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\zptmcm7v.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmex10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\symbol\psyr.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\zptmcm7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmr10.tfm
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Contents\TongKet.tex
+INPUT .\Contents\TongKet.tex
+INPUT .\Contents\TongKet.tex
+INPUT .\Contents\TongKet.tex
+INPUT Contents\TongKet.tex
+INPUT .\Outro\TaiLieuThamKhao.tex
+INPUT .\Outro\TaiLieuThamKhao.tex
+INPUT .\Outro\TaiLieuThamKhao.tex
+INPUT .\Outro\TaiLieuThamKhao.tex
+INPUT Outro\TaiLieuThamKhao.tex
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT .\Images\hcmut.png
+INPUT main.aux
+INPUT .\main.out
+INPUT .\main.out
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi8.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi8.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmr10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmr10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmss8.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmss8.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy8.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy8.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmtt10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmtt10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmtt8.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmtt8.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\symbols\msam10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\symbols\msam10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\urw\symbol\usyr.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\urw\symbol\usyr.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\urw\times\utmb8a.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\urw\times\utmb8a.pfb
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\fonts\type1\vntex\urwvn\utmb8v.pfb
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\fonts\type1\vntex\urwvn\utmb8v.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\urw\times\utmr8a.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\urw\times\utmr8a.pfb
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\fonts\type1\vntex\urwvn\utmr8v.pfb
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\fonts\type1\vntex\urwvn\utmr8v.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\urw\times\utmri8a.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\urw\times\utmri8a.pfb
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\fonts\type1\vntex\vnr\vntt10.pfb
+INPUT C:\Users\mrpartis\AppData\Roaming\MiKTeX\fonts\type1\vntex\vnr\vntt10.pfb
