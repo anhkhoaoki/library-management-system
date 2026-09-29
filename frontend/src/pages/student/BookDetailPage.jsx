@@ -270,7 +270,9 @@ export default function BookDetailPage() {
                       disabled={processing}
                       className="w-full py-3 rounded-xl font-bold text-label-md border-2 border-error/40 text-error hover:bg-error/5 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                     >
-                      <span className="material-symbols-outlined text-[18px]">cancel</span>
+                      <span className={`material-symbols-outlined text-[18px] ${processing ? 'animate-spin' : ''}`}>
+                        {processing ? 'progress_activity' : 'cancel'}
+                      </span>
                       {processing ? 'Đang xử lý...' : 'Hủy đặt chỗ'}
                     </button>
                   )}
@@ -284,7 +286,7 @@ export default function BookDetailPage() {
                       disabled={processing}
                       className="w-full py-4 rounded-xl font-bold text-title-md bg-primary text-on-primary hover:bg-primary/90 shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                     >
-                      <span className="material-symbols-outlined">
+                      <span className={`material-symbols-outlined ${processing ? 'animate-spin' : ''}`}>
                         {processing ? 'progress_activity' : 'shopping_cart_checkout'}
                       </span>
                       {processing ? 'Đang gửi yêu cầu...' : 'Yêu cầu mượn ngay'}
@@ -295,7 +297,9 @@ export default function BookDetailPage() {
                       disabled={processing}
                       className="w-full py-4 rounded-xl font-bold text-title-md bg-tertiary text-on-tertiary hover:bg-tertiary/90 shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                     >
-                      <span className="material-symbols-outlined">local_shipping</span>
+                      <span className={`material-symbols-outlined ${processing ? 'animate-spin' : ''}`}>
+                        {processing ? 'progress_activity' : 'local_shipping'}
+                      </span>
                       {processing ? 'Đang gửi...' : 'Yêu cầu luân chuyển'}
                     </button>
                   ) : (
@@ -304,7 +308,9 @@ export default function BookDetailPage() {
                       disabled={processing}
                       className="w-full py-4 rounded-xl font-bold text-title-md bg-secondary text-on-secondary hover:bg-secondary/90 shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                     >
-                      <span className="material-symbols-outlined">event_seat</span>
+                      <span className={`material-symbols-outlined ${processing ? 'animate-spin' : ''}`}>
+                        {processing ? 'progress_activity' : 'event_seat'}
+                      </span>
                       {processing ? 'Đang đặt chỗ...' : 'Đặt giữ chỗ (Hàng đợi)'}
                     </button>
                   )}

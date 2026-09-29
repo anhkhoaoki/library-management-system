@@ -23,6 +23,7 @@ import CatalogPage from './pages/librarian/CatalogPage';
 import CommunicationsPage from './pages/librarian/CommunicationsPage';
 import ReportsPage from './pages/librarian/ReportsPage';
 import TransferManagementPage from './pages/librarian/TransferManagementPage';
+import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
 function App() {
@@ -36,33 +37,38 @@ function App() {
           <Route path="/verify-otp" element={<VerifyOtpPage />} />
 
           {/* Student Routes */}
-          <Route path="/dashboard/student" element={<StudentDashboard />} />
-          <Route path="/dashboard/student/search" element={<StudentSearchPage />} />
-          <Route path="/dashboard/student/book/:id" element={<BookDetailPage />} />
-          <Route path="/dashboard/student/borrowed-books" element={<BorrowedBooksPage />} />
-          <Route path="/dashboard/student/reservations" element={<ReservationsPage />} />
-          <Route path="/dashboard/student/history" element={<HistoryPage />} />
-          {/* <Route path="/dashboard/student/digital-resources" element={<DigitalResourcesPage />} /> */}
-          <Route path="/dashboard/student/profile" element={<ProfilePage />} />
-          <Route path="/dashboard/student/settings" element={<ProfilePage />} />
+          <Route element={<ProtectedRoute allowedRoles={['READER']} />}>
+            <Route path="/dashboard/student" element={<StudentDashboard />} />
+            <Route path="/dashboard/student/search" element={<StudentSearchPage />} />
+            <Route path="/dashboard/student/book/:id" element={<BookDetailPage />} />
+            <Route path="/dashboard/student/borrowed-books" element={<BorrowedBooksPage />} />
+            <Route path="/dashboard/student/reservations" element={<ReservationsPage />} />
+            <Route path="/dashboard/student/history" element={<HistoryPage />} />
+            {/* <Route path="/dashboard/student/digital-resources" element={<DigitalResourcesPage />} /> */}
+            <Route path="/dashboard/student/profile" element={<ProfilePage />} />
+            <Route path="/dashboard/student/settings" element={<ProfilePage />} />
+          </Route>
 
           {/* Admin Routes */}
-          <Route path="/dashboard/admin" element={<AdminDashboard />} />
-          <Route path="/dashboard/admin/users" element={<AdminUsersPage />} />
-          <Route path="/dashboard/admin/branches" element={<AdminBranchesPage />} />
-          <Route path="/dashboard/admin/logs" element={<AdminLogsPage />} />
-          <Route path="/dashboard/admin/backup" element={<AdminBackupPage />} />
-          <Route path="/dashboard/admin/settings" element={<AdminSettingsPage />} />
+          <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
+            <Route path="/dashboard/admin" element={<AdminDashboard />} />
+            <Route path="/dashboard/admin/users" element={<AdminUsersPage />} />
+            <Route path="/dashboard/admin/branches" element={<AdminBranchesPage />} />
+            <Route path="/dashboard/admin/logs" element={<AdminLogsPage />} />
+            <Route path="/dashboard/admin/backup" element={<AdminBackupPage />} />
+            <Route path="/dashboard/admin/settings" element={<AdminSettingsPage />} />
+          </Route>
 
           {/* Librarian Routes */}
-          <Route path="/dashboard/librarian" element={<LibrarianDashboard />} />
-          <Route path="/dashboard/librarian/circulation" element={<CirculationPage />} />
-          <Route path="/dashboard/librarian/catalog" element={<CatalogPage />} />
-          <Route path="/dashboard/librarian/news" element={<CommunicationsPage />} />
-          <Route path="/dashboard/librarian/reports" element={<ReportsPage />} />
-          <Route path="/dashboard/librarian/transfers" element={<TransferManagementPage />} />
-          <Route path="/dashboard/librarian/settings" element={<ProfilePage />} />
-
+          <Route element={<ProtectedRoute allowedRoles={['LIBRARIAN']} />}>
+            <Route path="/dashboard/librarian" element={<LibrarianDashboard />} />
+            <Route path="/dashboard/librarian/circulation" element={<CirculationPage />} />
+            <Route path="/dashboard/librarian/catalog" element={<CatalogPage />} />
+            <Route path="/dashboard/librarian/news" element={<CommunicationsPage />} />
+            <Route path="/dashboard/librarian/reports" element={<ReportsPage />} />
+            <Route path="/dashboard/librarian/transfers" element={<TransferManagementPage />} />
+            <Route path="/dashboard/librarian/settings" element={<ProfilePage />} />
+          </Route>
           {/* Redirect root to student dashboard */}
           <Route path="/" element={<Navigate to="/dashboard/student" replace />} />
 

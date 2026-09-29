@@ -15,6 +15,9 @@ export default function CirculationPage() {
   const [readerBorrows, setReaderBorrows] = useState([]);
   const [readerFines, setReaderFines] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isFetchingReader, setIsFetchingReader] = useState(false);
+  const [isBorrowing, setIsBorrowing] = useState(false);
+  const [isReturning, setIsReturning] = useState(false);
   const [error, setError] = useState('');
 
   // Quick Book Lookup State
@@ -37,6 +40,7 @@ export default function CirculationPage() {
   const handleReaderLookup = async () => {
     const code = readerCode || location.state?.readerCode;
     if (!code) return;
+    setIsFetchingReader(true);
     setLoading(true);
     setError('');
     try {
@@ -64,6 +68,7 @@ export default function CirculationPage() {
       setReaderFines([]);
     }
     setLoading(false);
+    setIsFetchingReader(false);
   };
 
   const handleQuickLookup = async () => {
@@ -154,7 +159,7 @@ export default function CirculationPage() {
 
   const handleBorrow = async () => {
     if (!reader || !barcode) return;
-    setLoading(true);
+    setIsBorrowing(true);
     setError('');
     try {
       const response = await api.post('/circulation/borrow', {
@@ -179,13 +184,13 @@ export default function CirculationPage() {
     } catch (err) {
       setError(err.response?.data?.message || 'Lỗi khi mượn sách');
     }
-    setLoading(false);
+    setIsBorrowing(false);
   };
 
   const handleReturn = async (recordId = null) => {
     const idToReturn = recordId || barcode;
     if (!idToReturn) return;
-    setLoading(true);
+    setIsReturning(true);
     setError('');
     try {
       // Try return by ID first if we have it, otherwise try barcode then ID
@@ -219,7 +224,7 @@ export default function CirculationPage() {
     } catch (err) {
       setError(err.response?.data?.message || 'Lỗi khi trả sách');
     }
-    setLoading(false);
+    setIsReturning(false);
   };
 
   return (
@@ -259,14 +264,56 @@ export default function CirculationPage() {
                     onChange={(e) => setReaderCode(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleReaderLookup()}
                   />
-                  <button onClick={handleReaderLookup} className="bg-primary text-on-primary px-4 py-2 rounded-lg">
-                    <span className="material-symbols-outlined">{loading ? 'progress_activity' : 'search'}</span>
+                  <button onClick={handleReaderLookup} className="bg-primary text-on-primary px-4 py-2 rounded-lg transition-transform active:scale-95">
+                    <span className="material-symbols-outlined">{isFetchingReader ? 'progress_activity' : 'search'}</span>
                   </button>
                 </div>
               </div>
             </section>
 
-            {reader && (
+            {/* Skeletons when fetching reader */}
+            {isFetchingReader && (
+              <div className="flex flex-col gap-stack-md">
+                <section className="bg-white rounded-xl shadow-sm border border-outline-variant overflow-hidden animate-pulse">
+                  <div className="p-stack-md bg-surface-bright flex items-start gap-4">
+                    <div className="w-16 h-16 rounded-full bg-surface-container-high"></div>
+                    <div className="flex flex-col gap-2 w-full pt-1">
+                      <div className="h-5 bg-surface-container-high rounded-md w-1/2"></div>
+                      <div className="h-3 bg-surface-container-high rounded w-1/3 mt-1"></div>
+                      <div className="h-4 bg-surface-container-high rounded-full w-20 mt-2"></div>
+                    </div>
+                  </div>
+                  <div className="px-stack-md py-stack-sm grid grid-cols-2 gap-4 border-t border-outline-variant bg-surface-container-lowest">
+                    <div>
+                      <div className="h-2 bg-surface-container-high rounded w-12 mb-2"></div>
+                      <div className="h-4 bg-surface-container-high rounded w-24"></div>
+                    </div>
+                    <div>
+                      <div className="h-2 bg-surface-container-high rounded w-20 mb-2"></div>
+                      <div className="h-4 bg-surface-container-high rounded w-8"></div>
+                    </div>
+                  </div>
+                </section>
+                
+                <section className="bg-white rounded-xl shadow-sm border border-outline-variant overflow-hidden animate-pulse">
+                  <div className="p-stack-md border-b border-outline-variant bg-surface-container-low flex items-center justify-between">
+                    <div className="h-5 bg-surface-container-high rounded w-1/2"></div>
+                  </div>
+                  <div className="p-stack-md flex flex-col gap-5">
+                    <div className="flex justify-between">
+                      <div className="h-4 bg-surface-container-high rounded w-2/3"></div>
+                      <div className="h-4 bg-surface-container-high rounded w-16"></div>
+                    </div>
+                    <div className="flex justify-between">
+                      <div className="h-4 bg-surface-container-high rounded w-1/2"></div>
+                      <div className="h-4 bg-surface-container-high rounded w-16"></div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            )}
+
+            {!isFetchingReader && reader && (
               <section className="bg-white rounded-xl shadow-sm border border-outline-variant overflow-hidden animate-in fade-in slide-in-from-left-4">
                 <div className="p-stack-md bg-surface-bright flex items-start gap-4">
                   <div className="w-16 h-16 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-2xl shadow-sm">
@@ -320,8 +367,18 @@ export default function CirculationPage() {
                     {lookupError}
                   </p>
                 )}
+                {lookupLoading && (
+                  <div className="mt-3 p-3 bg-surface-container-lowest border border-outline-variant rounded-lg animate-pulse">
+                    <div className="h-4 bg-surface-container-high rounded w-3/4 mb-3"></div>
+                    <div className="flex flex-col gap-2">
+                      <div className="h-3 bg-surface-container-high rounded w-1/2"></div>
+                      <div className="h-3 bg-surface-container-high rounded w-1/3"></div>
+                      <div className="h-3 bg-surface-container-high rounded w-2/3"></div>
+                    </div>
+                  </div>
+                )}
                 
-                {lookupResult && (
+                {!lookupLoading && lookupResult && (
                   <div className="mt-3 p-3 bg-surface-container-lowest border border-outline-variant rounded-lg animate-in fade-in zoom-in-95 duration-200">
                     <h4 className="font-bold text-sm text-on-surface mb-1">{lookupResult.book.title}</h4>
                     <div className="flex flex-col gap-1 text-xs text-on-surface-variant">
@@ -530,18 +587,18 @@ export default function CirculationPage() {
                     />
                   </div>
                   <button 
-                    disabled={!reader || !barcode || loading}
+                    disabled={!reader || !barcode || isBorrowing || isReturning}
                     onClick={handleBorrow}
-                    className="bg-primary text-on-primary px-8 py-3 rounded-xl font-bold hover:bg-primary-container transition-all disabled:opacity-50"
+                    className="bg-primary text-on-primary px-8 py-3 rounded-xl font-bold hover:bg-primary-container transition-all disabled:opacity-50 flex items-center justify-center gap-2 min-w-[120px]"
                   >
-                    Mượn
+                    {isBorrowing ? <span className="material-symbols-outlined animate-spin">progress_activity</span> : 'Mượn'}
                   </button>
                   <button 
-                    disabled={!barcode || loading}
+                    disabled={!barcode || isBorrowing || isReturning}
                     onClick={handleReturn}
-                    className="bg-white border-2 border-primary text-primary px-8 py-3 rounded-xl font-bold hover:bg-primary/5 transition-all disabled:opacity-50"
+                    className="bg-white border-2 border-primary text-primary px-8 py-3 rounded-xl font-bold hover:bg-primary/5 transition-all disabled:opacity-50 flex items-center justify-center gap-2 min-w-[120px]"
                   >
-                    Trả
+                    {isReturning ? <span className="material-symbols-outlined animate-spin">progress_activity</span> : 'Trả'}
                   </button>
                 </div>
               </div>

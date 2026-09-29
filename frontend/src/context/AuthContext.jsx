@@ -20,12 +20,12 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await api.post('/auth/login', { email, password });
       const { user, accessToken, refreshToken } = response.data.data;
-      
+
       setUser(user);
       localStorage.setItem('user', JSON.stringify(user));
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
-      
+
       return { success: true, user };
     } catch (error) {
       return {

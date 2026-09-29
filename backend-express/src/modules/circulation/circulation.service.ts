@@ -26,6 +26,24 @@ const getConfig = async (key: string, defaultValue: string): Promise<string> => 
   return config?.value ?? defaultValue;
 };
 
+// ─── Helper: Re-index Reservation Queue ────────────────────────
+const reindexReservationQueue = async (bookId: string) => {
+  const activeReservations = await prisma.reservation.findMany({
+    where: {
+      bookId,
+      status: { in: [ReservationStatus.WAITING, ReservationStatus.READY_FOR_PICKUP] },
+    },
+    orderBy: { queuePosition: 'asc' },
+  });
+
+  for (let i = 0; i < activeReservations.length; i++) {
+    await prisma.reservation.update({
+      where: { id: activeReservations[i].id },
+      data: { queuePosition: i + 1 },
+    });
+  }
+};
+
 // ─── Helper: Count overdue days excluding holidays ────────────
 const calcOverdueDays = async (dueDate: Date, returnDate: Date): Promise<number> => {
   if (returnDate <= dueDate) return 0;
@@ -173,6 +191,9 @@ export const borrowDocument = async (data: {
       physicalCopy.bookId,
       dueDate,
     );
+
+    // Re-index hàng đợi sau khi người trước đã nhận sách thành công
+    await reindexReservationQueue(physicalCopy.bookId);
   }
 
   // Step 11: Write audit log
@@ -681,16 +702,7 @@ export const cancelReservation = async (reservationId: string, userId: string, r
       );
 
       // Re-index remaining waiting queue
-      const waitingList = await prisma.reservation.findMany({
-        where: { bookId: reservation.bookId, status: ReservationStatus.WAITING },
-        orderBy: { queuePosition: 'asc' },
-      });
-      for (let i = 0; i < waitingList.length; i++) {
-        await prisma.reservation.update({
-          where: { id: waitingList[i].id },
-          data: { queuePosition: i + 1 },
-        });
-      }
+      await reindexReservationQueue(reservation.bookId);
     } else {
       // No waiting user: free up copy & available count
       await prisma.book.update({
@@ -713,21 +725,7 @@ export const cancelReservation = async (reservationId: string, userId: string, r
     }
   } else if (previousStatus === ReservationStatus.WAITING) {
     // Re-index queue positions of remaining waiting reservations
-    const remainingWaiting = await prisma.reservation.findMany({
-      where: {
-        bookId: reservation.bookId,
-        status: ReservationStatus.WAITING,
-        queuePosition: { gt: previousQueuePosition },
-      },
-      orderBy: { queuePosition: 'asc' },
-    });
-
-    for (const r of remainingWaiting) {
-      await prisma.reservation.update({
-        where: { id: r.id },
-        data: { queuePosition: r.queuePosition - 1 },
-      });
-    }
+    await reindexReservationQueue(reservation.bookId);
   }
 
   return { message: 'Đã hủy đặt chỗ thành công' };
