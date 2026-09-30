@@ -5,6 +5,10 @@ import { Role } from '../../types/roles';
 
 const router = Router();
 
+// ─── Public endpoint (no auth) — for internal AI service use ──
+// Chỉ trả về các config không nhạy cảm phục vụ chatbot
+router.get('/public-config', adminController.getPublicConfig);
+
 // All admin routes require authentication
 router.use(authenticate);
 

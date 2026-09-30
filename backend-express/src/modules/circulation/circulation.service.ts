@@ -93,9 +93,8 @@ export const borrowDocument = async (data: {
     );
   }
 
-  // Step 3: Check borrow limit based on role
-  const maxBorrowKey =
-    user.role.name === 'READER' ? CONFIG_KEYS.MAX_BORROW_READER : CONFIG_KEYS.MAX_BORROW_FACULTY;
+  // Step 3: Check borrow limit
+  const maxBorrowKey = CONFIG_KEYS.MAX_BORROW_READER;
   const maxBorrow = parseInt(await getConfig(maxBorrowKey, '5'), 10);
 
   const currentBorrowCount = await prisma.borrowRecord.count({
@@ -185,12 +184,13 @@ export const borrowDocument = async (data: {
     });
 
     // Chỉ thông báo "đã duyệt" khi thủ thư xác nhận cho mượn
-    await notifyBorrowApproved(
+    // Fire-and-forget: gửi email ngầm — không block response
+    notifyBorrowApproved(
       data.userId,
       physicalCopy.book.title,
       physicalCopy.bookId,
       dueDate,
-    );
+    ).catch((err: Error) => console.error('[Notify] notifyBorrowApproved failed:', err.message));
 
     // Re-index hàng đợi sau khi người trước đã nhận sách thành công
     await reindexReservationQueue(physicalCopy.bookId);
@@ -303,11 +303,12 @@ export const returnDocument = async (data: {
     });
 
     // Notify next user in queue
-    await notifyReservationReady(
+    // Fire-and-forget: gửi email ngầm — không block response
+    notifyReservationReady(
       nextReservation.userId,
       physicalCopy.book.title,
       physicalCopy.bookId,
-    );
+    ).catch((err: Error) => console.error('[Notify] notifyReservationReady failed:', err.message));
   } else {
     // No reservation queue - set copy to available
     await prisma.physicalCopy.update({
@@ -497,8 +498,7 @@ export const reserveBook = async (userId: string, bookId: string) => {
   }
 
   // Check borrow limit — cannot reserve if already at max active borrows
-  const maxBorrowKey =
-    (user as any).role?.name === 'READER' ? CONFIG_KEYS.MAX_BORROW_READER : CONFIG_KEYS.MAX_BORROW_FACULTY;
+  const maxBorrowKey = CONFIG_KEYS.MAX_BORROW_READER;
   const maxBorrow = parseInt(await getConfig(maxBorrowKey, '5'), 10);
   const currentBorrowCount = await prisma.borrowRecord.count({
     where: { userId, status: BorrowStatus.ACTIVE },
@@ -583,8 +583,9 @@ export const reserveBook = async (userId: string, bookId: string) => {
       });
     }
     
-    // Notify user via Email and In-App notification that the book is ready for pickup
-    await notifyReservationReady(userId, book.title, bookId);
+    // Fire-and-forget: gửi email ngầm — không block response UI
+    notifyReservationReady(userId, book.title, bookId)
+      .catch((err: Error) => console.error('[Notify] notifyReservationReady failed:', err.message));
   }
 
   return {
@@ -695,11 +696,12 @@ export const cancelReservation = async (reservationId: string, userId: string, r
         },
       });
 
-      await notifyReservationReady(
+      // Fire-and-forget: gửi email ngầm — không block response
+      notifyReservationReady(
         nextReservation.userId,
         reservation.book.title,
         reservation.bookId,
-      );
+      ).catch((err: Error) => console.error('[Notify] notifyReservationReady failed:', err.message));
 
       // Re-index remaining waiting queue
       await reindexReservationQueue(reservation.bookId);

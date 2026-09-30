@@ -5,21 +5,19 @@
 
 ### 1.1 Đối tượng được mượn sách
 - Sinh viên đang theo học tại trường (có thẻ sinh viên hợp lệ).
-- Giảng viên, cán bộ nhân viên của trường.
 - Người dùng phải đăng nhập vào hệ thống BkLib bằng tài khoản được cấp.
 
 ### 1.2 Số lượng sách được mượn cùng lúc
-- Sinh viên (bạn đọc): tối đa **5 cuốn sách** cùng một lúc.
-- Giảng viên, cán bộ: tối đa **5 cuốn sách** cùng một lúc.
+- Sinh viên (bạn đọc) được mượn số lượng sách giới hạn theo quy định hiện hành (vui lòng hỏi hệ thống để biết con số cụ thể).
 - Giới hạn này được cấu hình bởi quản trị viên thư viện và có thể thay đổi theo từng thời kỳ.
 
 ### 1.3 Thời hạn mượn sách
-- Thời hạn mượn tiêu chuẩn: 14 ngày (2 tuần) kể từ ngày mượn.
-- Tài liệu tham khảo đặc biệt (có ký hiệu [TK]): tối đa 7 ngày.
+- Thời hạn mượn tiêu chuẩn được quy định trên hệ thống thư viện.
+- Tài liệu tham khảo đặc biệt (có ký hiệu [TK]): có thể có thời hạn ngắn hơn.
 
 ### 1.4 Gia hạn mượn sách
-- Mỗi cuốn sách được phép gia hạn tối đa 2 lần.
-- Mỗi lần gia hạn được thêm 7 ngày (1 tuần).
+- Sách có thể được gia hạn nhiều lần (theo quy định số lần tối đa hiện hành).
+- Mỗi lần gia hạn sẽ được thêm một số ngày nhất định theo quy định.
 - Điều kiện để gia hạn: sách chưa quá hạn và chưa có người khác đặt giữ chỗ cuốn đó.
 - Sinh viên có thể tự gia hạn trực tuyến qua hệ thống BkLib trong mục "Sách đang mượn".
 
@@ -28,9 +26,9 @@
 ## 2. QUY ĐỊNH TRẢ SÁCH VÀ XỬ PHẠT
 
 ### 2.1 Phí phạt trễ hạn
-- Mức phạt: 2.000 đồng (hai nghìn đồng) mỗi ngày cho mỗi cuốn sách trễ hạn.
+- Hệ thống áp dụng mức phạt trễ hạn theo ngày cho mỗi cuốn sách trễ hạn.
 - Phí phạt được tính tự động từ ngày hết hạn cho đến ngày thực tế trả sách.
-- Ví dụ: Nếu trả trễ 5 ngày với 2 cuốn sách, tiền phạt = 5 ngày × 2 cuốn × 2.000đ = 20.000đ.
+- Công thức: Số ngày trễ × Số cuốn sách trễ × Phí phạt mỗi ngày.
 
 ### 2.2 Quy trình nộp phạt
 - Tiền phạt được xác nhận và thanh toán trực tiếp tại quầy thư viện.
@@ -48,13 +46,13 @@
 
 ### 3.1 Điều kiện đặt giữ chỗ
 - Chỉ có thể đặt giữ chỗ khi tất cả các bản sao của cuốn sách đã được mượn hết (không còn sách để mượn trực tiếp).
-- **Không thể đặt giữ chỗ nếu bạn đang mượn đủ số lượng tối đa (5 tài liệu)**. Bạn cần trả bớt sách trước.
+- **Không thể đặt giữ chỗ nếu bạn đang mượn đủ số lượng tối đa**. Bạn cần trả bớt sách trước.
 - Không thể đặt giữ chỗ nếu có tiền phạt chưa thanh toán hoặc có sách quá hạn chưa trả.
 
 ### 3.2 Thông báo và thời hạn nhận sách
 - Khi sách được trả và đến lượt của bạn, hệ thống sẽ gửi thông báo qua email và thông báo trong hệ thống BkLib.
-- Sau khi nhận thông báo, sinh viên có 3 ngày để đến thư viện nhận sách.
-- Nếu quá 3 ngày không đến nhận, lượt đặt chỗ sẽ bị hủy tự động và chuyển sang người tiếp theo trong hàng chờ.
+- Sau khi nhận thông báo, sinh viên có một khoảng thời hạn (theo quy định hiện hành) để đến thư viện nhận sách.
+- Nếu quá thời hạn không đến nhận, lượt đặt chỗ sẽ bị hủy tự động và chuyển sang người tiếp theo trong hàng chờ.
 
 ### 3.3 Hủy đặt giữ chỗ
 - Sinh viên có thể tự hủy đặt giữ chỗ bất kỳ lúc nào qua hệ thống BkLib trong mục "Sách đang đặt".
@@ -92,7 +90,7 @@
 ## 6. CÂU HỎI THƯỜNG GẶP (FAQ)
 
 **Hỏi: Tôi quên trả sách đúng hạn, phải làm gì?**
-Trả lời: Hãy trả sách càng sớm càng tốt. Hệ thống sẽ tự động tính tiền phạt theo số ngày trễ (2.000đ/ngày/cuốn). Bạn có thể xem số tiền phạt trong mục "Thông tin tài khoản" và thanh toán tại quầy thư viện.
+Trả lời: Hãy trả sách càng sớm càng tốt. Hệ thống sẽ tự động tính tiền phạt theo số ngày trễ. Bạn có thể xem số tiền phạt trong mục "Thông tin tài khoản" và thanh toán tại quầy thư viện.
 
 **Hỏi: Tôi có thể mượn sách cho người khác không?**
 Trả lời: Không. Thẻ thư viện và tài khoản BkLib chỉ được sử dụng bởi chính chủ sở hữu. Mỗi lần mượn sách, thủ thư sẽ đối chiếu thẻ sinh viên.
@@ -119,7 +117,7 @@ Trả lời: Cơ sở Dĩ An: (028) 3724-4270. Cơ sở Lý Thường Kiệt: (0
 Trả lời: Có. Bạn có thể trả sách ở bất kỳ cơ sở thư viện nào trong hệ thống BkLib, không cần phải trả đúng cơ sở đã mượn.
 
 **Hỏi: Mỗi lần mượn sách được mấy quyển?**
-Trả lời: Tất cả bạn đọc (sinh viên và giảng viên) đều được mượn tối đa **5 cuốn** cùng lúc. Khi đã mượn đủ 5 cuốn, bạn cần trả bớt sách mới có thể mượn thêm hoặc đặt giữ chỗ cuốn khác.
+Trả lời: Bạn đọc được mượn tối đa số lượng sách theo quy định hệ thống (vui lòng hỏi chatbot để biết con số hiện tại). Khi đã mượn đủ số lượng tối đa, bạn cần trả bớt sách mới có thể mượn thêm hoặc đặt giữ chỗ cuốn khác.
 
-**Hỏi: Tôi có thể đặt giữ chỗ sách khi đang mượn đủ 5 cuốn không?**
-Trả lời: Không. Hệ thống sẽ không cho phép đặt giữ chỗ nếu bạn đang mượn đủ số lượng tối đa (5 cuốn). Bạn cần trả bớt ít nhất 1 cuốn trước khi có thể đặt thêm.
+**Hỏi: Tôi có thể đặt giữ chỗ sách khi đang mượn đủ số lượng tối đa không?**
+Trả lời: Không. Hệ thống sẽ không cho phép đặt giữ chỗ nếu bạn đang mượn đủ số lượng tối đa. Bạn cần trả bớt ít nhất 1 cuốn trước khi có thể đặt thêm.

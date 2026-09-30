@@ -87,6 +87,29 @@ export const updateSystemConfig = async (req: Request, res: Response, next: Next
   } catch (err) { next(err); }
 };
 
+// ─── Public config (no auth) — for AI chatbot context ────────
+// Chỉ expose các thông số thư viện không nhạy cảm
+export const getPublicConfig = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const configs = await adminService.getSystemConfig();
+    const PUBLIC_KEYS = [
+      'borrow_duration_days',
+      'max_borrow_limit_reader',
+      'fine_rate_per_day',
+      'max_renew_count',
+      'renew_duration_days',
+      'pickup_deadline_days',
+    ];
+    const publicConfigs = configs
+      .filter((c: any) => PUBLIC_KEYS.includes(c.key))
+      .reduce((acc: Record<string, string>, c: any) => {
+        acc[c.key] = c.value;
+        return acc;
+      }, {});
+    res.status(200).json({ success: true, data: publicConfigs });
+  } catch (err) { next(err); }
+};
+
 // ─── UC-ADM-05: Branch Management ────────────────────────────
 export const getBranches = async (req: Request, res: Response, next: NextFunction) => {
   try {

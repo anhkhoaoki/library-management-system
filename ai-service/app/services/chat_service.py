@@ -1,16 +1,34 @@
 """
 Chatbot Service — UC-AI-02 (RAG Only)
-Kiến trúc đơn giản hóa:
-  - Chỉ dùng RAG để trả lời câu hỏi về nội quy/FAQ thư viện
-  - Không dùng Function Calling hay xử lý dữ liệu cá nhân người dùng
+Kiến trúc:
+  - Dùng RAG để trả lời câu hỏi về nội quy/FAQ thư viện
+  - Fetch system config thực từ Backend mỗi lần chat để inject vào prompt
+    → Chatbot luôn trả lời đúng dù Admin thay đổi thông số bất kỳ lúc nào
   - SSE generator: stream token từng chữ về frontend
 """
 
+import asyncio
+import httpx
 from typing import List, AsyncGenerator
 from google import genai
 
 from app.core.config import settings
 from app.services.rag_service import retrieve_context
+
+# ─── Backend internal URL ────────────────────────────────────────
+BACKEND_URL = getattr(settings, "BACKEND_URL", "http://localhost:3000")
+_PUBLIC_CONFIG_URL = f"{BACKEND_URL}/api/v1/admin/public-config"
+
+# ─── Default fallback values (used if backend unreachable) ───────
+_DEFAULT_CONFIG = {
+    "borrow_duration_days": "14",
+    "max_borrow_limit_reader": "5",
+    "max_borrow_limit_faculty": "5",
+    "fine_rate_per_day": "2000",
+    "max_renew_count": "2",
+    "renew_duration_days": "7",
+    "pickup_deadline_days": "3",
+}
 
 # ─── Khởi tạo Gemini client ──────────────────────────────────────
 class GoogleClientWrapper:
@@ -24,7 +42,7 @@ class GoogleClientWrapper:
     @property
     def models(self):
         return self._fallback.models if (self._use_fallback and self._fallback) else self._primary.models
-    
+
     def switch_to_fallback(self):
         if self._fallback and not self._use_fallback:
             self._use_fallback = True
@@ -36,14 +54,56 @@ _google_client = GoogleClientWrapper()
 MODEL = settings.GEMINI_MODEL if not settings.GEMINI_MODEL.startswith("models/") else settings.GEMINI_MODEL.replace("models/", "")
 
 
-# ─── System Prompt ───────────────────────────────────────────────
-BASE_SYSTEM_PROMPT = """Bạn là "Thư Bé" - trợ lý ảo thông minh của Thư viện Đại học BkLib.
+# ─── Fetch live config from backend ─────────────────────────────
+async def _fetch_live_config() -> dict:
+    """
+    Gọi endpoint public của backend để lấy cấu hình thư viện thực tế.
+    Timeout 3s — nếu không kết nối được thì dùng giá trị mặc định.
+    """
+    try:
+        async with httpx.AsyncClient(timeout=3.0) as client:
+            resp = await client.get(_PUBLIC_CONFIG_URL)
+            if resp.status_code == 200:
+                data = resp.json().get("data", {})
+                if data:
+                    # Merge: backend values override defaults
+                    merged = {**_DEFAULT_CONFIG, **data}
+                    print(f"[ChatService] ✅ Loaded live config: {merged}")
+                    return merged
+    except Exception as e:
+        print(f"[ChatService] ⚠️ Cannot fetch config from backend: {e}. Using defaults.")
+    return _DEFAULT_CONFIG
+
+
+# ─── Build dynamic system prompt ────────────────────────────────
+def _build_system_prompt(cfg: dict) -> str:
+    """
+    Tạo system prompt có nhúng thông số thực tế từ DB.
+    Phần [THÔNG SỐ HIỆN HÀNH] override mọi thông tin trong file FAQ nếu xung đột.
+    """
+    borrow_days     = cfg.get("borrow_duration_days", "14")
+    max_reader      = cfg.get("max_borrow_limit_reader", "5")
+    fine_rate       = int(cfg.get("fine_rate_per_day", "2000"))
+    max_renew       = cfg.get("max_renew_count", "2")
+    renew_days      = cfg.get("renew_duration_days", "7")
+    pickup_deadline = cfg.get("pickup_deadline_days", "3")
+
+    return f"""Bạn là "Thư Bé" - trợ lý ảo thông minh của Thư viện Đại học BkLib.
 Nhiệm vụ của bạn là hỗ trợ bạn đọc về các nội quy, quy định và thủ tục của thư viện.
 Luôn trả lời bằng tiếng Việt, thân thiện, ngắn gọn và chuyên nghiệp.
 Tối đa 200 từ mỗi câu trả lời.
-Nếu câu hỏi nằm ngoài phạm vi nội quy thư viện, lịch sự từ chối và hướng dẫn liên hệ thủ thư."""
+Nếu câu hỏi nằm ngoài phạm vi nội quy thư viện, lịch sự từ chối và hướng dẫn liên hệ thủ thư.
+
+[THÔNG SỐ HIỆN HÀNH — ƯU TIÊN CAO NHẤT, ghi đè mọi thông tin khác nếu mâu thuẫn]:
+- Thời hạn mượn tiêu chuẩn: {borrow_days} ngày
+- Số sách tối đa bạn đọc được mượn cùng lúc: {max_reader} cuốn
+- Phí phạt trả trễ: {fine_rate:,}đ/ngày/cuốn
+- Số lần gia hạn tối đa: {max_renew} lần
+- Mỗi lần gia hạn được thêm: {renew_days} ngày
+- Thời hạn đến nhận sách sau khi có thông báo "sách sẵn sàng": {pickup_deadline} ngày"""
 
 
+# ─── Format history ──────────────────────────────────────────────
 def _format_history(chat_history: List[dict]) -> str:
     """Định dạng lịch sử hội thoại cho prompt."""
     if not chat_history:
@@ -59,21 +119,25 @@ def _format_history(chat_history: List[dict]) -> str:
 async def generate_chat_stream(
     user_message: str,
     chat_history: List[dict],
-    **kwargs,  # Bỏ qua các tham số không dùng (user_id, user_context)
+    **kwargs,
 ) -> AsyncGenerator[str, None]:
     """
-    Truy xuất top-3 chunks liên quan từ ChromaDB (nội quy thư viện),
-    nhồi vào prompt rồi stream Gemini response.
+    1. Fetch config thực từ backend (3s timeout, fallback về default nếu lỗi).
+    2. Build system prompt động với thông số thực tế.
+    3. Retrieve top-3 chunks liên quan từ ChromaDB (nội quy thư viện).
+    4. Stream Gemini response về frontend.
     """
+    cfg = await _fetch_live_config()
+    system_prompt = _build_system_prompt(cfg)
     context = retrieve_context(user_message, top_k=3)
 
     if context:
-        prompt = f"""{BASE_SYSTEM_PROMPT}
+        prompt = f"""{system_prompt}
 
 Lịch sử hội thoại:
 {_format_history(chat_history)}
 
-Thông tin ngữ cảnh từ nội quy thư viện (chỉ dùng thông tin này để trả lời, không bịa đặt):
+Thông tin bổ sung từ tài liệu nội quy (dùng để bổ sung chi tiết, nhưng THÔNG SỐ HIỆN HÀNH ở trên mới là chính xác nhất nếu có mâu thuẫn):
 ---
 {context}
 ---
@@ -82,8 +146,7 @@ Câu hỏi của bạn đọc: {user_message}
 
 Trả lời:"""
     else:
-        # Không có context liên quan trong nội quy
-        prompt = f"""{BASE_SYSTEM_PROMPT}
+        prompt = f"""{system_prompt}
 
 Lịch sử hội thoại:
 {_format_history(chat_history)}
@@ -108,7 +171,6 @@ Trả lời:"""
         err_str = str(e)
         if ("429" in err_str or "RESOURCE_EXHAUSTED" in err_str) and ("Quota" in err_str or "quota" in err_str):
             if hasattr(_google_client, "switch_to_fallback") and _google_client.switch_to_fallback():
-                # Thử lại với fallback key
                 fallback_stream = _google_client.models.generate_content_stream(
                     model=MODEL,
                     contents=prompt,
@@ -118,7 +180,6 @@ Trả lời:"""
                     if chunk.text:
                         yield chunk.text
                 return
-        # Bắn lỗi ra ngoài nếu không xử lý được
         raise e
 
 
@@ -126,13 +187,23 @@ Trả lời:"""
 def generate_chat_response(
     user_message: str,
     chat_history: List[dict],
-    **kwargs,  # Bỏ qua các tham số không dùng
+    **kwargs,
 ) -> str:
-    """
-    Phiên bản non-streaming (dùng khi SSE không khả dụng).
-    """
+    """Phiên bản non-streaming (dùng khi SSE không khả dụng)."""
+    try:
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            # In async context, use nest_asyncio or create new loop
+            import nest_asyncio
+            nest_asyncio.apply()
+        cfg = loop.run_until_complete(_fetch_live_config())
+    except Exception:
+        cfg = _DEFAULT_CONFIG
+
+    system_prompt = _build_system_prompt(cfg)
     context = retrieve_context(user_message, top_k=3)
-    prompt = f"""{BASE_SYSTEM_PROMPT}
+
+    prompt = f"""{system_prompt}
 
 {f"Ngữ cảnh nội quy:{chr(10)}{context}{chr(10)}" if context else ""}
 Lịch sử: {_format_history(chat_history)}

@@ -401,10 +401,6 @@ export default function ChatWidget() {
                         {msg.role === 'assistant' ? (
                           <span>
                             {renderText(msg.text)}
-                            {/* Cursor nhấp nháy khi đang stream */}
-                            {msg.isStreaming && (
-                              <span className="inline-block w-0.5 h-3.5 bg-primary ml-0.5 animate-pulse align-middle" />
-                            )}
                           </span>
                         ) : (
                           msg.text
