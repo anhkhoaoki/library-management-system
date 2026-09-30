@@ -115,5 +115,13 @@ export const updateTransferStatus = async (
     );
   }
 
+  // Restore copy status if cancelled
+  if (status === TransferStatus.CANCELLED) {
+    await prisma.physicalCopy.update({
+      where: { id: transfer.physicalCopyId },
+      data: { status: CopyStatus.AVAILABLE },
+    });
+  }
+
   return updatedTransfer;
 };

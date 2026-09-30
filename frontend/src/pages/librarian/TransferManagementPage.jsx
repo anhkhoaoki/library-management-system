@@ -39,6 +39,8 @@ export default function TransferManagementPage() {
       await api.patch(`/branches/transfers/${id}/status`, { status });
       const msg = status === 'IN_TRANSIT' 
         ? 'Xác nhận đi thành công! Sách đang trong trạng thái vận chuyển.' 
+        : status === 'CANCELLED'
+        ? 'Hủy yêu cầu luân chuyển thành công. Bản sao đã được trả về trạng thái sẵn có.'
         : 'Xác nhận đến thành công! Sách đã được lưu kho cơ sở mới và hệ thống đã tạo lịch hẹn lấy sách (3 ngày) cho sinh viên.';
       alert(msg);
       setMessage({ type: 'success', text: msg });
@@ -48,6 +50,11 @@ export default function TransferManagementPage() {
       alert('Thao tác thất bại: ' + errMsg);
       setMessage({ type: 'error', text: errMsg });
     }
+  };
+
+  const handleCancelTransfer = async (id) => {
+    if (!window.confirm('Bạn có chắc muốn hủy yêu cầu luân chuyển này không?')) return;
+    handleUpdateStatus(id, 'CANCELLED');
   };
 
   return (
@@ -113,12 +120,20 @@ export default function TransferManagementPage() {
                       {console.log('Rendering transfer:', t.id, t.status)}
                       <div className="flex gap-2">
                         {t.status === 'REQUESTED' && (
-                          <button
-                            onClick={() => handleUpdateStatus(t.id, 'IN_TRANSIT')}
-                            className="bg-primary text-on-primary px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-primary/90 transition-all"
-                          >
-                            Xác nhận đi
-                          </button>
+                          <>
+                            <button
+                              onClick={() => handleUpdateStatus(t.id, 'IN_TRANSIT')}
+                              className="bg-primary text-on-primary px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-primary/90 transition-all"
+                            >
+                              Xác nhận đi
+                            </button>
+                            <button
+                              onClick={() => handleCancelTransfer(t.id)}
+                              className="bg-error/10 text-error border border-error/30 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-error/20 transition-all"
+                            >
+                              Hủy yêu cầu
+                            </button>
+                          </>
                         )}
                         {t.status === 'IN_TRANSIT' && (
                           <button

@@ -223,19 +223,7 @@ export default function ProfilePage() {
                       profileData.fullName.charAt(0)
                     )}
                   </div>
-                  <button 
-                    type="button"
-                    onClick={() => {
-                      const newUrl = prompt('Nhập link hình ảnh avatar của bạn:', profileData.avatarUrl);
-                      if (newUrl !== null) {
-                        setProfileData(prev => ({ ...prev, avatarUrl: newUrl }));
-                      }
-                    }}
-                    className="bg-surface-container-high text-on-surface hover:bg-surface-container-highest font-label-md text-label-md px-4 py-2 rounded-lg transition-colors flex items-center gap-2 border border-outline-variant"
-                  >
-                    <span className="material-symbols-outlined text-sm">photo_camera</span>
-                    Cập nhật ảnh
-                  </button>
+
                 </div>
                 
                 <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-stack-md w-full">
@@ -267,16 +255,18 @@ export default function ProfilePage() {
                       onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
                     />
                   </div>
-                  <div className="space-y-1">
-                    <label className="font-label-md text-label-md text-on-surface-variant font-bold">Mã số sinh viên</label>
-                    <input
-                      className="w-full bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg font-body-md text-body-md text-on-surface px-4 py-3"
-                      type="text"
-                      placeholder="Nhập MSSV nếu chưa có"
-                      value={profileData.studentId}
-                      onChange={(e) => setProfileData(prev => ({ ...prev, studentId: e.target.value }))}
-                    />
-                  </div>
+                  {profileData.role === 'READER' && (
+                    <div className="space-y-1">
+                      <label className="font-label-md text-label-md text-on-surface-variant font-bold">Mã số sinh viên</label>
+                      <input
+                        className="w-full bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg font-body-md text-body-md text-on-surface px-4 py-3"
+                        type="text"
+                        placeholder="Nhập MSSV nếu chưa có"
+                        value={profileData.studentId}
+                        onChange={(e) => setProfileData(prev => ({ ...prev, studentId: e.target.value }))}
+                      />
+                    </div>
+                  )}
                   <div className="space-y-1">
                     <label className="font-label-md text-label-md text-on-surface-variant font-bold">Chi nhánh sinh hoạt</label>
                     <select
@@ -289,7 +279,7 @@ export default function ProfilePage() {
                       <option value="branch-cs-02">CS2 - Dĩ An</option>
                     </select>
                   </div>
-                  {profileData.readerCode && (
+                  {profileData.role === 'READER' && profileData.readerCode && (
                     <div className="space-y-1">
                       <label className="font-label-md text-label-md text-on-surface-variant font-bold">Mã bạn đọc</label>
                       <input

@@ -115,6 +115,12 @@ export const borrowDocument = async (data: {
   });
   if (!physicalCopy) throw createError('Không tìm thấy tài liệu với mã vạch này', 404);
 
+  // LIBRARIAN BRANCH VALIDATION
+  const librarian = await prisma.user.findUnique({ where: { id: data.processedById } });
+  if (librarian && librarian.branchId && librarian.branchId !== physicalCopy.branchId) {
+    throw createError('Sách này thuộc cơ sở khác. Bạn chỉ có thể xử lý sách thuộc cơ sở của mình.', 403);
+  }
+
   if (physicalCopy.status !== CopyStatus.AVAILABLE && physicalCopy.status !== CopyStatus.RESERVED) {
     throw createError(
       `Tài liệu hiện không khả dụng (trạng thái: ${physicalCopy.status})`,
@@ -233,6 +239,12 @@ export const returnDocument = async (data: {
     include: { book: true },
   });
   if (!physicalCopy) throw createError('Không tìm thấy tài liệu với mã vạch này', 404);
+
+  // LIBRARIAN BRANCH VALIDATION
+  const librarian = await prisma.user.findUnique({ where: { id: data.processedById } });
+  if (librarian && librarian.branchId && librarian.branchId !== physicalCopy.branchId) {
+    throw createError('Sách này thuộc cơ sở khác. Bạn chỉ có thể xử lý sách thuộc cơ sở của mình.', 403);
+  }
 
   // Step 2: Find active borrow record for this copy
   const borrowRecord = await prisma.borrowRecord.findFirst({

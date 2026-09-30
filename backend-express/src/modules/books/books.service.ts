@@ -30,9 +30,6 @@ export const searchBooks = async (query: {
     if (field === 'all' || field === 'title') {
       conditions.push({ title: { contains: keyword, mode: 'insensitive' } });
     }
-    if (field === 'all' || field === 'author') {
-      conditions.push({ authorNames: { hasSome: [keyword] } });
-    }
     if (field === 'all' || field === 'isbn') {
       conditions.push({ isbn: { contains: keyword } });
     }
@@ -40,6 +37,29 @@ export const searchBooks = async (query: {
   }
 
   if (query.categoryId) where['categoryId'] = query.categoryId;
+
+  // For author search: use raw SQL with array_to_string + ILIKE for partial match
+  // because Prisma's hasSome requires exact element match
+  let authorBookIds: string[] = [];
+  if (keyword && (field === 'all' || field === 'author')) {
+    const rawRows = await prisma.$queryRaw<{ id: string }[]>`
+      SELECT id FROM books
+      WHERE status = 'ACTIVE'
+        AND array_to_string("authorNames", ',') ILIKE ${'%' + keyword + '%'}
+    `;
+    authorBookIds = rawRows.map(r => r.id);
+  }
+
+  // If searching only by author field, override where to use only author matches
+  if (field === 'author' && keyword) {
+    where['id'] = { in: authorBookIds };
+    delete where['OR'];
+  } else if (field === 'all' && keyword && authorBookIds.length > 0) {
+    // Merge author matches with title/isbn OR conditions
+    const existingOr = (where['OR'] as Record<string, unknown>[]) || [];
+    existingOr.push({ id: { in: authorBookIds } });
+    where['OR'] = existingOr;
+  }
 
   const [total, books] = await Promise.all([
     prisma.book.count({ where }),

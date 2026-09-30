@@ -201,9 +201,9 @@ export default function BookDetailPage() {
               <p className="text-sm text-on-surface-variant mb-3">
                 {isAvailableAtMyBranch 
                   ? `Có sẵn tại chi nhánh của bạn (${copiesAtMyBranch.length} bản).` 
-                  : isAvailableGlobally 
+                  : copiesAtOtherBranches.length > 0
                     ? `Có sẵn tại chi nhánh khác. Bạn có thể yêu cầu luân chuyển.`
-                    : 'Tất cả các bản sao đang được mượn.'}
+                    : 'Tất cả các bản sao đang được mượn hoặc đặt chỗ.'}
               </p>
 
               {/* Dự kiến có sẵn — chỉ hiển thị khi hết sách và có dữ liệu trả sách */}
@@ -291,7 +291,7 @@ export default function BookDetailPage() {
                       </span>
                       {processing ? 'Đang gửi yêu cầu...' : 'Yêu cầu mượn ngay'}
                     </button>
-                  ) : isAvailableGlobally ? (
+                  ) : copiesAtOtherBranches.length > 0 ? (
                     <button
                       onClick={handleTransferRequest}
                       disabled={processing}
