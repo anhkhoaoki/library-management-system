@@ -181,17 +181,6 @@ export default function CommunicationsPage() {
                       <span className="font-body-md text-body-md text-on-surface">Email</span>
                     </label>
 
-                    {/* Checkbox SMS */}
-                    <label className={`flex items-center gap-2 cursor-pointer p-3 border border-outline-variant rounded-lg flex-1 hover:bg-surface-container-low transition-colors ${channels.includes('SMS') ? 'bg-surface-container-low border-primary' : 'bg-surface-container-lowest'}`}>
-                      <input 
-                        className="text-primary focus:ring-primary w-4 h-4 rounded border-outline-variant" 
-                        type="checkbox" 
-                        checked={channels.includes('SMS')}
-                        onChange={(e) => setChannels(prev => e.target.checked ? [...prev, 'SMS'] : prev.filter(c => c !== 'SMS'))}
-                        disabled={isSubmitting}
-                      />
-                      <span className="font-body-md text-body-md text-on-surface">SMS</span>
-                    </label>
                   </div>
                 </div>
 
