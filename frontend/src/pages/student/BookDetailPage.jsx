@@ -233,24 +233,29 @@ export default function BookDetailPage() {
               
               {userReservation ? (
                 // --- TRẠNG THÁI: ĐÃ ĐẶT CHỖ ---
+                (() => {
+                  // Chỉ hiện "Sách đã sẵn sàng" khi status READY_FOR_PICKUP VÀ đang ở vị trí #1 (hoặc không có hàng đợi)
+                  const isActuallyReady = userReservation.status === 'READY_FOR_PICKUP' && 
+                    (!userReservation.queuePosition || userReservation.queuePosition <= 1);
+                  return (
                 <div className="flex flex-col gap-3">
                   <div className={`rounded-xl p-4 border-2 ${
-                    userReservation.status === 'READY_FOR_PICKUP'
+                    isActuallyReady
                       ? 'bg-success-container border-success'
                       : 'bg-primary/8 border-primary/30'
                   }`}>
                     <div className="flex items-center gap-3 mb-3">
                       <span className={`material-symbols-outlined text-3xl ${
-                        userReservation.status === 'READY_FOR_PICKUP' ? 'text-success' : 'text-primary'
+                        isActuallyReady ? 'text-success' : 'text-primary'
                       }`}>
-                        {userReservation.status === 'READY_FOR_PICKUP' ? 'check_circle' : 'pending'}
+                        {isActuallyReady ? 'check_circle' : 'pending'}
                       </span>
                       <div>
                         <p className="font-bold text-on-surface">
-                          {userReservation.status === 'READY_FOR_PICKUP' ? 'Sách đã sẵn sàng!' : 'Đang trong hàng đợi'}
+                          {isActuallyReady ? 'Sách đã sẵn sàng!' : 'Đang trong hàng đợi'}
                         </p>
                         <p className="text-xs text-on-surface-variant">
-                          {userReservation.status === 'READY_FOR_PICKUP'
+                          {isActuallyReady
                             ? 'Vui lòng đến thư viện nhận sách trong 3 ngày'
                             : `Đặt chỗ từ ${new Date(userReservation.createdAt).toLocaleDateString('vi-VN')}`}
                         </p>
@@ -259,7 +264,12 @@ export default function BookDetailPage() {
                     {userReservation.queuePosition && (
                       <div className="flex items-center gap-2 text-sm text-primary bg-primary/5 rounded-lg px-3 py-2">
                         <span className="material-symbols-outlined text-[16px]">format_list_numbered</span>
-                        <span>Vị trí trong hàng đợi: <strong>#{userReservation.queuePosition}</strong></span>
+                        <span>
+                          {isActuallyReady
+                            ? 'Sách đang được giữ riêng cho bạn'
+                            : <>Vị trí trong hàng đợi: <strong>#{userReservation.queuePosition}</strong> — Dự kiến đến lượt sau khi người trước trả sách</>
+                          }
+                        </span>
                       </div>
                     )}
                   </div>
@@ -277,6 +287,8 @@ export default function BookDetailPage() {
                     </button>
                   )}
                 </div>
+                  );
+                })()
               ) : (
                 // --- CHƯA ĐẶT CHỖ: HIỆN BUTTON ---
                 <div className="flex flex-col gap-3">
