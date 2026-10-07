@@ -1,0 +1,15 @@
+name: Keep Services Warm
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping backend
+        run: curl -fsS --max-time 60 "${{ secrets.BACKEND_URL }}/health" || echo "backend ping failed"
+      - name: Ping AI service
+        run: curl -fsS --max-time 90 "${{ secrets.AI_SERVICE_URL }}/health" || echo "ai-service ping failed"
