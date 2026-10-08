@@ -77,18 +77,9 @@ export const startReservationExpiryJob = () => {
 
         if (nextInQueue) {
           const newExpiresAt = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000); // +3 days
-          await prisma.reservation.update({
-            where: { id: nextInQueue.id },
-            data: {
-              status: ReservationStatus.READY_FOR_PICKUP,
-              expiresAt: newExpiresAt,
-            },
-          });
 
-          // Also reserve a copy for next user
-          const nextCopy = await prisma.physicalCopy.findFirst({
-            where: { bookId: reservation.bookId, status: CopyStatus.AVAILABLE },
-          });
+          // Reserve a copy for the next user first (get the ID to link)
+          const nextCopy = await prisma.physicalCopy.findFirst({\n            where: { bookId: reservation.bookId, status: CopyStatus.AVAILABLE },\n          });
           if (nextCopy) {
             await prisma.physicalCopy.update({
               where: { id: nextCopy.id },
@@ -97,6 +88,29 @@ export const startReservationExpiryJob = () => {
             await prisma.book.update({
               where: { id: reservation.bookId },
               data: { availableCopies: { decrement: 1 } },
+            });
+          }
+
+          await prisma.reservation.update({
+            where: { id: nextInQueue.id },
+            data: {
+              status: ReservationStatus.READY_FOR_PICKUP,
+              notifiedAt: now,
+              expiresAt: newExpiresAt,
+              // Liên kết đúng bản copy vật lý đang được giữ
+              physicalCopyId: nextCopy?.id ?? null,
+            },
+          });
+
+          // Reindex hàng chờ còn lại (chỉ WAITING)
+          const remainingWaiting = await prisma.reservation.findMany({
+            where: { bookId: reservation.bookId, status: ReservationStatus.WAITING },
+            orderBy: { queuePosition: 'asc' },
+          });
+          for (let i = 0; i < remainingWaiting.length; i++) {
+            await prisma.reservation.update({
+              where: { id: remainingWaiting[i].id },
+              data: { queuePosition: i + 1 },
             });
           }
 
