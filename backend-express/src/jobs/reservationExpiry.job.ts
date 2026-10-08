@@ -79,7 +79,10 @@ export const startReservationExpiryJob = () => {
           const newExpiresAt = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000); // +3 days
 
           // Reserve a copy for the next user first (get the ID to link)
-          const nextCopy = await prisma.physicalCopy.findFirst({\n            where: { bookId: reservation.bookId, status: CopyStatus.AVAILABLE },\n          });
+          const nextCopy = await prisma.physicalCopy.findFirst({
+            where: { bookId: reservation.bookId, status: CopyStatus.AVAILABLE },
+          });
+
           if (nextCopy) {
             await prisma.physicalCopy.update({
               where: { id: nextCopy.id },
