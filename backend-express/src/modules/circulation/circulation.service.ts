@@ -27,18 +27,20 @@ const getConfig = async (key: string, defaultValue: string): Promise<string> => 
 };
 
 // ─── Helper: Re-index Reservation Queue ────────────────────────
+// Chỉ reindex các reservation ở trạng thái WAITING.
+// READY_FOR_PICKUP đã có bản copy riêng được giữ → không tính vào thứ tự chờ.
 const reindexReservationQueue = async (bookId: string) => {
-  const activeReservations = await prisma.reservation.findMany({
+  const waitingReservations = await prisma.reservation.findMany({
     where: {
       bookId,
-      status: { in: [ReservationStatus.WAITING, ReservationStatus.READY_FOR_PICKUP] },
+      status: ReservationStatus.WAITING,
     },
     orderBy: { queuePosition: 'asc' },
   });
 
-  for (let i = 0; i < activeReservations.length; i++) {
+  for (let i = 0; i < waitingReservations.length; i++) {
     await prisma.reservation.update({
-      where: { id: activeReservations[i].id },
+      where: { id: waitingReservations[i].id },
       data: { queuePosition: i + 1 },
     });
   }
@@ -525,8 +527,8 @@ export const reserveBook = async (userId: string, bookId: string) => {
   const book = await prisma.book.findUnique({ where: { id: bookId } });
   if (!book) throw createError('Tài liệu không tồn tại', 404);
 
-  // Check if available
-  const isAvailable = book.availableCopies > 0;
+  // Check if available (initial check — sẽ được xác nhận lại bằng truy vấn physicalCopy bên dưới)
+  let isAvailable = book.availableCopies > 0;
 
   // Check if the user is already borrowing this book
   const isBorrowing = await prisma.borrowRecord.findFirst({
@@ -548,13 +550,18 @@ export const reserveBook = async (userId: string, bookId: string) => {
   });
   if (alreadyReserved) throw createError('Bạn đã đặt giữ chỗ cuốn sách này rồi', 422);
 
+  // Đếm chỉ WAITING để tính vị trí hàng đợi đúng.
+  // READY_FOR_PICKUP không tính vào queue vì bản copy đó đã được giữ riêng.
   const queueCount = await prisma.reservation.count({
     where: {
       bookId,
-      status: { in: [ReservationStatus.WAITING, ReservationStatus.READY_FOR_PICKUP] },
+      status: ReservationStatus.WAITING,
     },
   });
 
+  // Tìm bản copy vật lý thực sự AVAILABLE (không chỉ dựa vào availableCopies counter).
+  // Điều này ngăn race condition: availableCopies có thể chưa decrement kịp
+  // trong khi copy đã bị đánh RESERVED cho người trước.
   let reservedCopy = null;
   if (isAvailable) {
     reservedCopy = await prisma.physicalCopy.findFirst({
@@ -569,13 +576,24 @@ export const reserveBook = async (userId: string, bookId: string) => {
         status: CopyStatus.AVAILABLE,
       },
     });
+
+    // Nếu availableCopies > 0 nhưng không có bản copy nào thực sự AVAILABLE
+    // (race condition / data inconsistency) → treat as not available, đưa vào WAITING.
+    if (!reservedCopy) {
+      isAvailable = false;
+    }
   }
+
+  // queuePosition:
+  //   - Nếu sách có sẵn ngay (READY_FOR_PICKUP): vị trí = 1 (không có ai chờ trước)
+  //   - Nếu phải chờ (WAITING): xếp sau tất cả người đang WAITING
+  const queuePosition = isAvailable ? 1 : queueCount + 1;
 
   const reservation = await prisma.reservation.create({
     data: {
       userId,
       bookId,
-      queuePosition: queueCount + 1,
+      queuePosition,
       status: isAvailable ? ReservationStatus.READY_FOR_PICKUP : ReservationStatus.WAITING,
       expiresAt: isAvailable ? new Date(Date.now() + 3 * 24 * 60 * 60 * 1000) : null,
       physicalCopyId: isAvailable && reservedCopy ? reservedCopy.id : null,
@@ -705,6 +723,8 @@ export const cancelReservation = async (reservationId: string, userId: string, r
           status: ReservationStatus.READY_FOR_PICKUP,
           notifiedAt: new Date(),
           expiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+          // Chuyển bản copy đang được giữ sang cho người tiếp theo trong hàng đợi
+          physicalCopyId: reservation.physicalCopyId,
         },
       });
 

@@ -61,54 +61,67 @@ export const notifyReservationReady = async (
   const title = 'Sách đặt giữ chỗ đã sẵn sàng';
   const content = `Cuốn sách "${bookTitle}" bạn đặt chỗ đã có tại thư viện. Vui lòng đến quầy thủ thư để xác nhận mượn trong vòng 3 ngày.`;
 
-  await prisma.notification.create({
-    data: {
-      userId,
-      type: NotificationType.RESERVATION_READY,
-      channel: NotificationChannel.IN_APP,
-      title,
-      content,
-      relatedId: bookId,
-      relatedType: 'Book',
-    },
-  });
+  // Tạo in-app notification — lỗi DB không được chặn việc gửi email bên dưới
+  try {
+    await prisma.notification.create({
+      data: {
+        userId,
+        type: NotificationType.RESERVATION_READY,
+        channel: NotificationChannel.IN_APP,
+        title,
+        content,
+        relatedId: bookId,
+        relatedType: 'Book',
+      },
+    });
+  } catch (dbErr) {
+    console.error('[Notify] Failed to create IN_APP notification for reservationReady:', dbErr);
+  }
 
-  const [user, settings] = await Promise.all([
-    prisma.user.findUnique({ where: { id: userId }, select: { email: true, fullName: true } }),
-    prisma.notificationSetting.findUnique({ where: { userId } }),
-  ]);
+  // Gửi email — độc lập với bước tạo notification ở trên
+  try {
+    const [user, settings] = await Promise.all([
+      prisma.user.findUnique({ where: { id: userId }, select: { email: true, fullName: true } }),
+      prisma.notificationSetting.findUnique({ where: { userId } }),
+    ]);
 
-  const emailEnabled = settings?.emailEnabled !== false;
-  const reservationReady = settings?.reservationReady !== false;
-
-  if (emailEnabled && reservationReady && user?.email) {
-    try {
-      const html = `
-        <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 24px; border: 1px solid #e5e7eb; border-radius: 8px;">
-          <h2 style="color: #1a1a2e; margin-bottom: 8px;">📚 Sách đặt giữ chỗ đã sẵn sàng</h2>
-          <p style="color: #4b5563;">Xin chào ${user.fullName || 'bạn đọc'},</p>
-          <p style="color: #4b5563;">Cuốn sách <strong>"${bookTitle}"</strong> bạn đặt chỗ đã có tại thư viện.</p>
-          <p style="color: #6b7280; font-size: 14px;">Vui lòng đến quầy thủ thư để xác nhận mượn trong vòng <strong>3 ngày</strong> kể từ hôm nay.</p>
-          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 16px 0;" />
-          <p style="color: #9ca3af; font-size: 12px;">Đây là email tự động từ hệ thống Thư viện số.</p>
-        </div>
-      `;
-      await sendMail({ to: user.email, subject: `[Thư viện] ${title}`, html });
-
-      await prisma.notification.create({
-        data: {
-          userId,
-          type: NotificationType.RESERVATION_READY,
-          channel: NotificationChannel.EMAIL,
-          title,
-          content,
-          relatedId: bookId,
-          relatedType: 'Book',
-        },
-      });
-    } catch (error) {
-      console.error('[Email] Failed to send reservation ready notification:', error);
+    if (!user?.email) {
+      console.warn(`[Notify] reservationReady: user ${userId} has no email, skipping.`);
+      return;
     }
+
+    const emailEnabled = settings?.emailEnabled !== false;
+    const reservationReady = settings?.reservationReady !== false;
+
+    if (!emailEnabled || !reservationReady) return;
+
+    const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 24px; border: 1px solid #e5e7eb; border-radius: 8px;">
+        <h2 style="color: #1a1a2e; margin-bottom: 8px;">📚 Sách đặt giữ chỗ đã sẵn sàng</h2>
+        <p style="color: #4b5563;">Xin chào ${user.fullName || 'bạn đọc'},</p>
+        <p style="color: #4b5563;">Cuốn sách <strong>"${bookTitle}"</strong> bạn đặt chỗ đã có tại thư viện.</p>
+        <p style="color: #6b7280; font-size: 14px;">Vui lòng đến quầy thủ thư để xác nhận mượn trong vòng <strong>3 ngày</strong> kể từ hôm nay.</p>
+        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 16px 0;" />
+        <p style="color: #9ca3af; font-size: 12px;">Đây là email tự động từ hệ thống Thư viện số.</p>
+      </div>
+    `;
+
+    await sendMail({ to: user.email, subject: `[Thư viện] ${title}`, html });
+    console.log(`[Notify] reservationReady email sent to ${user.email} for book ${bookId}`);
+
+    await prisma.notification.create({
+      data: {
+        userId,
+        type: NotificationType.RESERVATION_READY,
+        channel: NotificationChannel.EMAIL,
+        title,
+        content,
+        relatedId: bookId,
+        relatedType: 'Book',
+      },
+    });
+  } catch (error) {
+    console.error('[Notify] Failed to send reservationReady email:', error);
   }
 };
 
