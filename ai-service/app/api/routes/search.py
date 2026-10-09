@@ -19,6 +19,8 @@ from app.services.search_service import (
     _determine_confidence,
     generate_result_explanation,
     generate_suggested_queries,
+    _compute_adaptive_weights,
+    _keyword_score,
 )
 from app.services.vector_store import (
     upsert_books,
@@ -126,14 +128,14 @@ async def natural_language_search(request: SemanticSearchRequest):
             intent = None
 
     try:
-        # pgvector_search: encode query → tìm top-50 gần nhất trong PostgreSQL
-        results = pgvector_search(
+        # BƯỚC 1: Lấy kết quả thô từ pgvector (Cosine Similarity)
+        raw_results = pgvector_search(
             query=safe_query,
             limit=50,
-            min_similarity=0.10,
+            min_similarity=0.0, # Lấy rộng để Re-rank bằng keyword
         )
 
-        if not results:
+        if not raw_results:
             return SemanticSearchResponse(
                 results=[],
                 intent=intent,
@@ -142,6 +144,25 @@ async def natural_language_search(request: SemanticSearchRequest):
                 confidenceLevel="low",
                 suggestedQueries=generate_suggested_queries(safe_query),
             )
+
+        # BƯỚC 2: Tính Adaptive Hybrid Score (Re-ranking)
+        semantic_w, keyword_w = _compute_adaptive_weights(safe_query)
+        
+        for book in raw_results:
+            cosine_score = book.get("score", 0.0)
+            
+            title = book.get("title") or ""
+            summary = book.get("summary") or ""
+            author_names = book.get("authorNames") or []
+            text_context = " ".join([title, summary, " ".join(author_names)])
+            
+            kw_score = _keyword_score(normalized_query, text_context)
+            
+            hybrid_score = max(0.0, min(1.0, semantic_w * cosine_score + keyword_w * kw_score))
+            book["score"] = round(float(hybrid_score), 4)
+
+        # Sắp xếp lại theo điểm mới
+        results = sorted(raw_results, key=lambda x: x["score"], reverse=True)
 
         top_score = results[0].get("score", 0)
         confidence = _determine_confidence(top_score)
