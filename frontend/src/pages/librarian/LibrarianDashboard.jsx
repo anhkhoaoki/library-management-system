@@ -64,7 +64,7 @@ export default function LibrarianDashboard() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
-          <div className="bg-white p-stack-md rounded-xl shadow-sm border border-outline-variant">
+          <Link to="/dashboard/librarian/details/active_borrows" className="bg-white p-stack-md rounded-xl shadow-sm border border-outline-variant hover:bg-surface-container-low transition-colors block cursor-pointer">
             <div className="flex justify-between items-start mb-4">
               <div className="p-2 bg-primary-container rounded-lg text-on-primary-container">
                 <span className="material-symbols-outlined">book</span>
@@ -72,9 +72,9 @@ export default function LibrarianDashboard() {
               <span className="font-label-sm text-on-surface-variant">Đang mượn</span>
             </div>
             <h3 className="font-headline-lg text-on-surface">{overview.activeBorrows || 0}</h3>
-          </div>
+          </Link>
 
-          <div className="bg-white p-stack-md rounded-xl shadow-sm border border-outline-variant">
+          <Link to="/dashboard/librarian/details/overdue" className="bg-white p-stack-md rounded-xl shadow-sm border border-outline-variant hover:bg-surface-container-low transition-colors block cursor-pointer">
             <div className="flex justify-between items-start mb-4">
               <div className="p-2 bg-error-container rounded-lg text-on-error-container">
                 <span className="material-symbols-outlined">warning</span>
@@ -82,9 +82,9 @@ export default function LibrarianDashboard() {
               <span className="font-label-sm text-on-surface-variant">Quá hạn</span>
             </div>
             <h3 className="font-headline-lg text-on-surface">{overview.overdueCount || 0}</h3>
-          </div>
+          </Link>
 
-          <div className="bg-white p-stack-md rounded-xl shadow-sm border border-outline-variant">
+          <Link to="/dashboard/librarian/details/pending_reservations" className="bg-white p-stack-md rounded-xl shadow-sm border border-outline-variant hover:bg-surface-container-low transition-colors block cursor-pointer">
             <div className="flex justify-between items-start mb-4">
               <div className="p-2 bg-secondary-container rounded-lg text-on-secondary-container">
                 <span className="material-symbols-outlined">event_seat</span>
@@ -92,9 +92,9 @@ export default function LibrarianDashboard() {
               <span className="font-label-sm text-on-surface-variant">Yêu cầu mới</span>
             </div>
             <h3 className="font-headline-lg text-on-surface">{pendingReservations.length}</h3>
-          </div>
+          </Link>
 
-          <div className="bg-white p-stack-md rounded-xl shadow-sm border border-outline-variant">
+          <Link to="/dashboard/librarian/details/fines" className="bg-white p-stack-md rounded-xl shadow-sm border border-outline-variant hover:bg-surface-container-low transition-colors block cursor-pointer">
             <div className="flex justify-between items-start mb-4">
               <div className="p-2 bg-tertiary-container rounded-lg text-on-tertiary-container">
                 <span className="material-symbols-outlined">payments</span>
@@ -102,7 +102,7 @@ export default function LibrarianDashboard() {
               <span className="font-label-sm text-on-surface-variant">Phí phạt</span>
             </div>
             <h3 className="font-headline-lg text-on-surface">{(overview.totalPendingFineAmount || 0).toLocaleString()}đ</h3>
-          </div>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-gutter">

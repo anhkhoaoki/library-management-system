@@ -160,7 +160,7 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-stack-lg">
           
           {/* 1. Tổng số thành viên */}
-          <div className="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-surface-variant flex flex-col justify-between min-h-[140px]">
+          <Link to="/dashboard/admin/details/all_users" className="bg-surface-container-lowest hover:bg-surface-container-low transition-colors rounded-xl p-6 shadow-sm border border-surface-variant flex flex-col justify-between min-h-[140px] block cursor-pointer">
             <div className="flex justify-between items-start mb-2">
               <div className="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed">
                 <span className="material-symbols-outlined text-2xl">group</span>
@@ -176,10 +176,10 @@ export default function AdminDashboard() {
                 </p>
               )}
             </div>
-          </div>
+          </Link>
 
           {/* 2. Tổng số tài liệu */}
-          <div className="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-surface-variant flex flex-col justify-between min-h-[140px]">
+          <Link to="/dashboard/admin/details/all_books" className="bg-surface-container-lowest hover:bg-surface-container-low transition-colors rounded-xl p-6 shadow-sm border border-surface-variant flex flex-col justify-between min-h-[140px] block cursor-pointer">
             <div className="flex justify-between items-start mb-2">
               <div className="w-12 h-12 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed">
                 <span className="material-symbols-outlined text-2xl">library_books</span>
@@ -195,10 +195,10 @@ export default function AdminDashboard() {
                 </p>
               )}
             </div>
-          </div>
+          </Link>
 
           {/* 3. Đang được mượn */}
-          <div className="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-surface-variant flex flex-col justify-between min-h-[140px]">
+          <Link to="/dashboard/admin/details/active_borrows" className="bg-surface-container-lowest hover:bg-surface-container-low transition-colors rounded-xl p-6 shadow-sm border border-surface-variant flex flex-col justify-between min-h-[140px] block cursor-pointer">
             <div className="flex justify-between items-start mb-2">
               <div className="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed">
                 <span className="material-symbols-outlined text-2xl">book_2</span>
@@ -219,17 +219,17 @@ export default function AdminDashboard() {
                 </p>
               )}
             </div>
-          </div>
+          </Link>
 
           {/* 4. Tổng tiền phạt */}
-          <div className="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-surface-variant flex flex-col justify-between min-h-[140px]">
+          <Link to="/dashboard/admin/details/fines" className="bg-surface-container-lowest hover:bg-surface-container-low transition-colors rounded-xl p-6 shadow-sm border border-surface-variant flex flex-col justify-between min-h-[140px] block cursor-pointer">
             <div className="flex justify-between items-start mb-2">
               <div className="w-12 h-12 rounded-full bg-error-container text-on-error-container flex items-center justify-center">
                 <span className="material-symbols-outlined text-2xl">payments</span>
               </div>
             </div>
             <div>
-              <p className="font-body-md text-body-md text-on-surface-variant mb-1">Tổng tiền phạt tồn đọng</p>
+              <p className="font-body-md text-body-md text-on-surface-variant mb-1">Tổng tiền phạt</p>
               {loading ? (
                 <div className="h-9 w-32 bg-surface-variant animate-pulse rounded"></div>
               ) : (
@@ -238,7 +238,7 @@ export default function AdminDashboard() {
                 </p>
               )}
             </div>
-          </div>
+          </Link>
 
         </div>
 

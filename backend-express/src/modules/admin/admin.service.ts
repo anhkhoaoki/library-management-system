@@ -284,9 +284,8 @@ export const getDashboardStats = async () => {
       }),
       prisma.borrowRecord.count({ where: { borrowedAt: { gte: today } } }),
       prisma.borrowRecord.count({ where: { returnedAt: { gte: today } } }),
-      prisma.fine.count({ where: { status: FineStatus.PENDING } }),
+      prisma.fine.count(),
       prisma.fine.aggregate({
-        where: { status: FineStatus.PENDING },
         _sum: { totalAmount: true },
       }),
     ]);
@@ -378,9 +377,8 @@ export const getDashboardStats = async () => {
         overdueCount: fallbackSnapshot.borrowRecords.filter((record: { status?: string; dueDate?: string }) => record.status === 'ACTIVE' && record.dueDate && new Date(record.dueDate) < new Date()).length,
         newBorrowsToday: fallbackSnapshot.borrowRecords.filter((record: { borrowedAt?: string }) => record.borrowedAt && new Date(record.borrowedAt) >= today).length,
         returnsToday: fallbackSnapshot.borrowRecords.filter((record: { returnedAt?: string }) => record.returnedAt && new Date(record.returnedAt) >= today).length,
-        pendingFines: fallbackSnapshot.fines.filter((fine: { status?: string }) => fine.status === 'PENDING').length,
+        pendingFines: fallbackSnapshot.fines.length,
         totalPendingFineAmount: fallbackSnapshot.fines
-          .filter((fine: { status?: string }) => fine.status === 'PENDING')
           .reduce((sum: number, fine: { totalAmount?: number | string }) => sum + Number(fine.totalAmount ?? 0), 0),
       };
 
@@ -544,7 +542,7 @@ export const getAuditLogs = async (query: {
 
 // ─── UC-ADM-02: Export Report Data ───────────────────────────
 export const getReportData = async (query: {
-  type: 'most_borrowed' | 'fines' | 'overdue';
+  type: 'most_borrowed' | 'fines' | 'overdue' | 'active_borrows' | 'pending_reservations' | 'all_users' | 'all_books';
   fromDate?: string;
   toDate?: string;
 }) => {
@@ -583,10 +581,48 @@ export const getReportData = async (query: {
     return prisma.borrowRecord.findMany({
       where: { status: 'ACTIVE', dueDate: { lt: new Date() } },
       include: {
-        user: { select: { id: true, email: true, fullName: true } },
-        physicalCopy: { select: { book: { select: { title: true, isbn: true } } } },
+        user: { select: { id: true, email: true, fullName: true, readerCode: true, avatarUrl: true } },
+        physicalCopy: { select: { book: { select: { title: true, isbn: true, coverImageUrl: true } } } },
       },
       orderBy: { dueDate: 'asc' },
+    });
+  }
+
+  if (query.type === 'active_borrows') {
+    return prisma.borrowRecord.findMany({
+      where: { status: 'ACTIVE' },
+      include: {
+        user: { select: { id: true, email: true, fullName: true, readerCode: true, avatarUrl: true } },
+        physicalCopy: { select: { book: { select: { title: true, isbn: true, coverImageUrl: true } } } },
+      },
+      orderBy: { borrowedAt: 'desc' },
+    });
+  }
+
+  if (query.type === 'pending_reservations') {
+    return prisma.reservation.findMany({
+      where: { status: { in: ['WAITING', 'READY_FOR_PICKUP'] } },
+      include: {
+        user: { select: { id: true, email: true, fullName: true, readerCode: true, avatarUrl: true } },
+        book: { select: { title: true, isbn: true, coverImageUrl: true } },
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+  }
+
+  if (query.type === 'all_users') {
+    return prisma.user.findMany({
+      where: { deletedAt: null },
+      select: { id: true, fullName: true, email: true, readerCode: true, role: { select: { name: true } }, status: true, createdAt: true, avatarUrl: true },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  if (query.type === 'all_books') {
+    return prisma.book.findMany({
+      where: { status: { not: BookStatus.DELETED } },
+      select: { id: true, title: true, authorNames: true, isbn: true, availableCopies: true, totalCopies: true, coverImageUrl: true, category: { select: { name: true } } },
+      orderBy: { title: 'asc' },
     });
   }
 

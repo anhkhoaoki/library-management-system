@@ -24,6 +24,7 @@ import CommunicationsPage from './pages/librarian/CommunicationsPage';
 import ReportsPage from './pages/librarian/ReportsPage';
 import TransferManagementPage from './pages/librarian/TransferManagementPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import DashboardDetailsPage from './pages/shared/DashboardDetailsPage';
 import './App.css';
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
           {/* Admin Routes */}
           <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
             <Route path="/dashboard/admin" element={<AdminDashboard />} />
+            <Route path="/dashboard/admin/details/:type" element={<DashboardDetailsPage role="admin" />} />
             <Route path="/dashboard/admin/users" element={<AdminUsersPage />} />
             <Route path="/dashboard/admin/branches" element={<AdminBranchesPage />} />
             <Route path="/dashboard/admin/logs" element={<AdminLogsPage />} />
@@ -62,6 +64,7 @@ function App() {
           {/* Librarian Routes */}
           <Route element={<ProtectedRoute allowedRoles={['LIBRARIAN']} />}>
             <Route path="/dashboard/librarian" element={<LibrarianDashboard />} />
+            <Route path="/dashboard/librarian/details/:type" element={<DashboardDetailsPage role="librarian" />} />
             <Route path="/dashboard/librarian/circulation" element={<CirculationPage />} />
             <Route path="/dashboard/librarian/catalog" element={<CatalogPage />} />
             <Route path="/dashboard/librarian/news" element={<CommunicationsPage />} />
