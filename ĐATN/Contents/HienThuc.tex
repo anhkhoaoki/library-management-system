@@ -102,6 +102,9 @@ The weights $w_{\text{semantic}}$ and $w_{\text{keyword}}$ dynamically adjust ac
     \item \textbf{Long Queries ($>5$ tokens):} $w_{\text{semantic}} = 0.80, w_{\text{keyword}} = 0.20$ (heavily favoring semantic intent).
 \end{itemize}
 
+\textbf{Weighting Strategy Justification:}
+These specific thresholds were established through manual empirical testing, starting from the industry-recommended baseline of $0.75$ semantic weight (standardized by vendors like Weaviate). Through iterative trial and error on sample queries, the baseline was manually adjusted to handle edge cases: short queries were inverted to favor keywords ($0.60$) to prevent semantic drift on exact-entity searches, while long queries were increased to $0.80$ semantic to mitigate stop-word noise. 
+
 \subsubsection{Security, Authentication, and Role-Based Access Control}
 System security is established on four pillars:
 \begin{itemize}

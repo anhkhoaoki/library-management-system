@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1790709479.61501 "f:/NEW/KHOA/HK252/DATN/demo/ĐATN/main.tex" "main.pdf" "main" 1790709506.89344 2
+["pdflatex"] 1791556011.48449 "f:/NEW/KHOA/HK252/DATN/demo/ĐATN/main.tex" "main.pdf" "main" 1791556035.72776 2
   "C:/Users/Admin/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1790327350.91835 89997 008b71c0c00a33f5fc03307b772025e5 ""
   "C:/Users/Admin/AppData/Local/MiKTeX/fonts/tfm/public/rsfs/rsfs10.tfm" 1779451932.33365 688 37338d6ab346c2f1466b29e195316aa4 ""
   "C:/Users/Admin/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1779451836.54373 13316212 b4cf1d0659a42f13b61b08943aee0947 ""
@@ -74,10 +74,10 @@
   "Contents/DanhGiaAI.tex" 1790527323.90333 12655 1dba9e708c2792121112de47529ff0cb ""
   "Contents/GioiThieu.tex" 1790528254.82544 11625 8331b99dc627e42925b198fdbd6ea81a ""
   "Contents/Hethonglienquan.tex" 1788410784 10633 74c8633c9bcf3509c5b5a24fa1809815 ""
-  "Contents/HienThuc.tex" 1790530254.06425 61140 59425b7ed934e21f65a8e6e6fd93890c ""
+  "Contents/HienThuc.tex" 1790964408.87216 61679 b6d120434a117c7553fb962789fb8fd5 ""
   "Contents/KiemThuHeThong.tex" 1789889943.82397 11442 8f15382ea8b992f7a080e47b8090f37c ""
   "Contents/PhanTichThietKeHeThong.tex" 1790528380.51295 45393 7e9efe061c711e25e42a9c00b980ba61 ""
-  "Contents/TongKet.tex" 1790528363.10454 3047 b8ec1ff5155d4c99061f7e032bfa5a12 ""
+  "Contents/TongKet.tex" 1790963313.22667 3047 b8ec1ff5155d4c99061f7e032bfa5a12 ""
   "Contents/YeuCauHeThong.tex" 1790530592.75305 9678 d616fbdab3f5925bcff5df389ae18715 ""
   "F:/MkTex/fonts/enc/dvips/base/8r.enc" 1458473887 4993 1194fb36dfcb11d9ae9802f2b00b60a3 ""
   "F:/MkTex/fonts/tfm/adobe/symbol/psyr.tfm" 1136747054 1408 5937f58aa508ea2cea4901c07d10f5fe ""
@@ -357,11 +357,12 @@
   "Intro/TomTat.tex" 1790528228.52676 3336 eb7912323d5489ca6b0a7ca8a86f5fd0 ""
   "Outro/TaiLieuThamKhao.tex" 1788410784 1682 74921139f65c303e56c1ada865d41a19 ""
   "f:/NEW/KHOA/HK252/DATN/demo/ĐATN/main.tex" 1790529185.39007 7800 748c182fe6b405cac2e53889b02edabd ""
-  "main.aux" 1790709505.48173 63865 04a1c6c487b2b3bed2407d4a94afade3 "pdflatex"
-  "main.lof" 1790709505.51373 10811 be7f0b0424a131cb3f142cf299196619 "pdflatex"
-  "main.lot" 1790709505.51373 4568 d84f558613e1bbb2837f4dfbab01e4d5 "pdflatex"
-  "main.out" 1790709505.50377 33710 1d297b767d94b3096eed8e9674a6f676 "pdflatex"
-  "main.toc" 1790709505.51373 20808 3a604c88e7af6ff2c5043b5da192cecb "pdflatex"
+  "main.aux" 1791556034.64038 63865 82970aa332e73f5a5a7e59ff44b8075b "pdflatex"
+  "main.lof" 1791556034.67937 10811 cd98b69fe0ea41a0882dfa5cbaea0c94 "pdflatex"
+  "main.lot" 1791556034.67937 4568 d84f558613e1bbb2837f4dfbab01e4d5 "pdflatex"
+  "main.out" 1791556034.66437 33710 1d297b767d94b3096eed8e9674a6f676 "pdflatex"
+  "main.tex" 1790529185.39007 7800 748c182fe6b405cac2e53889b02edabd ""
+  "main.toc" 1791556034.67937 20808 4d367c581adddc83705976d432097cb5 "pdflatex"
   (generated)
   "main.aux"
   "main.lof"

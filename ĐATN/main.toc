@@ -130,14 +130,14 @@
 \contentsline {subsubsection}{\numberline {6.2.1}User Interface Implementation}{68}{subsubsection.6.2.1}%
 \contentsline {paragraph}{\numberline {6.2.1.1}Login Page}{68}{paragraph.6.2.1.1}%
 \contentsline {paragraph}{\numberline {6.2.1.2}Registration Page}{69}{paragraph.6.2.1.2}%
-\contentsline {paragraph}{\numberline {6.2.1.3}Password Reset Workflow (3-Step Modal)}{69}{paragraph.6.2.1.3}%
+\contentsline {paragraph}{\numberline {6.2.1.3}Password Reset Workflow (3-Step Modal)}{70}{paragraph.6.2.1.3}%
 \contentsline {subsubsection}{\numberline {6.2.2}Technical Implementation Highlights}{70}{subsubsection.6.2.2}%
 \contentsline {paragraph}{\numberline {6.2.2.1}Registration and Email Verification}{70}{paragraph.6.2.2.1}%
 \contentsline {paragraph}{\numberline {6.2.2.2}Login, Tokens, and Account Protection}{70}{paragraph.6.2.2.2}%
-\contentsline {paragraph}{\numberline {6.2.2.3}Password Recovery}{70}{paragraph.6.2.2.3}%
-\contentsline {subsection}{\numberline {6.3}Reader Module}{70}{subsection.6.3}%
-\contentsline {subsubsection}{\numberline {6.3.1}User Interface Implementation}{70}{subsubsection.6.3.1}%
-\contentsline {paragraph}{\numberline {6.3.1.1}Patron Homepage}{70}{paragraph.6.3.1.1}%
+\contentsline {paragraph}{\numberline {6.2.2.3}Password Recovery}{71}{paragraph.6.2.2.3}%
+\contentsline {subsection}{\numberline {6.3}Reader Module}{71}{subsection.6.3}%
+\contentsline {subsubsection}{\numberline {6.3.1}User Interface Implementation}{71}{subsubsection.6.3.1}%
+\contentsline {paragraph}{\numberline {6.3.1.1}Patron Homepage}{71}{paragraph.6.3.1.1}%
 \contentsline {paragraph}{\numberline {6.3.1.2}Catalog Search and Discovery}{71}{paragraph.6.3.1.2}%
 \contentsline {paragraph}{\numberline {6.3.1.3}Book Details, Availability, and Reviews}{72}{paragraph.6.3.1.3}%
 \contentsline {paragraph}{\numberline {6.3.1.4}Active Loans Management and Online Renewal}{73}{paragraph.6.3.1.4}%
